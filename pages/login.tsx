@@ -11,6 +11,8 @@ export default function Login() {
     const { data: session, status } = useSession()
     const router = useRouter();
 
+    const callBackURL = router.query.callbackUrl || '/';
+
     const [isLoading, setIsLoading] = useState(false);
     const [loginData, setLoginData] = useState({
         email: '',
@@ -52,8 +54,9 @@ export default function Login() {
             const res = await signIn('case-credentials', {
                 email: loginData.email,
                 password: loginData.password,
-                redirect: false,
+                redirect: true,
                 verificationCode: loginData.verificationCode,
+                callbackUrl: callBackURL as string,
             });
             console.log(res)
             if (!res) {
@@ -61,7 +64,11 @@ export default function Login() {
             }
             if (res.ok === false) {
                 setError(true);
+
             } else {
+                if (res.url) {
+                    router.push(res.url);
+                }
                 setError(false);
             }
             if (res.error === ERROR_SECOND_FACTOR_NEEDED) {
