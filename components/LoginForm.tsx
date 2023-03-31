@@ -59,6 +59,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoginData, loginData, isLoadin
                 <label className="block mt-4">
                     <span className="text-gray-700">Email</span>
                     <Input type="email"
+                        autoComplete='email'
                         onChange={(event) => {
                             setLoginData({
                                 ...loginData,
@@ -71,6 +72,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoginData, loginData, isLoadin
                 <label className="block mt-4">
                     <span className="text-gray-700">Password</span>
                     <Input type="password"
+                        autoComplete='current-password'
                         onChange={(event) => {
                             setLoginData({
                                 ...loginData,
