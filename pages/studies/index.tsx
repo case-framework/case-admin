@@ -1,3 +1,4 @@
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import useSWR, { Fetcher } from 'swr';
 
@@ -10,11 +11,32 @@ interface Studies {
     studies: Study[];
 }
 
-const StudyListFetcher: Fetcher<Studies, string> = () => fetch(`/api/studies`).then((res) => res.json());
+interface ApiError extends Error {
+    info: any;
+    status: number;
+}
+
+
+const StudyListFetcher: Fetcher<Studies, string> = async () => {
+    const res = await fetch(`/api/studies`)
+    if (!res.ok) {
+        const error = new Error('An error occurred while fetching the data.') as ApiError;
+        // Attach extra info to the error object.
+        error.info = await res.json()
+        error.status = res.status
+        throw error
+    }
+    return res.json()
+};
 
 
 export default function Studies() {
-    const { data: studies, error, isLoading } = useSWR<Studies, Error>('studies', StudyListFetcher);
+    const { data: studyResponse, error, isLoading } = useSWR<Studies, ApiError>('studies', StudyListFetcher);
+    console.log(studyResponse, error, isLoading)
+
+    if (error?.status === 401) {
+        signIn();
+    }
 
     return (
         <>
@@ -31,8 +53,9 @@ export default function Studies() {
                     <h2 className='mt-4 mb-2 text-slate-500'>Studies:</h2>
                     {isLoading && <div>Loading...</div>}
                     {error && <div className='text-red-500'>
-                        Error: {error.message}</div>}
-                    {studies?.studies.map((study) => {
+                        Error: {error.message} - Reason: {error.info.error}</div>}
+
+                    {studyResponse?.studies ? studyResponse.studies.map((study) => {
                         return (
                             <Link
                                 key={study.key}
@@ -41,7 +64,7 @@ export default function Studies() {
                                 {study.key}
                             </Link>
                         )
-                    })
+                    }) : null
                     }
                 </div>
             </main>
