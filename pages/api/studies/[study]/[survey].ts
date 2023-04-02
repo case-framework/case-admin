@@ -13,15 +13,8 @@ export default async function handler(
         res.status(401).json({ error: 'Unauthorized' });
         return;
     }
-    // console.log(session);
-    /*const token = await getToken({ req })
-    if (!token) {
-        res.status(401).json({ error: 'Unauthorized' });
-        return;
-    }*/
+
     const { study, survey } = req.query as { study: string, survey: string };
-    console.log(study, survey)
-    // console.log(token.access_token);
 
     const studyKey = study;
     try {
@@ -32,8 +25,7 @@ export default async function handler(
                 }
             }
         );
-        // console.log(response.data);
-
+        res.status(200).json(response.data);
     }
 
     catch (error) {
@@ -42,6 +34,5 @@ export default async function handler(
         return;
     }
 
-
-    res.status(200).json({ name: 'John Doe' })
+    return;
 }
