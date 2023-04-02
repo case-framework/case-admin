@@ -1,30 +1,45 @@
-import Sidebar from '@/components/sidebar/Sidebar';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import useSWR from 'swr';
+import { ApiError, AuthAPIFetcher } from '@/utils/server/fetcher';
+import { SurveyInfos } from '@/utils/server/types/studyInfos';
 
 
 export default function Dashboard() {
     const router = useRouter()
     const { study: studyKey } = router.query
 
-    console.log(studyKey);
+    const { data: surveyList, error, isLoading } = useSWR<SurveyInfos, ApiError>(`/api/studies/${studyKey}/survey`, AuthAPIFetcher);
 
-    useEffect(() => {
-        console.log('Dashboard');
-        const fetchData = async () => {
-            const res = await fetch('/api/studies/tekenradar/survey');
-            const data = await res.json();
-            console.log(data);
-        }
-        fetchData();
-    }, []);
+    console.log(studyKey, surveyList, error, isLoading);
 
     return (
-        <>
+        <div
+            className='p-4'
+        >
+            <div>
+                <Link
+                    className='block mb-2 hover:underline text-blue-600 '
+                    href={`/studies`}
+                >
+                    Back
+                </Link>
+            </div>
             <main className='flex'>
-                <Sidebar>
-                </Sidebar>
+                <div
+                >
+                    <h2 className='mt-4 mb-2 text-slate-500'>Surveys:</h2>
+                    {isLoading && <div>Loading...</div>}
+                    {error && <div className='text-red-500'>
+                        Error: {error.message} - Reason: {error.info.error}</div>}
+
+                    {surveyList?.infos ? surveyList.infos.map((survey: any) => {
+                        return <div key={survey.surveyKey}>
+                            {survey.surveyKey}
+                        </div>
+                    }) : null}
+                </div>
             </main>
-        </>
+        </div>
     )
 }
