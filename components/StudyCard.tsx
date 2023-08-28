@@ -6,8 +6,8 @@ import { Link as NextUILink } from "@nextui-org/link";
 
 
 const StudyCard = (props: { study: Study, baseURL: string }) => {
-    return <Card shadow='none'
-        className="border border-default-400 bg-gradient-to-r from-content2 to-content1"
+    return <Card
+        className=" bg-white"
         radius='sm'
         isPressable
         as={NextUILink}

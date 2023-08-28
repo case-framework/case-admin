@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { Card, CardBody, CardHeader, CardFooter } from "@nextui-org/card";
 import { Button } from "@nextui-org/button";

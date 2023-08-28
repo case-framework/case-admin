@@ -4,9 +4,16 @@ import { Spinner } from "@nextui-org/spinner";
 import { Suspense } from "react";
 
 import StudySelector from "./StudySelector";
+import { pageTitle } from "@/utils/pageTitle";
 
 
 export const dynamic = 'force-dynamic';
+
+export const metadata = {
+    title: pageTitle('Study Selector'),
+    description: 'Select a study to view participants.',
+}
+
 
 export default async function Page() {
     return (

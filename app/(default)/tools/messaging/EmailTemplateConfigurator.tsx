@@ -138,7 +138,7 @@ const EmailTemplateConfigurator: React.FC<EmailTemplateConfiguratorProps> = (pro
                             }
                         }}
 
-                    >Delete schedule</Button>
+                    >Delete template</Button>
                 )}
             </h2>
             {errorComp}
@@ -190,7 +190,7 @@ const EmailTemplateConfigurator: React.FC<EmailTemplateConfiguratorProps> = (pro
                             onValueChange={(value) => {
                                 if (!value && emailTemplateConfig.headerOverrides !== undefined && (
                                     emailTemplateConfig.headerOverrides.from ||
-                                    emailTemplateConfig.headerOverrides.replyTo.length > 0 ||
+                                    (emailTemplateConfig.headerOverrides.replyTo && emailTemplateConfig.headerOverrides.replyTo.length > 0) ||
                                     emailTemplateConfig.headerOverrides.sender
                                 )) {
                                     if (!confirm('Are you sure you want to remove the email header overrides?')) {
@@ -221,7 +221,7 @@ const EmailTemplateConfigurator: React.FC<EmailTemplateConfiguratorProps> = (pro
                         <div
                             className={clsx('flex flex-col gap-unit-md mt-unit-md p-unit-md border border-default-200 rounded-medium',
                                 {
-                                    'bg-default-100 opacity-50': !emailTemplateConfig.headerOverrides
+                                    'hidden bg-default-100 opacity-50': !emailTemplateConfig.headerOverrides
                                 }
                             )}
                         >

@@ -4,7 +4,7 @@ import { Avatar, Button, Spinner, Tooltip } from '@nextui-org/react';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import NextUILink from 'next/link';
-import { BsBoxArrowRight } from 'react-icons/bs';
+import { BsXLg } from 'react-icons/bs';
 import clsx from 'clsx';
 
 interface AppbarBaseForToolsProps {
@@ -80,7 +80,7 @@ const AppbarBaseForTools: React.FC<AppbarBaseForToolsProps> = (props) => {
 
                 <div className="flex gap-2 items-center">
                     <AppbarAuth />
-                    <Tooltip showArrow={true} content="Exit">
+                    <Tooltip showArrow={true} content="Return to main menu">
                         <Button
                             as={NextUILink}
                             color='secondary'
@@ -90,7 +90,7 @@ const AppbarBaseForTools: React.FC<AppbarBaseForToolsProps> = (props) => {
                             isIconOnly
                             aria-label='Exit'
                         >
-                            <BsBoxArrowRight />
+                            <BsXLg />
                         </Button>
                     </Tooltip>
                 </div>

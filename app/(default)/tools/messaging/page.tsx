@@ -1,34 +1,11 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import Container from "@/components/Container";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import LinkCard from "@/components/LinkCard";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { getServerSession } from "next-auth/next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { BsCalendarWeek, BsChevronRight, BsCodeSquare, BsEnvelopePaper } from "react-icons/bs";
+import { BsCalendarWeek, BsCodeSquare, BsEnvelopePaper } from "react-icons/bs";
 
-
-const LinkCard = (props: { href: string, title: string, description: string, icon: React.ReactNode }) => {
-    return (<Card
-        isPressable
-        as={Link}
-        href={props.href}
-        className="bg-white hover:bg-content2"
-    >
-        <div className="p-unit-md flex items-center">
-            <div className="me-unit-md text-default-400 text-3xl">
-                {props.icon}
-            </div>
-            <div className="grow">
-                <h3 className="font-bold text-large">{props.title}</h3>
-                <p className="text-default-600 text-small">{props.description}</p>
-            </div>
-            <div >
-                <BsChevronRight />
-            </div>
-        </div>
-    </Card>)
-}
 
 
 export default async function Page() {
@@ -73,7 +50,6 @@ export default async function Page() {
                                 description="Manage schedules for sending messages, e.g., weekly emails."
                                 icon={<BsCalendarWeek />}
                             />
-
                         </div>
                     </CardBody>
                 </Card>

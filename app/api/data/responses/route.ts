@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth/next";
 import { NextRequest } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../auth/[...nextauth]/authOptions";
 import { getCASEManagementAPIURL, getTokenHeader } from "@/utils/server/api";
 
 export async function GET(request: NextRequest) {

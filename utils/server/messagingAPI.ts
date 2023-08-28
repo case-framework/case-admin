@@ -1,7 +1,7 @@
 import 'server-only';
 import { EmailTemplate, MessageSchedule } from './types/messaging';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import { getCASEManagementAPIURL, getTokenHeader } from './api';
 
 export const getMessageSchedules = async (): Promise<MessageSchedule[]> => {

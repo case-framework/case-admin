@@ -1,6 +1,6 @@
 'use server';
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { getCASEManagementAPIURL } from "@/utils/server/api";
 import { getServerSession } from "next-auth/next";
 

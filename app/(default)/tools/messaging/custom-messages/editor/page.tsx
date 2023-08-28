@@ -1,4 +1,4 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { getMessageTemplates } from "@/utils/server/messagingAPI";
 import { EmailTemplate } from "@/utils/server/types/messaging";

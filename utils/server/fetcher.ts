@@ -1,5 +1,3 @@
-import next from "next/types";
-
 export interface ApiError extends Error {
     info: any;
     status: number;
