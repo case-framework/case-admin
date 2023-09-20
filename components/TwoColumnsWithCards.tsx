@@ -10,7 +10,7 @@ const TwoColumnsWithCards: React.FC<{
     children: React.ReactNode
 }> = (props) => {
     return (
-        <div className='flex flex-col sm:flex-row gap-4 my-6'>
+        <div className='flex flex-col sm:flex-row gap-4 my-6 group'>
             <div className='min-w-[300px] w-full sm:w-[300px]'>
                 <h3 className='text-xl font-bold'>{props.label}
                     {props.infoboxContent && (
@@ -33,7 +33,7 @@ const TwoColumnsWithCards: React.FC<{
                     )
                     }
                 </h3>
-                <p className='text-sm text-gray-500'>{props.description}</p>
+                <p className='text-sm text-gray-500 group-hover:text-foreground'>{props.description}</p>
 
             </div>
             <Card

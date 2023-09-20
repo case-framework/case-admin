@@ -35,81 +35,78 @@ const ResponseDownloader: React.FC<ResponseDownloaderProps> = (props) => {
         </>
         )
     } else {
-        cardContent = (<fieldset className='flex flex-col gap-unit-md'>
-            <div className='my-unit-md'>
-                <Select
-                    id='survey-key-for-response-downloader'
-                    label='Survey key'
-                    labelPlacement='outside'
-                    variant='bordered'
-                    placeholder='Select a survey'
-                    classNames={{
-                        trigger: 'bg-white'
-                    }}
-                    description='Download survey info for this survey.'
-                    selectedKeys={new Set([selectedSurveyKey || ''])}
-                    onSelectionChange={(keys: Set<React.Key> | 'all') => {
-                        const selectedKey = (keys as Set<React.Key>).values().next().value;
-                        if (!selectedKey) return;
-                        setSelectedSurveyKey(selectedKey as string);
-                    }}
-                >
-                    {
-                        props.availableSurveys.map((surveyKey) => {
-                            return (
-                                <SelectItem
-                                    key={surveyKey}
-                                    value={surveyKey}
-                                >
-                                    {surveyKey}
-                                </SelectItem>
-                            );
-                        })
-                    }
-                </Select>
-            </div>
+        cardContent = (<fieldset className='flex flex-col'>
 
-            <div className='my-unit-md'>
-                <Select
-                    id='export-format-for-responses-downloader'
-                    label='Export format'
-                    labelPlacement='outside'
-                    variant='bordered'
-                    placeholder='Select a format'
-                    classNames={{
-                        trigger: 'bg-white'
-                    }}
-                    description='Select the format for the downloaded file.'
-                    selectedKeys={new Set([exportFormat || ''])}
-                    onSelectionChange={(keys: Set<React.Key> | 'all') => {
-                        const selectedKey = (keys as Set<React.Key>).values().next().value;
-                        if (!selectedKey) return;
-                        setExportFormat(selectedKey as 'long' | 'wide' | 'json');
-                    }}
+            <Select
+                id='survey-key-for-response-downloader'
+                label='Survey key'
+                labelPlacement='outside'
+                variant='bordered'
+                placeholder='Select a survey'
+                classNames={{
+                    trigger: 'bg-white'
+                }}
+                description='Download survey info for this survey.'
+                selectedKeys={new Set([selectedSurveyKey || ''])}
+                onSelectionChange={(keys: Set<React.Key> | 'all') => {
+                    const selectedKey = (keys as Set<React.Key>).values().next().value;
+                    if (!selectedKey) return;
+                    setSelectedSurveyKey(selectedKey as string);
+                }}
+            >
+                {
+                    props.availableSurveys.map((surveyKey) => {
+                        return (
+                            <SelectItem
+                                key={surveyKey}
+                                value={surveyKey}
+                            >
+                                {surveyKey}
+                            </SelectItem>
+                        );
+                    })
+                }
+            </Select>
+
+            <Select
+                id='export-format-for-responses-downloader'
+                label='Export format'
+                labelPlacement='outside'
+                variant='bordered'
+                placeholder='Select a format'
+                classNames={{
+                    trigger: 'bg-white'
+                }}
+                description='Select the format for the downloaded file.'
+                selectedKeys={new Set([exportFormat || ''])}
+                onSelectionChange={(keys: Set<React.Key> | 'all') => {
+                    const selectedKey = (keys as Set<React.Key>).values().next().value;
+                    if (!selectedKey) return;
+                    setExportFormat(selectedKey as 'long' | 'wide' | 'json');
+                }}
+            >
+                <SelectItem
+                    key='wide'
+                    value='wide'
+                    startContent={<BsFiletypeCsv className='text-2xl text-default-500' />}
                 >
-                    <SelectItem
-                        key='wide'
-                        value='wide'
-                        startContent={<BsFiletypeCsv className='text-2xl text-default-500' />}
-                    >
-                        CSV (wide)
-                    </SelectItem>
-                    <SelectItem
-                        key='long'
-                        value='long'
-                        startContent={<BsFiletypeCsv className='text-2xl text-default-500' />}
-                    >
-                        CSV (long)
-                    </SelectItem>
-                    <SelectItem
-                        key='json'
-                        value='json'
-                        startContent={<BsFiletypeJson className='text-2xl text-default-500' />}
-                    >
-                        JSON
-                    </SelectItem>
-                </Select>
-            </div>
+                    CSV (wide)
+                </SelectItem>
+                <SelectItem
+                    key='long'
+                    value='long'
+                    startContent={<BsFiletypeCsv className='text-2xl text-default-500' />}
+                >
+                    CSV (long)
+                </SelectItem>
+                <SelectItem
+                    key='json'
+                    value='json'
+                    startContent={<BsFiletypeJson className='text-2xl text-default-500' />}
+                >
+                    JSON
+                </SelectItem>
+            </Select>
 
             <Input
                 id='key-separator-for-survey-responses-downloader'
@@ -126,7 +123,7 @@ const ResponseDownloader: React.FC<ResponseDownloaderProps> = (props) => {
                 }}
             />
 
-            <div className='flex gap-unit-md'>
+            <div className='flex gap-unit-md py-unit-md'>
                 <Input
                     id='query-start-date-for-survey-responses-downloader'
                     type='datetime-local'

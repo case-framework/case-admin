@@ -30,76 +30,74 @@ const SurveyInfoDownloader: React.FC<SurveyInfoDownloaderProps> = (props) => {
         )
     } else {
         cardContent = (<fieldset>
-            <p className='text-tiny text-default-600 p-unit-sm bg-primary-50 rounded-small'>
+            <p className='text-tiny text-default-600 p-unit-sm bg-primary-50 rounded-small mb-unit-md'>
                 Download the history of the survey structure in a CSV or JSON format. This can be helpful when interpreting the response data.
             </p>
 
-            <div className='my-unit-md'>
-                <Select
-                    id='survey-key-for-survey-info-downloader'
-                    label='Survey key'
-                    labelPlacement='outside'
-                    variant='bordered'
-                    placeholder='Select a survey'
-                    classNames={{
-                        trigger: 'bg-white'
-                    }}
-                    description='Download survey info for this survey.'
-                    selectedKeys={new Set([selectedSurveyKey || ''])}
-                    onSelectionChange={(keys: Set<React.Key> | 'all') => {
-                        const selectedKey = (keys as Set<React.Key>).values().next().value;
-                        if (!selectedKey) return;
-                        setSelectedSurveyKey(selectedKey as string);
-                    }}
-                >
-                    {
-                        props.availableSurveys.map((surveyKey) => {
-                            return (
-                                <SelectItem
-                                    key={surveyKey}
-                                    value={surveyKey}
-                                >
-                                    {surveyKey}
-                                </SelectItem>
-                            );
-                        })
-                    }
-                </Select>
-            </div>
 
-            <div className='my-unit-md'>
-                <Select
-                    id='export-format-for-survey-info-downloader'
-                    label='Export format'
-                    labelPlacement='outside'
-                    variant='bordered'
-                    placeholder='Select a format'
-                    classNames={{
-                        trigger: 'bg-white'
-                    }}
-                    description='Select the format for the downloaded file.'
-                    selectedKeys={new Set([exportFormat || ''])}
-                    onSelectionChange={(keys: Set<React.Key> | 'all') => {
-                        const selectedKey = (keys as Set<React.Key>).values().next().value;
-                        if (!selectedKey) return;
-                        setExportFormat(selectedKey as string);
-                    }}
+            <Select
+                id='survey-key-for-survey-info-downloader'
+                label='Survey key'
+                labelPlacement='outside'
+                variant='bordered'
+                placeholder='Select a survey'
+                classNames={{
+                    trigger: 'bg-white'
+                }}
+                description='Download survey info for this survey.'
+                selectedKeys={new Set([selectedSurveyKey || ''])}
+                onSelectionChange={(keys: Set<React.Key> | 'all') => {
+                    const selectedKey = (keys as Set<React.Key>).values().next().value;
+                    if (!selectedKey) return;
+                    setSelectedSurveyKey(selectedKey as string);
+                }}
+            >
+                {
+                    props.availableSurveys.map((surveyKey) => {
+                        return (
+                            <SelectItem
+                                key={surveyKey}
+                                value={surveyKey}
+                            >
+                                {surveyKey}
+                            </SelectItem>
+                        );
+                    })
+                }
+            </Select>
+
+            <Select
+                id='export-format-for-survey-info-downloader'
+                label='Export format'
+                labelPlacement='outside'
+                variant='bordered'
+                placeholder='Select a format'
+                classNames={{
+                    trigger: 'bg-white'
+                }}
+                description='Select the format for the downloaded file.'
+                selectedKeys={new Set([exportFormat || ''])}
+                onSelectionChange={(keys: Set<React.Key> | 'all') => {
+                    const selectedKey = (keys as Set<React.Key>).values().next().value;
+                    if (!selectedKey) return;
+                    setExportFormat(selectedKey as string);
+                }}
+            >
+                <SelectItem
+                    key='json'
+                    value='json'
                 >
-                    <SelectItem
-                        key='json'
-                        value='json'
-                    >
-                        JSON
-                    </SelectItem>
-                    <SelectItem
-                        key='csv'
-                        value='csv'
-                    >
-                        CSV
-                    </SelectItem>
-                </Select>
-            </div>
-            <div className='mt-unit-md pt-unit-md'>
+                    JSON
+                </SelectItem>
+                <SelectItem
+                    key='csv'
+                    value='csv'
+                >
+                    CSV
+                </SelectItem>
+            </Select>
+
+            <div className=''>
                 <LanguageSelector onLanguageChange={(l) =>
                     setLanguage(l)
                 } />

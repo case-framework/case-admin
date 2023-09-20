@@ -2,6 +2,7 @@
 
 import AvatarFromId from '@/components/AvatarFromID';
 import { ParticipantState } from '@/utils/server/types/participantState';
+import { shortenID } from '@/utils/shortenID';
 import { Card, CardBody, Chip, Divider, Snippet, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react';
 
 import React from 'react';
@@ -14,7 +15,6 @@ interface ParticipantDetailsProps {
 
 
 const ParticipantDetails: React.FC<ParticipantDetailsProps> = (props) => {
-    console.log(props.participant?.messages)
     const flagsTable = React.useMemo(() => {
         if (!props.participant) return <></>;
 
@@ -267,7 +267,7 @@ const ParticipantDetails: React.FC<ParticipantDetailsProps> = (props) => {
                             <div className='flex items-start gap-unit-md'>
                                 <div>
                                     <AvatarFromId
-                                        userId={props.participant.id}
+                                        userId={props.participant.participantId}
                                         pixelSize={7}
                                     />
                                 </div>
@@ -279,7 +279,7 @@ const ParticipantDetails: React.FC<ParticipantDetailsProps> = (props) => {
                                         color='default'
                                         symbol=''
                                     >
-                                        {props.participant.id}
+                                        {shortenID(props.participant.participantId, 32)}
                                     </Snippet>
                                 </div>
                             </div>

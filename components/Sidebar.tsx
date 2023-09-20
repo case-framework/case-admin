@@ -65,11 +65,15 @@ export const SidebarItem: React.FC<SidebarItemProps> = (props) => {
 
 interface SidebarProps {
     children?: React.ReactNode;
+    className?: string;
 }
 
 export const Sidebar: React.FC<SidebarProps> = (props) => {
     return (
-        <nav className='h-full border-r border-default-300 z-30 bg-content2'>
+        <nav className={clsx(
+            'h-full border-r border-default-300 z-30 bg-content2',
+            props.className
+        )}>
             <ul className='flex flex-col h-full items-center z-30'>
                 {props.children}
             </ul>

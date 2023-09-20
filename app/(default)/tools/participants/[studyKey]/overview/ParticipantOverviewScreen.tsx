@@ -20,7 +20,7 @@ const ParticipantOverviewScreen: React.FC<ParticipantOverviewScreenProps> = (pro
 
     return (
         <div className="flex gap-1 h-full">
-            <div className='w-80'>
+            <div className='w-80 h-full overflow-y-scroll pt-unit-md'>
                 <h2 className='text-2xl font-bold mb-unit-md'>Participants</h2>
 
                 <ParticipantList
@@ -29,7 +29,7 @@ const ParticipantOverviewScreen: React.FC<ParticipantOverviewScreenProps> = (pro
                 />
             </div>
             <Divider orientation="vertical" />
-            <div className='grow'>
+            <div className='grow h-full overflow-y-scroll pt-unit-md'>
                 <ParticipantDetails
                     participant={selectedParticipant}
                 />

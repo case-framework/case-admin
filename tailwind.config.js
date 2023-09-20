@@ -20,6 +20,14 @@ module.exports = {
     darkMode: 'class',
     plugins: [
         require('@headlessui/tailwindcss')({ prefix: 'ui' }),
+        require('@tailwindcss/typography'),
         nextui()
     ],
+    safelist: [
+        'fst-italic',
+        'fs-small',
+        'text-decoration-underline',
+        'text-primary',
+        'sticky-top',
+    ]
 }

@@ -170,41 +170,41 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                         description='A label for this schedule. This will be used to identify the schedule in the list of schedules.'
                     />
 
-                    <div className='mb-unit-md'>
-                        <Select
-                            label='Send to'
-                            labelPlacement='outside'
-                            variant='bordered'
-                            placeholder='Select target group'
-                            description='Target group of this message.'
-                            selectedKeys={new Set([schedule.type])}
-                            onSelectionChange={(keys: Set<React.Key> | 'all') => {
-                                const selectedKey = (keys as Set<React.Key>).values().next().value;
-                                if (!selectedKey) return;
-                                setSchedule((s) => {
-                                    const newSchedule = { ...s };
 
-                                    newSchedule.type = selectedKey;
-                                    return newSchedule;
-                                })
-                            }}
+                    <Select
+                        label='Send to'
+                        labelPlacement='outside'
+                        variant='bordered'
+                        placeholder='Select target group'
+                        description='Target group of this message.'
+                        selectedKeys={new Set([schedule.type])}
+                        onSelectionChange={(keys: Set<React.Key> | 'all') => {
+                            const selectedKey = (keys as Set<React.Key>).values().next().value;
+                            if (!selectedKey) return;
+                            setSchedule((s) => {
+                                const newSchedule = { ...s };
+
+                                newSchedule.type = selectedKey;
+                                return newSchedule;
+                            })
+                        }}
+                    >
+                        <SelectItem
+                            key='all-users'
+                            value='all-users'
+                            description='Consider all users in the system when sending the message'
                         >
-                            <SelectItem
-                                key='all-users'
-                                value='all-users'
-                                description='Consider all users in the system when sending the message'
-                            >
-                                All users
-                            </SelectItem>
-                            <SelectItem
-                                key='study-participants'
-                                value='study-participants'
-                                description='Only consider users that are participating in a specific study who fulfill a condition'
-                            >
-                                Study participants
-                            </SelectItem>
-                        </Select>
-                    </div>
+                            All users
+                        </SelectItem>
+                        <SelectItem
+                            key='study-participants'
+                            value='study-participants'
+                            description='Only consider users that are participating in a specific study who fulfill a condition'
+                        >
+                            Study participants
+                        </SelectItem>
+                    </Select>
+
                     {schedule.type === 'study-participants' && (
                         <div className='p-unit-md  flex flex-col gap-unit-md border border-default-200 rounded-medium'>
                             <Input
@@ -316,49 +316,49 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                 label="Message settings"
                 description="General settings for the message."
             >
-                <div>
-                    <Select
-                        label='Message type'
-                        labelPlacement='outside'
-                        variant='bordered'
-                        placeholder='Select message type'
-                        description='Select the type of message to send.'
-                        selectedKeys={new Set([schedule.template.messageType])}
-                        onSelectionChange={(keys: Set<React.Key> | 'all') => {
-                            const selectedKey = (keys as Set<React.Key>).values().next().value;
-                            if (!selectedKey) return;
-                            setSchedule((s) => {
-                                const newSchedule = { ...s };
 
-                                newSchedule.template.messageType = selectedKey;
-                                return newSchedule;
-                            })
-                        }}
+                <Select
+                    label='Message type'
+                    labelPlacement='outside'
+                    variant='bordered'
+                    placeholder='Select message type'
+                    description='Select the type of message to send.'
+                    selectedKeys={new Set([schedule.template.messageType])}
+                    onSelectionChange={(keys: Set<React.Key> | 'all') => {
+                        const selectedKey = (keys as Set<React.Key>).values().next().value;
+                        if (!selectedKey) return;
+                        setSchedule((s) => {
+                            const newSchedule = { ...s };
+
+                            newSchedule.template.messageType = selectedKey;
+                            return newSchedule;
+                        })
+                    }}
+                >
+                    <SelectItem
+                        key='weekly'
+                        value='weekly'
+                        description='Send message to users only on their randomly assigned weekday.'
                     >
-                        <SelectItem
-                            key='weekly'
-                            value='weekly'
-                            description='Send message to users only on their randomly assigned weekday.'
-                        >
-                            weekly
-                        </SelectItem>
-                        <SelectItem
-                            key='newsletter'
-                            value='newsletter'
-                            description='Send a newsletter type message'
-                        >
-                            newsletter
-                        </SelectItem>
-                        <SelectItem
-                            key='study-reminder'
-                            value='study-reminder'
-                            description='Use this if this is not a weekly reminder but a reminder for a specific study.'
-                        >
-                            study reminder
-                        </SelectItem>
-                    </Select>
-                </div>
-                <div className='mt-unit-lg pt-unit-md'>
+                        weekly
+                    </SelectItem>
+                    <SelectItem
+                        key='newsletter'
+                        value='newsletter'
+                        description='Send a newsletter type message'
+                    >
+                        newsletter
+                    </SelectItem>
+                    <SelectItem
+                        key='study-reminder'
+                        value='study-reminder'
+                        description='Use this if this is not a weekly reminder but a reminder for a specific study.'
+                    >
+                        study reminder
+                    </SelectItem>
+                </Select>
+
+                <div className=''>
                     <Switch
                         isSelected={schedule.template.headerOverrides !== undefined}
                         onValueChange={(value) => {

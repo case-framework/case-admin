@@ -12,7 +12,6 @@ export const deleteStudyAction = async (studyKey: string) => {
     const url = getCASEManagementAPIURL(`/v1/study/${studyKey}`);
     const r = await fetch(url.toString(), {
         method: 'DELETE',
-        body: JSON.stringify({ studyKey: studyKey }),
         headers: {
             'Authorization': `Bearer ${session?.accessToken}`,
             'Content-Type': 'application/json'

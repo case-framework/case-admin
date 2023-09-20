@@ -42,9 +42,9 @@ const DisplayTexts: React.FC<{ study: Study }> = ({ study }) => {
                         </span>
                         <div className='flex flex-wrap gap-unit-sm'>
                             {tags.length < 1 ? 'not defined' : ''}
-                            {tags.map(tag => (
-                                <Chip key={tag}>
-                                    {tag}
+                            {tags.map((tag, index) => (
+                                <Chip key={index}>
+                                    {tag || 'not defined'}
                                 </Chip>
                             ))}
                         </div>

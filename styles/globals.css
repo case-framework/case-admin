@@ -3,7 +3,23 @@
 @tailwind utilities;
 
 @layer utilities {
-    .right-clipped {
-        clip-path: polygon(0 0, calc(100% - 80px) 0, 100% 100%, 0 100%);
+    .fst-italic {
+        @apply italic;
+    }
+
+    .fs-small {
+        @apply text-sm;
+    }
+
+    .text-decoration-underline {
+        @apply underline;
+    }
+
+    .text-primary {
+        @apply text-primary-600;
+    }
+
+    .sticky-top {
+        @apply sticky top-0;
     }
 }

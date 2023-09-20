@@ -107,49 +107,49 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
                     }}
                     items={participants}
                 >
-                    {/*(item) => (<ListboxItem key={item.id}>{item.id}</ListboxItem>))*/
-                        participants.map((p) => {
-                            return (
-                                <ListboxItem
-                                    key={p.id}
-                                    value={p.id}
-                                    showDivider
-                                    selectedIcon={<></>}
-                                    textValue={p.id}
-                                    className={clsx({ 'bg-primary-200/60 text-primary': selectedParticipantId === p.id })}
-                                    startContent={<div className='flex items-center'>
-                                        <AvatarFromId userId={p.id}
-                                            pixelSize={3}
-                                        />
-                                    </div>}
-                                    endContent={<div className='flex items-center'>
-                                        <BsChevronRight className='text-default-400' />
-                                    </div>}
-                                >
-                                    <div>
-                                        <div className='font-mono'>
-                                            {shortenID(p.id, 16)}
-                                        </div>
-                                        <div className='flex justify-between items-center'>
-                                            <div className='text-default-600 text-tiny grow flex items-center gap-1'>
-
-                                                <BsActivity className='' />
-                                                {getLastSubmission(p.lastSubmissions)}
-
-                                            </div>
-                                            <Chip
-                                                size='sm'
-                                                variant='flat'
-                                                className='text-tiny'
-                                                color={p.studyStatus === 'active' ? 'success' : (p.studyStatus === 'accountDeleted' ? 'danger' : 'default')}
-                                            >
-                                                {p.studyStatus}
-                                            </Chip>
-                                        </div>
+                    {(p) => {
+                        //participants.map((p) => {
+                        return (
+                            <ListboxItem
+                                key={p.id}
+                                value={p.id}
+                                showDivider
+                                selectedIcon={<></>}
+                                textValue={p.id}
+                                className={clsx({ 'bg-primary-200/60 text-primary': selectedParticipantId === p.id })}
+                                startContent={<div className='flex items-center'>
+                                    <AvatarFromId userId={p.participantId}
+                                        pixelSize={3}
+                                    />
+                                </div>}
+                                endContent={<div className='flex items-center'>
+                                    <BsChevronRight className='text-default-400' />
+                                </div>}
+                            >
+                                <div>
+                                    <div className='font-mono'>
+                                        {shortenID(p.participantId, 16)}
                                     </div>
-                                </ListboxItem>
-                            );
-                        })
+                                    <div className='flex justify-between items-center'>
+                                        <div className='text-default-600 text-tiny grow flex items-center gap-1'>
+
+                                            <BsActivity className='' />
+                                            {getLastSubmission(p.lastSubmissions)}
+
+                                        </div>
+                                        <Chip
+                                            size='sm'
+                                            variant='flat'
+                                            className='text-tiny'
+                                            color={p.studyStatus === 'active' ? 'success' : (p.studyStatus === 'accountDeleted' ? 'danger' : 'default')}
+                                        >
+                                            {p.studyStatus}
+                                        </Chip>
+                                    </div>
+                                </div>
+                            </ListboxItem>
+                        );
+                    }
                     }
                 </Listbox>
 
