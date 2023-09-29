@@ -1,15 +1,54 @@
 import Filepicker from '@/components/inputs/Filepicker';
 import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
-import { SurveyEditor } from 'case-editor-tools/surveys/survey-editor/survey-editor';
 import React from 'react';
-import { BsExclamationTriangle } from 'react-icons/bs';
+import { BsExclamationTriangle, BsPencil, BsXLg } from 'react-icons/bs';
 import { Survey } from 'survey-engine/data_types';
+import { findAllLocales, removeLocales, renameLocales } from './localeUtils';
 
 interface LoadSurveyFromDiskProps {
     isOpen: boolean;
     onOpenChange: (isOpen: boolean) => void;
     onLoadNewSurvey: (survey: Survey) => void;
 }
+
+
+const LocaleEditor: React.FC<{
+    locale: string,
+    onRename: (oldLocale: string, newLocale: string) => void,
+    onDelete: (locale: string) => void,
+}> = ({ locale, onRename, onDelete }) => {
+    return (
+        <div className='flex items-center gap-unit-md'>
+            <span className='font-mono grow'>{locale}</span>
+            <Button
+                variant='light'
+                size='sm'
+                isIconOnly={true}
+                onPress={() => {
+                    const newLocale = prompt('Enter new locale code:');
+                    if (newLocale) {
+                        onRename(locale, newLocale);
+                    }
+                }}
+            >
+                <BsPencil />
+            </Button>
+            <Button
+                variant='light'
+                size='sm'
+                isIconOnly={true}
+                onPress={() => {
+                    if (confirm(`Are you sure you want to delete locale ${locale}?`)) {
+                        onDelete(locale);
+                    }
+                }}
+            >
+                <BsXLg />
+            </Button>
+        </div>
+    )
+}
+
 
 const LoadSurveyFromDisk: React.FC<LoadSurveyFromDiskProps> = ({
     isOpen,
@@ -19,6 +58,7 @@ const LoadSurveyFromDisk: React.FC<LoadSurveyFromDiskProps> = ({
     const [surveyFileContent, setSurveyFileContent] = React.useState<Survey | undefined>(undefined);
     const [errorMsg, setErrorMsg] = React.useState<string | undefined>(undefined);
 
+
     React.useEffect(() => {
         setSurveyFileContent(undefined);
     }, [isOpen]);
@@ -27,6 +67,12 @@ const LoadSurveyFromDisk: React.FC<LoadSurveyFromDiskProps> = ({
         if (!surveyFileContent) return;
         onLoadNewSurvey(surveyFileContent);
         onOpenChange(false);
+    }
+
+
+    let localesFromSurvey: string[] = [];
+    if (surveyFileContent) {
+        localesFromSurvey = findAllLocales(surveyFileContent);
     }
 
     return (
@@ -92,16 +138,42 @@ const LoadSurveyFromDisk: React.FC<LoadSurveyFromDiskProps> = ({
                                     <p className='text-danger mt-unit-md'>{errorMsg}</p>
                                 )}
                             </div>
+                            {localesFromSurvey.length > 0 && (
+                                <div>
+                                    <h3 className='text-sm font-bold mb-2'>Locales used:</h3>
+                                    <ul>
+                                        {localesFromSurvey.map((loc, i) => (
+                                            <li key={i} className=' bg-default-50 border rounded-medium px-unit-sm py-unit-2 mr-unit-sm mb-unit-sm'>
+                                                <LocaleEditor
+                                                    locale={loc}
+                                                    onRename={(oldLocale, newLocale) => {
+                                                        if (!surveyFileContent) return;
+                                                        console.log('rename', oldLocale, newLocale);
+                                                        setSurveyFileContent({ ...renameLocales(surveyFileContent, oldLocale, newLocale) });
+                                                    }}
+                                                    onDelete={(locale) => {
+                                                        if (!surveyFileContent) return;
+                                                        setSurveyFileContent(removeLocales(surveyFileContent, [locale]));
+                                                    }}
+                                                />
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                </div>
+                            )}
+
                         </ModalBody>
                         <Divider />
                         <ModalFooter>
                             <Button color="danger" variant="light" onPress={onClose}>
                                 Cancel
                             </Button>
+
                             <Button color="primary" onPress={onLoad}
                                 isDisabled={!surveyFileContent}
                             >
-                                Load
+                                Import
                             </Button>
                         </ModalFooter>
                     </>

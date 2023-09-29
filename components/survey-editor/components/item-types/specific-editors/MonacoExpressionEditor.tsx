@@ -72,8 +72,7 @@ const MonacoExpressionEditor: React.FC<MonacoExpressionEditorProps> = (props) =>
                         minimap: {
                             enabled: false,
                         },
-                        rounedSelection: true,
-                        suggestionDelay: 100,
+                        roundedSelection: true,
                     }}
 
                     beforeMount={(monaco) => {

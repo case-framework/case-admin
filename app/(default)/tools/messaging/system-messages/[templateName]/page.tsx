@@ -29,7 +29,15 @@ export default async function Page(props: PageProps) {
         }
     }
 
-    const currentTemplate = templates.find(t => t.messageType === props.params.templateName);
+    let currentTemplate = templates.find(t => t.messageType === props.params.templateName);
+
+    if (!currentTemplate) {
+        currentTemplate = {
+            messageType: props.params.templateName,
+            defaultLanguage: process.env.NEXT_PUBLIC_DEFAULT_LANGUAGE || 'en',
+            translations: [],
+        }
+    }
 
     return (
         <div className="flex h-full w-full p-unit-lg">

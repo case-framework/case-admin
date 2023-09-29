@@ -1,6 +1,5 @@
 import React from 'react';
 import { ItemGroupComponent, SurveySingleItem } from 'survey-engine/data_types';
-import NotImplemented from '@/components/NotImplemented';
 import SingleChoiceAttributeEditor from './question-types/SingleChoiceAttributeEditor';
 import MultipleChoiceAttributeEditor from './question-types/MultipleChoiceAttributeEditor';
 import MatrixAttributeEditor from './question-types/MatrixAttributeEditor';
@@ -23,10 +22,10 @@ interface SurveySingleItemAttributeEditorProps {
     onItemChange: (item: SurveySingleItem) => void;
 }
 
-const determineItemType = (item: SurveySingleItem): string => {
+export const determineItemType = (item: SurveySingleItem): string => {
     if (!item.components?.items || item.components.items.length === 0) {
         console.warn('No components found for item: ', item.key);
-        return 'unknown';
+        return 'display';
     }
 
     const responseGroup = item.components.items.find(i => i.role === 'responseGroup');

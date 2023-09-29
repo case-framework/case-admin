@@ -4,12 +4,33 @@ import clsx from 'clsx';
 import React, { useEffect } from 'react';
 import { BsArrowReturnLeft, BsCardHeading, BsChevronRight, BsClipboardPlus, BsCollection, BsCollectionFill, BsFileEarmarkPlus, BsPlus, BsPlusCircle, BsPlusSquare, BsQuestionSquare, BsStopCircle } from 'react-icons/bs';
 import { SurveyGroupItem, SurveyItem, SurveySingleItem, isSurveyGroupItem } from 'survey-engine/data_types';
+import { surveyItemTypes } from './NewItemDialog';
+import { determineItemType } from './item-types/SurveySingleItemAttributeEditor';
 
 interface ItemExplorerColumnProps {
     itemGroup: SurveyGroupItem;
     onAddItem: (itemMode: string, path: string) => void;
     onItemsReorder: (newGroup: SurveyGroupItem) => void;
     onItemSelect?: (item: SurveyItem | null) => void;
+}
+
+const SurveyItemIcon: React.FC<{ item: SurveyItem }> = ({ item }) => {
+
+    if (isSurveyGroupItem(item) || (item as SurveyGroupItem).items !== undefined) {
+        return <BsCollectionFill className='text-primary-300' />;
+    } else if (item.type === 'pageBreak') {
+        return <BsArrowReturnLeft className='text-secondary-300' />;
+    } else if (item.type === 'surveyEnd') {
+        return <BsStopCircle className='text-danger-300' />;
+    } else {
+        // get current item type:
+        const itemType = determineItemType(item as SurveySingleItem);
+        const icon = surveyItemTypes.find(t => t.key === itemType)?.icon;
+        if (icon) {
+            return <span className='opacity-50'>{icon}</span>;
+        }
+    }
+    return <BsCardHeading />;
 }
 
 const ItemExplorerColumn: React.FC<ItemExplorerColumnProps> = (props) => {
@@ -84,8 +105,9 @@ const ItemExplorerColumn: React.FC<ItemExplorerColumnProps> = (props) => {
     } else {
         itemList = (
             <Listbox
-                className=' bg-white'
+                className='bg-white'
                 aria-label={`List of items in group ${props.itemGroup.key}`}
+
                 onAction={(key) => {
                     const item = props.itemGroup.items.find(i => i.key === key);
                     if (item) {
@@ -99,14 +121,10 @@ const ItemExplorerColumn: React.FC<ItemExplorerColumnProps> = (props) => {
             >
 
                 {props.itemGroup.items.map((item, index) => {
-                    let icon = <BsCardHeading />;
-                    if (isSurveyGroupItem(item) || (item as SurveyGroupItem).items !== undefined) {
-                        icon = <BsCollectionFill className='text-primary-300' />;
-                    } else if (item.type === 'pageBreak') {
-                        icon = <BsArrowReturnLeft className='text-secondary-300' />;
-                    } else if (item.type === 'surveyEnd') {
-                        icon = <BsStopCircle className='text-danger-300' />;
-                    }
+                    let icon = <SurveyItemIcon
+                        item={item}
+                    />;
+
 
                     return (
                         <ListboxItem
@@ -118,7 +136,7 @@ const ItemExplorerColumn: React.FC<ItemExplorerColumnProps> = (props) => {
                                 <BsChevronRight />
                             </span>}
                             className={clsx(
-                                'relative group',
+                                'relative group font-mono font-bold',
                                 {
                                     'bg-primary-100': selectedItem?.key === item.key,
                                     'bg-primary-50': dragOverIndex === index,

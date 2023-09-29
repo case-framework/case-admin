@@ -218,7 +218,7 @@ const ParticipantFileDownloader: React.FC<ParticipantFileDownloaderProps> = (pro
                     </div>
                 );
             default:
-                return columnKey;
+                return <p>columnKey</p>;
         }
     }, [props.studyKey]);
 

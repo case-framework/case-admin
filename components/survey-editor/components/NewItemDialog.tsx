@@ -1,13 +1,14 @@
 import { Button, Divider, Input, Listbox, ListboxItem, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
 import { Group } from 'case-editor-tools/surveys/types';
 import React from 'react';
-import { Bs123, BsArrowsExpand, BsCalendar2, BsCardText, BsCheck2Square, BsClock, BsCreditCard2Front, BsInfoCircle, BsInputCursorText, BsMenuButton, BsSliders, BsTable, BsTextarea, BsTextareaResize, BsUiChecks, BsUiRadios, BsUiRadiosGrid } from 'react-icons/bs';
+import { Bs123, BsArrowsExpand, BsCalendar3, BsCardHeading, BsCardText, BsCheck2Square, BsCheckCircle, BsCheckCircleFill, BsCheckSquare, BsCheckSquareFill, BsCircle, BsClock, BsCreditCard2Front, BsInfoCircle, BsInfoCircleFill, BsInfoLg, BsInputCursorText, BsMenuButton, BsSliders, BsTable, BsTextareaResize, BsUiRadiosGrid } from 'react-icons/bs';
 import { SurveyItem, SurveySingleItem } from 'survey-engine/data_types';
 import SurveyEndAttributeEditor, { SurveyEndAttributes } from './item-types/SurveyEndAttributeEditor';
 import KeyEditor from './KeyEditor';
 import { generateTitleComponent } from 'case-editor-tools/surveys/utils/simple-generators';
 import { ItemEditor } from 'case-editor-tools/surveys/survey-editor/item-editor';
 import { SurveyItems } from 'case-editor-tools/surveys/survey-items';
+import { ComponentGenerators } from 'case-editor-tools/surveys/utils/componentGenerators';
 
 interface NewItemDialogProps {
     currentMode: {
@@ -166,97 +167,97 @@ interface ModalContentForSurveyItemActionProps extends ModalContentProps {
     onSubmit: (item: SurveySingleItem) => void;
 }
 
-const surveyItemTypes = [
+export const surveyItemTypes = [
     {
         key: 'display',
         label: 'Display',
         description: 'Displays text, without response slots. For information or instructions.',
-        icon: <BsCardText />,
+        icon: <BsCardHeading className='text-neutral-800' />,
     },
     {
         key: 'singleChoice',
         label: 'Single choice',
         description: 'Allows the participant to select one option from a list of options.',
-        icon: <BsUiRadios />,
+        icon: <BsCheckCircle className='text-fuchsia-800' />,
     },
     {
         key: 'multipleChoice',
         label: 'Multiple choice',
         description: 'Allows the participant to select multiple options from a list of options.',
-        icon: <BsUiChecks />,
+        icon: <BsCheckSquare className='text-indigo-800' />,
     },
     {
         key: 'dateInput',
         label: 'Date input',
         description: 'Allows the participant to enter a date.',
-        icon: <BsCalendar2 />,
+        icon: <BsCalendar3 className='text-lime-700' />,
     },
     {
         key: 'timeInput',
         label: 'Time input',
         description: 'Allows the participant to enter a time.',
-        icon: <BsClock />,
+        icon: <BsClock className='text-yellow-600' />,
     },
     {
         key: 'textInput',
         label: 'Text input',
         description: 'Allows the participant to enter a text.',
-        icon: <BsInputCursorText />,
+        icon: <BsInputCursorText className='text-sky-700' />,
     },
     {
         key: 'numericInput',
         label: 'Numeric input',
         description: 'Allows the participant to enter a number.',
-        icon: <Bs123 />,
+        icon: <Bs123 className='text-green-700' />,
     },
     {
         key: 'responsiveSingleChoiceArray',
         label: 'Single choice array',
         description: 'A list of single choice questions (likert scale). Different view modes are available per screen size.',
-        icon: <BsUiRadiosGrid />,
+        icon: <BsUiRadiosGrid className='text-teal-800' />,
     },
     {
         key: 'responsiveBipolarLikertArray',
         label: 'Bipolar likert array',
         description: 'A list of bipolar likert scale questions. Different view modes are available per screen size.',
-        icon: <BsArrowsExpand className='rotate-90' />,
+        icon: <BsArrowsExpand className='rotate-90 text-violet-800' />,
     },
     {
         key: 'responsiveMatrix',
         label: 'Matrix',
         description: 'Response slots arranged in a matrix. Different view modes are available per screen size.',
-        icon: <BsTable />,
+        icon: <BsTable className='text-emerald-600' />,
     },
     {
         key: 'clozeQuestion',
         label: 'Cloze question',
         description: 'A cloze question with a list of text and response slots.',
-        icon: <BsCreditCard2Front />,
+        icon: <BsCreditCard2Front className='text-purple-600' />,
     },
     {
         key: 'multilineTextInput',
         label: 'Multiline text input',
         description: 'Allows the participant to enter a text with multiple lines.',
-        icon: <BsTextareaResize />,
+        icon: <BsTextareaResize className='text-fuchsia-600' />,
     },
 
     {
         key: 'consent',
         label: 'Consent',
         description: 'Displays a consent form.',
-        icon: <BsCheck2Square />,
+        icon: <BsCheck2Square className='text-rose-800' />,
     },
     {
-        key: 'numericSlider',
+        key: 'sliderNumeric',
         label: 'Slider',
         description: 'Allows the participant to select a value from a range.',
-        icon: <BsSliders />,
+        icon: <BsSliders className='text-blue-800' />,
     },
     {
         key: 'dropdown',
         label: 'Dropdown',
         description: 'Allows the participant to select one option from a list of options.',
-        icon: <BsMenuButton />,
+        icon: <BsMenuButton className='text-orange-800' />,
     }
 ]
 
@@ -374,7 +375,11 @@ const ModalContentForSurveyItemAction = (props: ModalContentForSurveyItemActionP
                             item = SurveyItems.display({
                                 parentKey: props.parentKey || '',
                                 itemKey: newItemKey,
-                                content: [],
+                                content: [
+                                    ComponentGenerators.markdown({
+                                        content: new Map(),
+                                    })
+                                ],
                             })
                             break;
                         case 'singleChoice':
@@ -480,7 +485,7 @@ const ModalContentForSurveyItemAction = (props: ModalContentForSurveyItemActionP
                                 rejectBtn: new Map(),
                             });
                             break;
-                        case 'numericSlider':
+                        case 'sliderNumeric':
                             item = SurveyItems.numericSlider({
                                 parentKey: props.parentKey || '',
                                 itemKey: newItemKey,

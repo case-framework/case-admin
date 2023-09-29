@@ -73,7 +73,7 @@ const AdvancedContentMonacoEditor: React.FC<AdvancedContentMonacoEditorProps> = 
                         minimap: {
                             enabled: false,
                         },
-                        rounedSelection: true,
+                        roundedSelection: true,
                     }}
                     language='yaml'
                     value={editorContent}

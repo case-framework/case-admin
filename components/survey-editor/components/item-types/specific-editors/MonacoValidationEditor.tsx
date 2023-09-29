@@ -49,8 +49,7 @@ const MonacoValidationEditor: React.FC<MonacoValidationEditorProps> = (props) =>
                         minimap: {
                             enabled: false,
                         },
-                        rounedSelection: true,
-                        suggestionDelay: 100,
+                        roundedSelection: true,
                     }}
                     language='yaml'
                     onChange={(e) => {

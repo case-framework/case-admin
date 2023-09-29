@@ -3,73 +3,98 @@ import React from 'react';
 import { Sidebar, SidebarItem } from '../Sidebar';
 import { BsBoxArrowLeft, BsCloudUpload, BsFileEarmarkMedical, BsFilePlay, BsFolder, BsListUl } from 'react-icons/bs';
 import { Divider } from '@nextui-org/react';
-import { editorModes } from './utils';
+
 
 interface SidebarProps {
     currentMode: string;
     onModeChange: (mode: string) => void;
     onExit: () => void;
+    editorModes: Array<{
+        mode: string;
+        isDisabled?: boolean;
+    }>;
 }
 
 const SurveyEditorSidebar: React.FC<SidebarProps> = ({
-    currentMode: mode,
+    editorModes,
+    currentMode,
     onModeChange: setMode,
     onExit,
 }) => {
+
+    const getItem = (mode: string, isDisabled?: boolean) => {
+        switch (mode) {
+            case 'file':
+                return <SidebarItem
+                    key={mode}
+                    tooltip='File import/export'
+                    isActive={currentMode === 'file'}
+                    onPress={() => {
+                        setMode(mode);
+                    }}
+                    isDisabled={isDisabled}
+                >
+                    <BsFolder />
+                </SidebarItem>
+            case 'props':
+                return <SidebarItem
+                    key={mode}
+                    tooltip='Survey properties'
+                    isActive={currentMode === 'props'}
+                    onPress={() => {
+                        setMode(mode);
+                    }}
+                    isDisabled={isDisabled}
+                >
+                    <BsFileEarmarkMedical />
+                </SidebarItem>
+            case 'items':
+                return <SidebarItem
+                    key={mode}
+                    tooltip='Survey items'
+                    isActive={currentMode === 'items'}
+                    onPress={() => {
+                        setMode(mode);
+                    }}
+                    isDisabled={isDisabled}
+                >
+                    <BsListUl />
+                </SidebarItem>
+            case 'preview':
+                return <SidebarItem
+                    key={mode}
+                    tooltip='Preview'
+                    isActive={currentMode === 'preview'}
+                    onPress={() => {
+                        setMode(mode);
+                    }}
+                    isDisabled={isDisabled}
+                >
+                    <BsFilePlay />
+                </SidebarItem>
+            case 'publish':
+                return <SidebarItem
+                    key={mode}
+                    tooltip='Publish'
+                    isActive={currentMode === 'publish'}
+                    onPress={() => {
+                        setMode(mode);
+                    }}
+                    isDisabled={isDisabled}
+                >
+                    <BsCloudUpload />
+                </SidebarItem>
+            default:
+                return null;
+        }
+    }
+
     return (
         <div className='fixed inset-y-0 z-[50]'>
             <Sidebar
                 className='border-default-400'
             >
-                <SidebarItem
-                    tooltip='File import/export'
-                    isActive={mode === editorModes[0]}
-                    onPress={() => {
-                        setMode(editorModes[0]);
-                    }}
-                >
-                    <BsFolder />
-                </SidebarItem>
-                <SidebarItem
-                    tooltip='Survey properties'
-                    isActive={mode === editorModes[1]}
-                    onPress={() => {
-                        setMode(editorModes[1]);
-                    }}
-                >
-                    <BsFileEarmarkMedical />
-                </SidebarItem>
-
-                <SidebarItem
-                    tooltip='Survey items'
-                    isActive={mode === editorModes[2]}
-                    onPress={() => {
-                        setMode(editorModes[2]);
-                    }}
-                >
-                    <BsListUl />
-                </SidebarItem>
-
-                <SidebarItem
-                    tooltip='Preview'
-                    isActive={mode === editorModes[3]}
-                    onPress={() => {
-                        setMode(editorModes[3]);
-                    }}
-                >
-                    <BsFilePlay />
-                </SidebarItem>
-
-                <SidebarItem
-                    tooltip='Publish'
-                    isActive={mode === editorModes[4]}
-                    onPress={() => {
-                        setMode(editorModes[4]);
-                    }}
-                >
-                    <BsCloudUpload />
-                </SidebarItem>
-
+                {editorModes.map(mode => getItem(mode.mode, mode.isDisabled))}
                 <span className='grow'></span>
                 <Divider />
                 <SidebarItem

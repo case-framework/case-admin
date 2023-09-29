@@ -10,6 +10,7 @@ import ParticipantsIcon from "@/components/tool-icons/ParticipantsIcon";
 import UserManagementIcon from "@/components/tool-icons/UserManagementIcon";
 import MessagingIcon from "@/components/tool-icons/MessagingIcon";
 import ServiceStatusIcon from "@/components/tool-icons/ServiceStatusIcon";
+import EditorsIcon from "@/components/tool-icons/EditorsIcons";
 
 
 
@@ -132,6 +133,12 @@ export default async function Page() {
                             icon={<MessagingIcon size="lg" />}
                         />
                         <ToolCard
+                            title='Standalone editors'
+                            description='Access standalone editors for surveys, rules and messages. (Load from and save on your local drive)'
+                            href='/tools/editors'
+                            icon={<EditorsIcon size="lg" />}
+                        />
+                        <ToolCard
                             title='Service status'
                             description='Overview showing if the application can connect to the backend services.'
                             href='/service-status'
@@ -156,7 +163,7 @@ export default async function Page() {
                         color="foreground"
                         className="text-default-600 hover:text-default-700"
                     >
-                        coneno GmbH
+                        coneno
                     </NextUILink>
                 </Container>
             </footer>

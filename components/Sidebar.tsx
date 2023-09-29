@@ -10,6 +10,7 @@ interface SidebarItemProps {
     href?: string;
     onPress?: () => void;
     isActive?: boolean;
+    isDisabled?: boolean;
 }
 
 
@@ -47,6 +48,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = (props) => {
                     as={props.as}
                     href={props.href}
                     onPress={props.onPress}
+                    isDisabled={props.isDisabled}
                 >
                     {props.children}
                 </Button>
