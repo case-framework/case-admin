@@ -22,7 +22,7 @@ export const saveMessageSchedule = async (
         next: { revalidate: 0 }
     });
     if (r.status !== 200) {
-        console.log(await r.json());
+        console.error(await r.json());
         throw new Error('Failed to save message schedule');
     }
     return r.json();
@@ -43,7 +43,7 @@ export const deleteMessageSchedule = async (
         next: { revalidate: 0 }
     });
     if (r.status !== 200) {
-        console.log(await r.json());
+        console.error(await r.json());
         throw new Error('Failed to delete message schedule');
     }
     return r.json();

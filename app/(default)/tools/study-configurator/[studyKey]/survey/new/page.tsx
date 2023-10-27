@@ -23,7 +23,6 @@ export default async function Page(props: PageProps) {
     }
 
     const surveyKeys = await getSurveyKeys(props.params.studyKey);
-    console.log(surveyKeys);
 
     return (
         <div className="px-unit-lg bg-white/60 h-full">

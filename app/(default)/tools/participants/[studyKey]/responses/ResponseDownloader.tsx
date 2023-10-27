@@ -213,7 +213,7 @@ const ResponseDownloader: React.FC<ResponseDownloaderProps> = (props) => {
                                 link.click();
                                 setSuccessMsg('Downloaded successfully.');
                             } catch (e: any) {
-                                console.log(e)
+                                console.error(e)
                                 setErrorMsg(e.message);
                             }
                         })

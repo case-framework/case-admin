@@ -9,6 +9,7 @@ import { BsCardChecklist, BsChevronRight, BsExclamationTriangle, BsPlus, BsUiChe
 import { Survey } from 'survey-engine/data_types';
 import useSWR from 'swr';
 import { Link as NextUILink } from '@nextui-org/link'
+import TwoColumnsWithCards from '@/components/TwoColumnsWithCards';
 
 interface SurveyOverviewProps {
     studyKey: string;
@@ -46,7 +47,9 @@ const SurveyCard: React.FC<{ surveyKey: string; studyKey: string }> = ({ surveyK
     const lastUpdated = new Date(largestPublished * 1000).toLocaleDateString();
 
 
-    return (<Card radius='sm'>
+    return (<Card radius='sm'
+        className='grow'
+    >
         <div className='p-unit-sm flex items-center gap-unit-md'>
             <div className='grow'>
 
@@ -75,7 +78,7 @@ const SurveyCard: React.FC<{ surveyKey: string; studyKey: string }> = ({ surveyK
                 type='button'
                 href={`/tools/study-configurator/${studyKey}/survey/${surveyKey}`}
             >
-                Open Survey
+                Open
                 <BsChevronRight />
             </Button>
         </div>
@@ -113,7 +116,7 @@ const SurveyList: React.FC<{ studyKey: string }> = ({ studyKey }) => {
     let list = <NoSurveys />;
 
     if (surveyKeys && surveyKeys.keys && surveyKeys.keys.length > 0) {
-        list = <div className="grid grid-cols-1  gap-unit-lg">
+        list = <div className="grid grid-cols-1 lg:grid-cols-2 gap-unit-md">
             {surveyKeys.keys.map((key: string) => <SurveyCard key={key} studyKey={studyKey} surveyKey={key} />)}
         </div>
     }
@@ -122,41 +125,31 @@ const SurveyList: React.FC<{ studyKey: string }> = ({ studyKey }) => {
         <>
             {errorComp}
             {list}
+            <div className='mt-unit-md'>
+                <Button
+                    variant="flat"
+                    color="primary"
+                    as={NextUILink}
+                    href={`/tools/study-configurator/${studyKey}/survey/new`}
+                >
+                    <BsPlus />
+                    Create new survey
+                </Button>
+            </div>
         </>
     )
 }
 
 const SurveyOverview: React.FC<SurveyOverviewProps> = (props) => {
     return (
-        <Card
-            className='bg-white/50'
-            isBlurred
+        <TwoColumnsWithCards
+            label='Surveys'
+            description='Upload a new survey version or create a new survey.'
         >
-            <CardHeader className="bg-content2">
-                <h3 className='text-xl font-bold flex items-center'>
-                    <BsUiChecks className='mr-unit-sm text-default-400' />
-                    Surveys
-                </h3>
-            </CardHeader>
-            <Divider />
-            <CardBody className='max-h-[400px] overflow-y-scroll'>
-                <SurveyList
-                    studyKey={props.studyKey}
-                />
-            </CardBody>
-            <Divider />
-            <CardFooter>
-                <Button
-                    variant="flat"
-                    color="primary"
-                    as={NextUILink}
-                    href={`/tools/study-configurator/${props.studyKey}/survey/new`}
-                >
-                    <BsPlus />
-                    Create new survey
-                </Button>
-            </CardFooter>
-        </Card>
+            <SurveyList
+                studyKey={props.studyKey}
+            />
+        </TwoColumnsWithCards>
     );
 };
 

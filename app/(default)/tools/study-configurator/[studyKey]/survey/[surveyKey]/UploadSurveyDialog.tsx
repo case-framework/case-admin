@@ -39,7 +39,7 @@ const UploadSurveyDialog: React.FC<UploadSurveyDialogProps> = ({
                 }
                 catch (e: any) {
                     setErrorMsg(e.message);
-                    console.log(e);
+                    console.error(e);
                 }
             })
         };
@@ -92,7 +92,7 @@ const UploadSurveyDialog: React.FC<UploadSurveyDialogProps> = ({
                                                     setNewSurvey(data as Survey);
                                                 } else {
                                                     setNewSurvey(undefined);
-                                                    console.log('error');
+                                                    console.error('error');
                                                 }
                                             }
                                             reader.readAsText(files[0]);

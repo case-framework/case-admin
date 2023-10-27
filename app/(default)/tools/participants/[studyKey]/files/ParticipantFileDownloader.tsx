@@ -52,7 +52,7 @@ const fileDownload = async (fileInfo: FileInfo, studyKey: string) => {
     )
     if (resp.status !== 200) {
         const err = await resp.json();
-        console.log('err', err);
+        console.error('err', err);
         throw new Error(err.message);
     }
     const blob = await resp.blob();
@@ -201,7 +201,7 @@ const ParticipantFileDownloader: React.FC<ParticipantFileDownloaderProps> = (pro
                                             )
                                             if (resp.status !== 200) {
                                                 const err = await resp.json();
-                                                console.log('err', err);
+                                                console.error('err', err);
                                                 throw new Error(err.message);
                                             }
                                             alert('File deleted successfully.');

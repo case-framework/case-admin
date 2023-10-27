@@ -21,7 +21,7 @@ export const uploadMessageTemplate = async (template: any): Promise<Study> => {
         next: { revalidate: 0 }
     });
     if (r.status !== 200) {
-        console.log(await r.json());
+        console.error(await r.json());
         throw new Error('upload failed');
     }
     return r.json();
@@ -44,7 +44,7 @@ export const deleteMessageTemplate = async (
         next: { revalidate: 0 }
     });
     if (r.status !== 200) {
-        console.log(await r.json());
+        console.error(await r.json());
         throw new Error('Failed to delete message schedule');
     }
     return r.json();

@@ -44,7 +44,7 @@ const StudyActionsCard: React.FC<StudyActionsCardProps> = (props) => {
                 }
                 catch (e: any) {
                     setErrorMsg(e.message);
-                    console.log(e);
+                    console.error(e);
                 }
             })
         };
@@ -89,7 +89,7 @@ const StudyActionsCard: React.FC<StudyActionsCardProps> = (props) => {
                                             setNewStudyRules(data as Expression[]);
                                         } else {
                                             setNewStudyRules(undefined);
-                                            console.log('error');
+                                            console.error('error');
                                         }
                                     }
                                     reader.readAsText(files[0]);

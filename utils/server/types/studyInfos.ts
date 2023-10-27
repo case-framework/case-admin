@@ -10,16 +10,18 @@ export interface SurveyInfos {
     }>
 }
 
+export interface StudyProps {
+    name: LocalizedString[];
+    description: LocalizedString[];
+    tags: Array<{ label: LocalizedString[] }>;
+    systemDefaultStudy: boolean;
+}
+
 export interface Study {
     key: string;
     status: string;
     secretKey: string;
-    props: {
-        name: LocalizedString[];
-        description: LocalizedString[];
-        tags: Array<{ label: LocalizedString[] }>;
-        systemDefaultStudy: boolean;
-    }
+    props: StudyProps;
     configs: {
         idMappingMethod: string;
         participantFileUploadRule: Expression;

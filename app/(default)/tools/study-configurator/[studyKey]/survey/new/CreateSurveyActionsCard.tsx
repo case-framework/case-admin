@@ -34,7 +34,7 @@ const CreateSurveyActionsCard: React.FC<CreateSurveyActionsCardProps> = (props) 
                 }
                 catch (e: any) {
                     setErrorMsg(e.message);
-                    console.log(e);
+                    console.error(e);
                 }
             })
         };
@@ -46,7 +46,7 @@ const CreateSurveyActionsCard: React.FC<CreateSurveyActionsCardProps> = (props) 
             isBlurred
         >
             <CardHeader className="bg-content2">
-                <h3 className='text-xl font-bold'>Actions</h3>
+                <h3 className='text-xl font-bold'>Upload new survey</h3>
             </CardHeader>
             <Divider />
             <CardBody className='max-h-[400px] overflow-y-scroll'>
@@ -78,7 +78,6 @@ const CreateSurveyActionsCard: React.FC<CreateSurveyActionsCardProps> = (props) 
                                             setNewSurvey(undefined);
                                             return;
                                         }
-                                        console.log(props.existingSurveyKeys);
 
                                         if (props.existingSurveyKeys.includes(surveyKeyFromData)) {
                                             setErrorMsg(`Survey key "${surveyKeyFromData}" already used in this study. Open the survey to upload a new version for it.`);
@@ -88,14 +87,13 @@ const CreateSurveyActionsCard: React.FC<CreateSurveyActionsCardProps> = (props) 
                                         setNewSurvey(data as Survey);
                                     } else {
                                         setNewSurvey(undefined);
-                                        console.log('error');
+                                        console.error('error');
                                     }
                                 }
                                 reader.readAsText(files[0]);
                             } else {
                                 setNewSurvey(undefined);
                             }
-                            // console.log(files);
                         }}
                     />
                     {errorMsg && <p className='text-danger'>{errorMsg}</p>}
@@ -110,7 +108,6 @@ const CreateSurveyActionsCard: React.FC<CreateSurveyActionsCardProps> = (props) 
                         startContent={<BsCloudArrowUp className='text-large' />}
                         onClick={() => {
                             submit();
-                            // console.log('create survey');
                         }}
                     >
                         Upload

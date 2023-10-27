@@ -55,7 +55,7 @@ const StudyRuleEditActions: React.FC<StudyRuleEditActionsProps> = (props) => {
                 }
                 catch (e: any) {
                     setErrorMsg(e.message);
-                    console.log(e);
+                    console.error(e);
                 }
             })
         };
@@ -99,14 +99,13 @@ const StudyRuleEditActions: React.FC<StudyRuleEditActionsProps> = (props) => {
                                         setNewStudyRules(data as Expression[]);
                                     } else {
                                         setNewStudyRules(undefined);
-                                        console.log('error');
+                                        console.error('error');
                                     }
                                 }
                                 reader.readAsText(files[0]);
                             } else {
                                 setNewStudyRules(undefined);
                             }
-                            // console.log(files);
                         }}
                     />
                     {errorMsg && <p className='text-danger'>{errorMsg}</p>}

@@ -79,7 +79,7 @@ export const getStudy = async (studyKey: string): Promise<Study> => {
                 ...getTokenHeader(session.accessToken)
             },
             next: {
-                revalidate: 10
+                revalidate: 0
             }
         });
     if (response.status !== 200) {

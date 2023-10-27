@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -14,9 +13,8 @@ const SimpleMarkdownRenderer: React.FC<MarkdownRendererProps> = (props) => {
             className={props.className}
             components={{
                 a: ({ node, ...props }) => {
-                    return <Link
+                    return <a
                         className='text-primary-500 hover:underline'
-                        prefetch={false}
                         href={props.href as string} {...props} />
                 }
             }}

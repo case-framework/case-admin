@@ -23,7 +23,7 @@ export default async function Page(props: PageProps) {
     try {
         templates = await getMessageTemplates();
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
         if (error.message === 'Unauthorized') {
             redirect('/auth/login?callbackUrl=/tools/messaging/system-messages');
         }

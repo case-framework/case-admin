@@ -1,10 +1,9 @@
-import { Card, CardHeader, CardBody, CardFooter } from '@nextui-org/card';
-import { Divider } from '@nextui-org/divider';
 import { Button } from '@nextui-org/button';
 import React from 'react';
 import NotImplemented from '@/components/NotImplemented';
-import { BsShuffle } from 'react-icons/bs';
 import { Link as NextUILink } from '@nextui-org/link'
+import TwoColumnsWithCards from '@/components/TwoColumnsWithCards';
+import { BsBracesAsterisk, BsShuffle } from 'react-icons/bs';
 
 
 interface StudyRuleOverviewProps {
@@ -13,37 +12,31 @@ interface StudyRuleOverviewProps {
 
 const StudyRuleOverview: React.FC<StudyRuleOverviewProps> = (props) => {
     return (
-        <Card
-            className='bg-white/50'
-            isBlurred
+        <TwoColumnsWithCards
+            label='Rules & actions'
+            description='Study rules govern what happens at specific study events. Study actions are one-time rules that can be executed manually.'
         >
-            <CardHeader className="bg-content2">
-                <h3 className='text-xl font-bold flex items-center'>
-                    <BsShuffle className='mr-unit-sm text-default-400' />
-                    Rules
-                </h3>
-            </CardHeader>
-            <Divider />
-            <CardBody className='max-h-[400px] overflow-y-scroll'>
-                <NotImplemented>
-                    show study rule history here
-                    using step view
-                    to manage (upload, edit, delete got to study rule page with button below, or to execute one time rules)
-                </NotImplemented>
-            </CardBody>
-            <Divider />
-            <CardFooter>
+            <h3 className='mb-1 font-bold'>Links:</h3>
+            <div className='grid grid-cols-2 gap-unit-md'>
                 <Button
-                    variant="flat"
-                    color="primary"
                     as={NextUILink}
                     href={`/tools/study-configurator/${props.studyKey}/rules`}
+                    size='lg'
+                    startContent={<span><BsShuffle /></span>}
+                >
+                    Go to study rules
+                </Button>
+                <Button
+                    as={NextUILink}
+                    href={`/tools/study-configurator/${props.studyKey}/actions`}
+                    size='lg'
+                    startContent={<span><BsBracesAsterisk /></span>}
                 >
 
-                    Manage Rules
+                    Go to study actions
                 </Button>
-            </CardFooter>
-        </Card>
+            </div>
+        </TwoColumnsWithCards>
     );
 };
 

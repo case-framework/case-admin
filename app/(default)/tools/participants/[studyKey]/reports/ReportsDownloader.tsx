@@ -148,8 +148,6 @@ const ReportsDownloader: React.FC<ReportsDownloaderProps> = (props) => {
 
                             setReports(data.reports);
                             setSuccessMsg('Downloaded successfully.');
-                            console.log(data);
-
                         } catch (err: any) {
                             setErrorMsg(err.message);
                         }

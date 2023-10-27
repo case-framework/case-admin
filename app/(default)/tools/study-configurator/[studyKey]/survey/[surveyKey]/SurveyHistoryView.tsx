@@ -96,7 +96,7 @@ const SurveyHistoryView: React.FC<SurveyHistoryViewProps> = (props) => {
                                                         document.body.appendChild(element);
                                                         element.click();
                                                     }).catch(error => {
-                                                        console.log(error);
+                                                        console.error(error);
                                                         alert('Failed to fetch survey data.');
                                                     })
 

@@ -27,7 +27,7 @@ export default async function Page(props: PageProps) {
     try {
         templates = await getMessageTemplates();
     } catch (error: any) {
-        console.log(error);
+        console.error(error);
         if (error.message === 'Unauthorized') {
             redirect('/auth/login?callbackUrl=/tools/messaging/custom-messages');
         }
@@ -41,7 +41,7 @@ export default async function Page(props: PageProps) {
     });
 
     if (!currentTemplate && props.searchParams.messageType) {
-        console.log('template not found');
+        console.error('template not found');
         redirect('/tools/messaging/custom-messages');
     }
 

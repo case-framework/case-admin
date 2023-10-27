@@ -102,7 +102,6 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                 event.preventDefault();
                 setSubmitError('');
                 startTransition(async () => {
-                    console.log(schedule);
                     try {
                         await saveMessageSchedule(schedule);
                         router.refresh();

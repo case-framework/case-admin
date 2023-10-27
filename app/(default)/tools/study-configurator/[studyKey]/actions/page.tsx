@@ -1,10 +1,8 @@
 import Breadcrumbs from '@/components/Breadcrumbs';
-import NotImplemented from '@/components/NotImplemented';
 import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
 import React from 'react';
-import StudyRuleEditActions from './StudyRuleEditActions';
-
+import StudyActionsCard from './StudyActionsCard';
 
 interface PageProps {
     params: {
@@ -32,20 +30,14 @@ const Page: React.FC<PageProps> = async (props) => {
                                 href: `/tools/study-configurator/${props.params.studyKey}`,
                             },
                             {
-                                title: `Study Rules`,
+                                title: `Actions`,
                             }
                         ]
                     }
                 />
                 <main className="py-unit-lg">
                     <div className="grid grid-cols-2 gap-unit-md">
-                        <NotImplemented >
-                            show rule history (list of rules published)
-                        </NotImplemented>
-
-                        <StudyRuleEditActions
-                            studyKey={props.params.studyKey}
-                        />
+                        <StudyActionsCard studyKey={props.params.studyKey} />
                     </div>
                 </main>
             </div>

@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import DialogBtn from './DialogBtn';
 
 
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
+import ReactMarkdown from 'react-markdown';
 
 
 interface ConsentDialogProps {
