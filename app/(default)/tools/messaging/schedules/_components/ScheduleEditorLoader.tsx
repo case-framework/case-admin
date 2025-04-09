@@ -47,7 +47,7 @@ const ScheduleEditorLoader: React.FC<ScheduleEditorLoaderProps> = async (props) 
 
 export default ScheduleEditorLoader;
 
-export const ScheduleEditorLoaderSkeleton: React.FC = () => {
+export const ScheduleEditorLoaderSkeleton: React.FC = async () => {
     return (
         <div className='flex justify-center grow'>
             <CogLoader label='Loading schedule...'

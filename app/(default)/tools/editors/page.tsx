@@ -31,8 +31,8 @@ const Page: React.FC = () => {
                                     icon={<BsUiChecks />}
                                 />
                                 <LinkCard
-                                    href="/tools/editors/expressions"
-                                    title="Expression editor"
+                                    href="/tools/editors/study-expressions"
+                                    title="Study expression editor"
                                     description="Create or load expressions (e.g., study rules) from a local file, edit and save to your computer."
                                     icon={<BsShuffle />}
                                 />

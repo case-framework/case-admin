@@ -87,7 +87,7 @@ const StartStudyActionOnPreviousResponses: React.FC<StartStudyActionOnPreviousRe
         }
         return true;
     }
-    console.log(surveyKeys)
+
     return (
         <div className='p-4 space-y-4'>
             <h2 className='text-lg font-semibold mb-4'>Start action</h2>
@@ -192,9 +192,9 @@ const StartStudyActionOnPreviousResponses: React.FC<StartStudyActionOnPreviousRe
                     name='survey-keys'
                     disabled={runOnAllSurveys}
                     placeholder="Enter survey keys..."
-                    value={surveyKeys?.join(',')}
+                    defaultValue={surveyKeys?.join(',')}
                     onChange={(e) => {
-                        const newSurveyKeys = e.target.value.split(',').map(sk => sk.trim()).filter(sk => sk.length > 0);
+                        const newSurveyKeys = e.target.value.split('\n').map(sk => sk.trim()).filter(sk => sk.length > 0);
                         setSurveyKeys(newSurveyKeys);
                     }}
                 />
