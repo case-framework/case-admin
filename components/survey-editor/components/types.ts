@@ -14,6 +14,8 @@ export enum ItemComponentRole {
     TimeInput = 'timeInput',
     DateInput = 'dateInput',
     ResponsiveBipolarLikertScaleArray = 'responsiveBipolarLikertScaleArray',
+    SingleChoiceGroup = 'singleChoiceGroup',
+    MultipleChoiceGroup = 'multipleChoiceGroup',
 }
 
 export enum EditorMode { Properties = 'properties', ItemEditor = 'itemEditor', Simulator = 'simulator' }

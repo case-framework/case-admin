@@ -15,6 +15,7 @@ import { ExpArg } from '@/components/expression-editor/utils';
 interface NumberInputContentConfigProps {
     component: ItemComponent;
     onChange: (newComp: ItemComponent) => void;
+    hideLabel?: boolean;
 }
 
 const NumberInputContentConfig: React.FC<NumberInputContentConfigProps> = (props) => {
@@ -34,7 +35,7 @@ const NumberInputContentConfig: React.FC<NumberInputContentConfigProps> = (props
         <div className='space-y-4'
             data-no-dnd={true}
         >
-            <div className='space-y-1.5'>
+            {!props.hideLabel && <div className='space-y-1.5'>
                 <Label
                     htmlFor={props.component.key + 'label'}
                 >
@@ -52,7 +53,7 @@ const NumberInputContentConfig: React.FC<NumberInputContentConfigProps> = (props
                     }}
                     placeholder='Enter label...'
                 />
-            </div>
+            </div>}
 
             <div className='my-2'>
                 <Label

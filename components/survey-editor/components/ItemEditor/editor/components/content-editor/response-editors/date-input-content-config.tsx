@@ -12,6 +12,7 @@ import { ExpArg } from '@/components/expression-editor/utils';
 interface DateInputContentConfigProps {
     component: ItemComponent;
     onChange: (newComp: ItemComponent) => void;
+    hideLabel?: boolean;
 }
 
 const DateInputContentConfig: React.FC<DateInputContentConfigProps> = (props) => {
@@ -66,7 +67,7 @@ const DateInputContentConfig: React.FC<DateInputContentConfigProps> = (props) =>
                     </SelectContent>
                 </Select>
             </div>
-            <div className='space-y-1.5'>
+            {!props.hideLabel && <div className='space-y-1.5'>
                 <Label
                     htmlFor={props.component.key + 'label'}
                 >
@@ -84,7 +85,7 @@ const DateInputContentConfig: React.FC<DateInputContentConfigProps> = (props) =>
                     }}
                     placeholder='Enter label...'
                 />
-            </div>
+            </div>}
 
             <div className='space-y-1.5'>
                 <Label

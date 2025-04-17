@@ -13,6 +13,7 @@ interface TextInputContentConfigProps {
     component: ItemComponent;
     onChange: (newComp: ItemComponent) => void;
     allowMultipleLines?: boolean;
+    hideLabel?: boolean;
 }
 
 const TextInputContentConfig: React.FC<TextInputContentConfigProps> = (props) => {
@@ -28,7 +29,7 @@ const TextInputContentConfig: React.FC<TextInputContentConfigProps> = (props) =>
         <div className='space-y-4'
             data-no-dnd={true}
         >
-            <div className='space-y-1.5'>
+            {!props.hideLabel && <div className='space-y-1.5'>
                 <Label
                     htmlFor={props.component.key + 'label'}
                 >
@@ -46,7 +47,7 @@ const TextInputContentConfig: React.FC<TextInputContentConfigProps> = (props) =>
                     }}
                     placeholder='Enter label...'
                 />
-            </div>
+            </div>}
 
             <div className='space-y-1.5'>
                 <Label

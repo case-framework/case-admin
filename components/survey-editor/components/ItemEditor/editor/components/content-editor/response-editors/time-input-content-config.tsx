@@ -11,6 +11,7 @@ import { ExpArg } from '@/components/expression-editor/utils';
 interface TimeInputContentConfigProps {
     component: ItemComponent;
     onChange: (newComp: ItemComponent) => void;
+    hideLabel?: boolean;
 }
 
 const TimeInputContentConfig: React.FC<TimeInputContentConfigProps> = (props) => {
@@ -23,7 +24,7 @@ const TimeInputContentConfig: React.FC<TimeInputContentConfigProps> = (props) =>
 
     return (
         <div className='space-y-4'>
-            <div className='space-y-1.5'>
+            {!props.hideLabel && <div className='space-y-1.5'>
                 <Label
                     htmlFor={props.component.key + 'label'}
                 >
@@ -41,7 +42,7 @@ const TimeInputContentConfig: React.FC<TimeInputContentConfigProps> = (props) =>
                     }}
                     placeholder='Enter label...'
                 />
-            </div>
+            </div>}
 
             <div className='grid grid-cols-2 gap-4'>
                 <div className='space-y-1.5'>

@@ -1,7 +1,6 @@
 import { ItemComponentRole } from "@/components/survey-editor/components/types";
 import { getLocalizedString } from '@/utils/localizedStrings';
 import { getUniqueRandomKey } from "@/components/survey-editor/utils/new-item-init";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { ContextMenu, ContextMenuContent, ContextMenuSubContent, ContextMenuGroup, ContextMenuItem, ContextMenuSeparator, ContextMenuSub, ContextMenuSubTrigger, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { useCopyToClipboard } from "usehooks-ts";
 import { useSurveyEditorCtx } from "@/components/survey-editor/surveyEditorContext";
+import { KeyBadge } from "../../KeyBadge";
 
 
 interface MatrixProps {
@@ -73,7 +73,7 @@ const OverviewMatrixCellContent: React.FC<{
                     }
                 )}>
                     {!hideIcon && <span className="text-muted-foreground">{icon(cell)}</span>}
-                    {!hideKey && <Badge variant={(isSelected || highlightKey) ? 'default' : 'outline'} className='h-auto border-2 py-0'>{cell.key}</Badge>}
+                    {!hideKey && KeyBadge({ itemKey: cell.key ?? '', isHighlighted: isSelected || (highlightKey ?? false) })}
                     <p className="text-sm">{getLocalizedString(cell.content, selectedLanguage)}</p>
                 </div>
             </ContextMenuTrigger>
