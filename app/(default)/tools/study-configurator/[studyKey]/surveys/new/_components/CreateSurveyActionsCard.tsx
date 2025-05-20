@@ -130,7 +130,7 @@ const CreateSurveyActionsCard: React.FC<CreateSurveyActionsCardProps> = (props) 
                         asChild
                     >
                         <Link
-                            href={`/tools/study-configurator/${props.studyKey}/survey/new`}
+                            href={`/tools/editors/survey`}
                         >
                             <PenSquare className='size-4 me-2' />
                             Open Editor

@@ -48,7 +48,7 @@ const Stats: React.FC<StatsProps> = async (props) => {
             <StatCard title='Participants'
                 value={study?.stats.participantCount || 0}
                 link={{
-                    href: '/tools/participants',
+                    href: '/tools/participants/' + props.studyKey,
                     text: 'View Participants'
                 }} />
 
@@ -59,7 +59,7 @@ const Stats: React.FC<StatsProps> = async (props) => {
             <StatCard title='Total Responses'
                 value={study?.stats.responseCount || 0}
                 link={{
-                    href: '/tools/participants',
+                    href: '/tools/participants/' + props.studyKey + '/responses',
                     text: 'View Responses'
                 }} />
         </div>
