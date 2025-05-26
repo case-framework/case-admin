@@ -18,6 +18,7 @@ import TimeInput from './time-input';
 import Rblsa from './rblsa';
 import MatrixEditor from './matrix';
 import CodeValidator from './code-validator';
+import ResponsiveMatrixEditor from './responsive-matrix';
 
 interface ResponseGroupEditorProps {
     surveyItem: SurveySingleItem;
@@ -62,6 +63,7 @@ const ResponseGroupEditor: React.FC<ResponseGroupEditorProps> = (props) => {
             content = <Rblsa surveyItem={props.surveyItem} onUpdateSurveyItem={props.onUpdateSurveyItem} />;
             break;
         case 'responsiveMatrix':
+            content = <ResponsiveMatrixEditor surveyItem={props.surveyItem} onUpdateSurveyItem={props.onUpdateSurveyItem} />;
             break;
         case 'matrix':
             content = <MatrixEditor surveyItem={props.surveyItem} onUpdateSurveyItem={props.onUpdateSurveyItem} />;

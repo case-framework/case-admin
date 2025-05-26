@@ -198,9 +198,16 @@ export const generateNewItemForType = (props: {
                 parentKey: parentKey,
                 itemKey: newItemKey,
                 questionText: new Map(),
-                columns: [],
-                rows: [],
-                responseType: 'dropdown',
+                columns: [{
+                    key: 'col1',
+                    label: new Map(),
+                }],
+                rows: [{
+                    key: 'row1',
+                    label: new Map(),
+                    role: 'row'
+                }],
+                responseType: 'input',
                 metadata: {
                     editorItemColor: editorItemColor
                 }

@@ -1,98 +1,74 @@
-
-
-import SortableItem from '@/components/survey-editor/components/general/SortableItem';
 import SortableWrapper from '@/components/survey-editor/components/general/SortableWrapper';
 import AddDropdown from '@/components/survey-editor/components/general/add-dropdown';
 import { useSurveyEditorCtx } from '@/components/survey-editor/surveyEditorContext';
 import { localisedObjectToMap } from '@/components/survey-editor/utils/localeUtils';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { generateLocStrings } from 'case-editor-tools/surveys/utils/simple-generators';
-import { Circle, X } from 'lucide-react';
+import { Circle, Trash2 } from 'lucide-react';
 import React from 'react';
 import { toast } from 'sonner';
 import { ItemComponent, ItemGroupComponent } from 'survey-engine/data_types';
+import ComponentEditor, { ComponentEditorGenericProps } from '../component-editor';
+import { PopoverKeyBadge } from '../../KeyBadge';
 
 interface DropdownContentConfigProps {
-    hideLabel?: boolean;
-    hidePlaceholder?: boolean;
+    hideContentInput?: boolean;
+    contentInputLabel?: string;
+    contentInputPlaceholder?: string;
+    hideDescriptionInput?: boolean;
+    descriptionInputLabel?: string;
+    descriptionInputPlaceholder?: string;
     component: ItemComponent;
     onChange: (newComp: ItemComponent) => void;
 }
 
-const DropdownOptionItem = (props: {
-    index: number;
-    optionComp: ItemComponent;
-    onChange?: (newComp: ItemComponent) => void;
-    onDelete?: () => void;
-    usedKeys?: string[];
-
-}) => {
+const DropdownOptionPreview: React.FC<ComponentEditorGenericProps> = (props) => {
     const { selectedLanguage } = useSurveyEditorCtx();
-    const currentContent = localisedObjectToMap(props.optionComp.content).get(selectedLanguage) || '';
+    const currentContent = localisedObjectToMap(props.component.content).get(selectedLanguage) || '';
 
     return (
-        <SortableItem
-            id={props.optionComp.key || props.index.toString()}
-            className='w-full'
-        >
-            <div className='bg-secondary rounded-md border border-border p-2 flex gap-2 items-center'>
-                <Input
-                    value={props.optionComp.key || ''}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        if (value.length < 1) {
+        <div className='flex items-center gap-4'>
+            <div className='min-w-10 flex justify-center'>
+                <PopoverKeyBadge
+                    headerText='Option Key'
+                    className='w-full'
+                    allOtherKeys={props.usedKeys?.filter(k => k !== props.component.key) ?? []}
+                    isHighlighted={props.isSelected}
+                    itemKey={props.component.key ?? ''}
+                    onKeyChange={(newKey) => {
+                        if (newKey.length < 1) {
                             toast.error('Key cannot be empty');
                             return;
                         }
-                        if (props.usedKeys?.includes(value)) {
+                        if (props.usedKeys?.includes(newKey)) {
                             toast.error('Key already in use');
                             return;
                         }
-
-                        if (props.onChange) {
-                            props.onChange({
-                                ...props.optionComp,
-                                key: value,
-                            })
-                        }
-
-                    }}
-                    className='w-24'
-                    placeholder='Key...'
-                />
-
-                <Input
-                    value={currentContent}
-                    className='grow'
-                    onChange={(e) => {
-                        const updatedContent = localisedObjectToMap(props.optionComp.content);
-                        updatedContent.set(selectedLanguage, e.target.value);
-                        props.optionComp.content = generateLocStrings(updatedContent);
-                        if (props.onChange) {
-                            props.onChange(props.optionComp);
-                        }
-                    }}
-                    placeholder='Enter option content...'
-                />
-
-
-                <Button
-                    variant='ghost'
-                    size='icon'
-                    onClick={() => {
-                        if (confirm('Are you sure you want to delete this option?')) {
-                            props.onDelete?.();
-                        }
-                    }}
-                >
-                    <X className='size-4 text-muted-foreground' />
-                </Button>
+                        props.onChange?.({
+                            ...props.component,
+                            key: newKey
+                        })
+                    }} />
             </div>
-        </SortableItem>
-    )
-}
+            <Input
+                value={currentContent}
+                className='grow h-8'
+                data-no-dnd={true}
+                onChange={(e) => {
+                    const updatedContent = localisedObjectToMap(props.component.content);
+                    updatedContent.set(selectedLanguage, e.target.value);
+                    const updatedComponent = {
+                        ...props.component,
+                        content: generateLocStrings(updatedContent)
+                    };
+                    props.onChange?.(updatedComponent);
+                }}
+                placeholder={'Enter option content...'}
+            />
+        </div>
+    );
+};
 
 const DropdownContentConfig: React.FC<DropdownContentConfigProps> = (props) => {
     const { selectedLanguage } = useSurveyEditorCtx();
@@ -109,11 +85,11 @@ const DropdownContentConfig: React.FC<DropdownContentConfigProps> = (props) => {
 
     return (
         <div className='space-y-4'>
-            {!props.hideLabel && <div className='space-y-1.5'>
+            {!props.hideContentInput && <div className='space-y-1.5'>
                 <Label
                     htmlFor={props.component.key + 'label'}
                 >
-                    Label
+                    {props.contentInputLabel || 'Label'}
                 </Label>
                 <Input
                     id={props.component.key + 'label'}
@@ -125,15 +101,15 @@ const DropdownContentConfig: React.FC<DropdownContentConfigProps> = (props) => {
                         updatedComponent.content = generateLocStrings(updatedContent);
                         props.onChange(updatedComponent);
                     }}
-                    placeholder='Enter label...'
+                    placeholder={props.contentInputPlaceholder || 'Enter label...'}
                 />
             </div>}
 
-            {!props.hidePlaceholder && <div className='space-y-1.5'>
+            {!props.hideDescriptionInput && <div className='space-y-1.5'>
                 <Label
                     htmlFor={props.component.key + 'placeholder'}
                 >
-                    Placeholder text
+                    {props.descriptionInputLabel || 'Placeholder text'}
                 </Label>
                 <Input
                     id={props.component.key + 'placeholder'}
@@ -145,7 +121,7 @@ const DropdownContentConfig: React.FC<DropdownContentConfigProps> = (props) => {
                         updatedComponent.description = generateLocStrings(updatedContent);
                         props.onChange(updatedComponent);
                     }}
-                    placeholder='Enter placeholder...'
+                    placeholder={props.descriptionInputPlaceholder || 'Enter placeholder...'}
                 />
             </div>}
 
@@ -171,22 +147,30 @@ const DropdownContentConfig: React.FC<DropdownContentConfigProps> = (props) => {
                         })
                     }}
                     dragOverlayItem={(draggedId && draggedItem) ?
-                        <DropdownOptionItem
-                            index={-1}
-                            optionComp={draggedItem}
+                        <ComponentEditor
+                            component={draggedItem}
+                            previewContent={DropdownOptionPreview}
+                            onChange={() => { }}
                         />
                         : null}
                 >
-                    <p className='text-sm font-semibold'>
+                    <h3 className='text-sm font-semibold'>
                         Options: <span className='text-muted-foreground'>({currentItems.length})</span>
+                    </h3>
+                    <p className='text-xs text-muted-foreground mb-2'>
+                        Drag options to reorder them.
                     </p>
 
-                    <ol className='gap-4 p-4 flex flex-col items-center border border-border border-dashed rounded-md min-w-full' >
+                    <ol className='gap-1 flex flex-col items-center min-w-full' >
+                        {currentItems.length === 0 && <p className='text-muted-foreground w-full text-center font-mono text-xs p-2 border border-border border-dashed rounded-md'>No options yet</p>}
                         {currentItems.map((item, index) => {
-                            return <DropdownOptionItem
+                            return <ComponentEditor
                                 key={item.key || index}
-                                index={index}
-                                optionComp={item}
+                                isSortable={true}
+                                component={item}
+                                isDragged={draggedId === item.key}
+                                usedKeys={usedKeys}
+                                previewContent={DropdownOptionPreview}
                                 onChange={(newComp) => {
                                     const newItems = [...currentItems];
                                     newItems[index] = newComp;
@@ -195,35 +179,45 @@ const DropdownContentConfig: React.FC<DropdownContentConfigProps> = (props) => {
                                         items: newItems,
                                     })
                                 }}
-                                onDelete={() => {
-                                    const newItems = [...currentItems];
-                                    newItems.splice(index, 1);
-                                    props.onChange({
-                                        ...props.component,
-                                        items: newItems,
-                                    })
-                                }}
-                                usedKeys={usedKeys}
+                                contextMenuItems={[
+                                    {
+                                        type: 'item',
+                                        label: 'Delete',
+                                        icon: <Trash2 className='size-4' />,
+                                        onClick: () => {
+                                            if (confirm('Are you sure you want to delete this option?')) {
+                                                const newItems = [...currentItems];
+                                                newItems.splice(index, 1);
+                                                props.onChange({
+                                                    ...props.component,
+                                                    items: newItems,
+                                                })
+                                            }
+                                        }
+                                    },
+                                ]}
                             />
                         })}
 
-                        <AddDropdown
-                            options={[
-                                { key: 'option', label: 'Option', icon: <Circle className='size-4 text-muted-foreground me-2' /> },
-                            ]}
-                            onAddItem={(type) => {
-                                if (type === 'option') {
-                                    const newOption: ItemComponent = {
-                                        key: currentItems.length.toString(),
-                                        role: 'option',
+                        <div className="mt-2">
+                            <AddDropdown
+                                options={[
+                                    { key: 'option', label: 'Option', icon: <Circle className='size-4 text-muted-foreground me-2' /> },
+                                ]}
+                                onAddItem={(type) => {
+                                    if (type === 'option') {
+                                        const newOption: ItemComponent = {
+                                            key: currentItems.length.toString(),
+                                            role: 'option',
+                                        }
+                                        props.onChange({
+                                            ...props.component,
+                                            items: [...currentItems, newOption],
+                                        })
                                     }
-                                    props.onChange({
-                                        ...props.component,
-                                        items: [...currentItems, newOption],
-                                    })
-                                }
-                            }}
-                        />
+                                }}
+                            />
+                        </div>
                     </ol>
 
                 </SortableWrapper>

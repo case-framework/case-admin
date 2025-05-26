@@ -6,7 +6,8 @@ import {
     GanttChart, Grid3X3, Info, LucideIcon, MessageCircleQuestion, Send, Settings2, SquareStack,
     TextCursorInput, UnfoldHorizontal, BotOff,
     Contact,
-    ShieldIcon
+    ShieldIcon,
+    TableIcon
 } from "lucide-react";
 import { ItemGroupComponent, Survey, SurveyGroupItem, SurveyItem, SurveySingleItem, isSurveyGroupItem } from "survey-engine/data_types";
 
@@ -219,10 +220,10 @@ export const SurveyItemTypeRegistry = [
     },
     {
         key: 'responsiveMatrix',
-        label: 'Simple Matrix',
-        description: 'Same response slots arranged in a matrix. Different view modes are available per screen size.',
+        label: 'Adaptive Question Grid',
+        description: 'Same response slots arranged in a grid. Different view modes are available per screen size.',
         className: 'text-purple-800',
-        icon: Grid3X3,
+        icon: TableIcon,
     },
     {
         key: 'matrix',

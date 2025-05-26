@@ -1,18 +1,14 @@
-import SortableItem from '@/components/survey-editor/components/general/SortableItem';
 import SortableWrapper from '@/components/survey-editor/components/general/SortableWrapper';
 import AddDropdown from '@/components/survey-editor/components/general/add-dropdown';
-import TabCard from '@/components/survey-editor/components/general/tab-card';
 import { localisedObjectToMap } from '@/components/survey-editor/utils/localeUtils';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { generateLocStrings } from 'case-editor-tools/surveys/utils/simple-generators';
-import { Circle, Cog, GripVertical, Languages, Rows, ToggleLeft, Trash2, XIcon } from 'lucide-react';
+import { Circle, Copy, Rows, Trash2 } from 'lucide-react';
 import React from 'react';
-import { ItemComponent, ItemGroupComponent, SurveySingleItem } from 'survey-engine/data_types';
-import { TabWrapper } from "@/components/survey-editor/components/ItemEditor/editor/components/TabWrapper";
+import { Expression, ItemComponent, ItemGroupComponent, SurveySingleItem } from 'survey-engine/data_types';
 import { Separator } from '@/components/ui/separator';
 import { useSurveyEditorCtx } from '@/components/survey-editor/surveyEditorContext';
 import { PopoverKeyBadge } from '../../KeyBadge';
@@ -20,6 +16,10 @@ import { ItemComponentRole } from '@/components/survey-editor/components/types';
 import { SimpleTextViewContentEditor } from './text-view-content-editor';
 import { StyleClassNameEditor } from './style-class-name-editor';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ComponentEditor, { ComponentEditorGenericProps } from '../component-editor';
+import SurveyLanguageToggle from '@/components/survey-editor/components/general/SurveyLanguageToggle';
+import SurveyExpressionEditor from '../../survey-expression-editor';
+
 
 interface RscaProps {
     surveyItem: SurveySingleItem;
@@ -50,73 +50,81 @@ const ModeSelector = (props: {
     </div>
 }
 
+
+const RscaCompPreview: React.FC<ComponentEditorGenericProps> = (props) => {
+    const { selectedLanguage } = useSurveyEditorCtx();
+
+    const rowLabel = localisedObjectToMap(props.component.content).get(selectedLanguage);
+
+    return <div className='flex items-center gap-4'>
+        <div className='min-w-14 flex justify-center'>
+            <PopoverKeyBadge
+                headerText='Key'
+                className='w-full'
+                allOtherKeys={props.usedKeys?.filter(k => k !== props.component.key) ?? []}
+                isHighlighted={props.isSelected}
+                itemKey={props.component.key ?? ''}
+                onKeyChange={(newKey) => {
+                    props.onChange?.({
+                        ...props.component,
+                        key: newKey
+                    })
+                }} />
+        </div>
+        {rowLabel && <p className='text-sm text-start'>
+            {rowLabel}
+        </p>}
+        {!rowLabel && <p className='text-muted-foreground text-xs text-start font-mono uppercase'>
+            {'- No label defined -'}
+        </p>}
+    </div>
+}
+
+const OptionQuickEditor: React.FC<ComponentEditorGenericProps> = (props) => {
+    return <div>
+        <SimpleTextViewContentEditor
+            component={props.component}
+            onChange={(updatedComponent) => props.onChange?.(updatedComponent)}
+            hideLabel={false}
+            label='Option Label'
+            placeholder='Enter option label...'
+        />
+    </div>
+}
+
+
 const OptionEditor = (props: {
     option: ItemComponent;
     existingKeys?: string[];
+    hideEditor?: boolean;
     onChange: (newOption: ItemComponent) => void;
     onDelete: () => void;
     isBeingDragged?: boolean;
-    hideLabel?: boolean;
 }) => {
-    return <SortableItem
-        id={props.option.key!}
-        className={props.isBeingDragged ? 'opacity-0' : ''}
-    >
-        <div className='border border-border rounded-md py-2 px-3 relative bg-white group'>
-            <div className='flex items-center gap-2 w-full'>
-                <div className='absolute -left-4 top-0 hidden group-hover:flex items-center h-full'>
-                    <GripVertical className='size-4 text-muted-foreground' />
-                </div>
-                <span className='text-muted-foreground text-xs'>
-                    Option:
-                </span>
 
-                <div className='flex items-center basis-1/4'>
-                    <PopoverKeyBadge
-                        headerText='Option Key'
-                        allOtherKeys={props.existingKeys?.filter(k => k !== props.option.key) ?? []}
-                        isHighlighted={false}
-                        itemKey={props.option.key ?? ''}
-                        onKeyChange={(newKey) => {
-                            props.onChange({
-                                ...props.option,
-                                key: newKey
-                            })
-                        }} />
-                </div>
-                {!props.hideLabel && <div className='grow'>
-                    <SimpleTextViewContentEditor
-                        component={props.option}
-                        onChange={(updatedComponent) => props.onChange(updatedComponent)}
-                        hideLabel={true}
-                        placeholder='Enter option label...'
-                    />
-                </div>}
-                {props.hideLabel && <div className='grow' />}
-                <div className=''>
-                    <Button
-                        variant='ghost'
-                        size='icon'
-                        className='size-7'
-                        onClick={() => {
-                            if (!confirm('Are you sure you want to delete this option?')) {
-                                return;
-                            }
-                            props.onDelete();
-                        }}
-                    >
-                        <XIcon className='size-3 text-muted-foreground' />
-                    </Button>
-                </div>
-            </div>
-        </div>
+    return <ComponentEditor
+        isSortable={true}
+        isDragged={props.isBeingDragged}
+        previewContent={RscaCompPreview}
+        component={props.option}
+        usedKeys={props.existingKeys}
+        onChange={(newOption) => props.onChange(newOption)}
+        quickEditorContent={props.hideEditor ? undefined : OptionQuickEditor}
+        contextMenuItems={[
+            {
+                type: 'item',
+                label: 'Delete',
+                icon: <Trash2 className='size-4' />,
+                onClick: props.onDelete
+            }
+        ]}
 
-    </SortableItem>
+    />
 }
 
 export const OptionsEditor = (props: {
     options: ItemComponent[],
-    hideLabel?: boolean,
+    hideEditor?: boolean,
     onChange: (newOptions: ItemComponent[]) => void
 }) => {
     const [draggedId, setDraggedId] = React.useState<string | null>(null);
@@ -127,9 +135,9 @@ export const OptionsEditor = (props: {
         <p className='font-semibold'>
             Options ({props.options.length})
         </p>
-        <p className='text-sm text-muted-foreground'>
+        <p className='text-xs text-muted-foreground'>
             These options will be used for each row
-            (drag and drop to reorder)
+            (drag items to reorder)
         </p>
 
         <SortableWrapper
@@ -154,7 +162,6 @@ export const OptionsEditor = (props: {
                     option={draggedItem}
                     onChange={() => { }}
                     onDelete={() => { }}
-                    hideLabel={props.hideLabel}
                 />
                 : null}
         >
@@ -167,6 +174,7 @@ export const OptionsEditor = (props: {
                     return <OptionEditor
                         key={option.key || index}
                         option={option}
+                        hideEditor={props.hideEditor}
                         existingKeys={props.options.map(o => o.key || index.toString())}
                         onChange={(newOption) => {
                             const newOptions = props.options.map((o) => {
@@ -184,7 +192,6 @@ export const OptionsEditor = (props: {
                             props.onChange(newOptions);
                         }}
                         isBeingDragged={draggedId === option.key}
-                        hideLabel={props.hideLabel}
                     />
                 })}
             </ol>
@@ -218,19 +225,25 @@ enum RscaStyleKeys {
 }
 
 
-const RowEditor = (props: {
-    row: ItemComponent;
-    existingKeys?: string[];
-    onChange: (newRow: ItemComponent) => void;
-    onDelete: () => void;
-    isBeingDragged?: boolean;
-    preSelectedTab?: string;
-    onTabSelect?: (tabLabel: string) => void;
-}) => {
-    const horizontalModeLabelPlacement = props.row.style?.find(s => s.key === RscaStyleKeys.horizontalModeLabelPlacement)?.value || 'bottom';
+
+const RowQuickEditor: React.FC<ComponentEditorGenericProps> = (props) => {
+    return <div>
+        <SimpleTextViewContentEditor
+            component={props.component}
+            onChange={(updatedComponent) => props.onChange?.(updatedComponent)}
+            hideLabel={false}
+            label='Row Label'
+            placeholder='Enter row label...'
+        />
+    </div>
+}
+
+const RowAdvancedEditor: React.FC<ComponentEditorGenericProps> = (props) => {
+
+    const horizontalModeLabelPlacement = props.component.style?.find(s => s.key === RscaStyleKeys.horizontalModeLabelPlacement)?.value || 'bottom';
 
     const onRowStyleChange = (key: string, newValue: string | undefined) => {
-        const existingStyles = [...props.row.style || []];
+        const existingStyles = [...props.component.style || []];
         const index = existingStyles.findIndex(st => st.key === key);
         if (newValue) {
             if (index > -1) {
@@ -243,137 +256,126 @@ const RowEditor = (props: {
                 existingStyles.splice(index, 1);
             }
         }
-        props.onChange({ ...props.row, style: existingStyles });
+        props.onChange?.({ ...props.component, style: existingStyles });
     }
 
-    return <SortableItem
-        id={props.row.key!}
-        className={props.isBeingDragged ? 'invisible' : ''}
-    >
-        <div className='relative'>
-            <div className='absolute left-0 top-1/2 pt-1 pl-2'>
-                <GripVertical className='size-4' />
+
+    return <div className='space-y-4 pt-2 pb-8 min-w-[600px]'>
+
+        <div className='flex justify-between'>
+            <div className='min-w-14 w-fit flex justify-center'>
+                <PopoverKeyBadge
+                    headerText='Row Key'
+                    className='w-full'
+                    allOtherKeys={props.usedKeys?.filter(k => k !== props.component.key) ?? []}
+                    isHighlighted={props.isSelected}
+                    itemKey={props.component.key ?? ''}
+                    onKeyChange={(newKey) => {
+                        props.onChange?.({
+                            ...props.component,
+                            key: newKey
+                        })
+                    }} />
             </div>
-            <TabCard
-                selectedTab={props.preSelectedTab ?? 'General'}
-                onTabSelect={(label) => props.onTabSelect?.(label)}
-                tabs={[
-                    {
-                        label: 'General',
-                        icon: <Languages className='me-1 size-3 text-muted-foreground' />,
-                        content: <TabWrapper>
-                            <div className='flex items-center gap-2 w-full'>
-                                <div className='flex items-center basis-1/4 pl-2'>
-                                    <PopoverKeyBadge
-                                        headerText='Row Key'
-                                        allOtherKeys={props.existingKeys?.filter(k => k !== props.row.key) ?? []}
-                                        isHighlighted={true}
-                                        itemKey={props.row.key ?? ''}
-                                        onKeyChange={(newKey) => {
-                                            props.onChange({
-                                                ...props.row,
-                                                key: newKey
-                                            })
-                                        }} />
-                                </div>
-
-                                <div className='grow'>
-                                    <SimpleTextViewContentEditor
-                                        component={props.row}
-                                        onChange={(updatedComponent) => props.onChange(updatedComponent)}
-                                        hideLabel={true}
-                                        placeholder='Enter row label...'
-                                    />
-                                </div>
-                                <Button
-                                    variant='ghost'
-                                    size='icon'
-                                    onClick={() => {
-                                        if (!confirm('Are you sure you want to delete this option?')) {
-                                            return;
-                                        }
-                                        props.onDelete();
-                                    }}
-                                >
-                                    <Trash2 className='size-4' />
-                                </Button>
-                            </div>
-                        </TabWrapper>
-                    },
-                    {
-                        label: 'Condition',
-                        icon: <ToggleLeft className='me-1 size-3 text-muted-foreground' />,
-                        content: <TabWrapper>
-                            TODO: condition editor
-                        </TabWrapper>
-                    },
-                    {
-                        label: 'Extras',
-                        icon: <Cog className='me-1 size-3 text-muted-foreground' />,
-                        content: <TabWrapper>
-                            <div className='flex items-center gap-2 w-full'>
-                                <Label className='text-xs w-1/3'>Horizontal Mode Label Placement</Label>
-                                <div className='w-2/3'>
-                                    <Select
-                                        value={horizontalModeLabelPlacement}
-                                        onValueChange={(value) => {
-                                            const existingStyles = [...props.row.style || []];
-                                            const index = existingStyles.findIndex(st => st.key === RscaStyleKeys.horizontalModeLabelPlacement);
-                                            if (value === 'bottom') {
-                                                if (index > -1) {
-                                                    existingStyles.splice(index, 1);
-                                                }
-                                            } else {
-                                                if (index > -1) {
-                                                    existingStyles[index] = { key: RscaStyleKeys.horizontalModeLabelPlacement, value };
-                                                } else {
-                                                    existingStyles.push({ key: RscaStyleKeys.horizontalModeLabelPlacement, value });
-                                                }
-                                            }
-
-                                            props.onChange({
-                                                ...props.row,
-                                                style: existingStyles
-                                            })
-                                        }}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select a label placement..." />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value='bottom'>Bottom</SelectItem>
-                                            <SelectItem value='top'>Top</SelectItem>
-                                            <SelectItem value='none'>Hidden</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-                            <Separator />
-                            <StyleClassNameEditor
-                                styles={props.row.style || []}
-                                styleKey={RscaStyleKeys.horizontalModeClassName}
-                                label={"Horizontal Mode Class Name"}
-                                onChange={onRowStyleChange} />
-                            <Separator />
-                            <StyleClassNameEditor
-                                styles={props.row.style || []}
-                                styleKey={RscaStyleKeys.verticalModeClassName}
-                                label={"Vertical Mode Class Name"}
-                                onChange={onRowStyleChange} />
-                            <Separator />
-                            <StyleClassNameEditor
-                                styles={props.row.style || []}
-                                styleKey={RscaStyleKeys.tableModeClassName}
-                                label={"Table Mode Class Name"}
-                                onChange={onRowStyleChange} />
-
-                        </TabWrapper>
-                    }
-                ]}
-            />
-
+            <div className='flex justify-end'>
+                <SurveyLanguageToggle />
+            </div>
         </div>
-    </SortableItem>
+
+        <SimpleTextViewContentEditor
+            component={props.component}
+            onChange={(updatedComponent) => props.onChange?.(updatedComponent)}
+            hideLabel={false}
+            label='Row Label'
+            placeholder='Enter row label...'
+        />
+
+        <Separator />
+
+        <div className='space-y-2'>
+            <h3 className='text-sm font-semibold'>
+                View mode specific settings
+            </h3>
+
+            <div className='flex items-center gap-2 w-full'>
+                <Label className='text-xs w-1/3'>Horizontal Mode Label Placement</Label>
+                <div className='w-2/3'>
+                    <Select
+                        value={horizontalModeLabelPlacement}
+                        onValueChange={(value) => {
+                            const existingStyles = [...props.component.style || []];
+                            const index = existingStyles.findIndex(st => st.key === RscaStyleKeys.horizontalModeLabelPlacement);
+                            if (value === 'bottom') {
+                                if (index > -1) {
+                                    existingStyles.splice(index, 1);
+                                }
+                            } else {
+                                if (index > -1) {
+                                    existingStyles[index] = { key: RscaStyleKeys.horizontalModeLabelPlacement, value };
+                                } else {
+                                    existingStyles.push({ key: RscaStyleKeys.horizontalModeLabelPlacement, value });
+                                }
+                            }
+
+                            props.onChange?.({
+                                ...props.component,
+                                style: existingStyles
+                            })
+                        }}
+                    >
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a label placement..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value='bottom'>Bottom</SelectItem>
+                            <SelectItem value='top'>Top</SelectItem>
+                            <SelectItem value='none'>Hidden</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+
+                </div>
+
+
+            </div>
+
+            <StyleClassNameEditor
+                styles={props.component.style || []}
+                styleKey={RscaStyleKeys.horizontalModeClassName}
+                label={"Horizontal Mode Class Name"}
+                onChange={onRowStyleChange} />
+
+            <StyleClassNameEditor
+                styles={props.component.style || []}
+                styleKey={RscaStyleKeys.verticalModeClassName}
+                label={"Vertical Mode Class Name"}
+                onChange={onRowStyleChange} />
+
+            <StyleClassNameEditor
+                styles={props.component.style || []}
+                styleKey={RscaStyleKeys.tableModeClassName}
+                label={"Table Mode Class Name"}
+                onChange={onRowStyleChange} />
+        </div>
+
+        <Separator />
+
+        <div className='space-y-2'>
+            <h3 className='text-sm font-semibold'>
+                Conditions
+            </h3>
+
+            <div>
+                <SurveyExpressionEditor
+                    label='Display condition'
+                    expression={props.component.displayCondition as Expression | undefined}
+                    onChange={(newExpression) => {
+                        props.onChange?.({ ...props.component, displayCondition: newExpression });
+                    }}
+                />
+            </div>
+        </div>
+    </div >
 }
 
 const RowsEditor = (props: {
@@ -381,17 +383,49 @@ const RowsEditor = (props: {
     onChange: (newRows: ItemComponent[]) => void
 }) => {
     const [draggedId, setDraggedId] = React.useState<string | null>(null);
-    const [selectedTabsMap, setSelectedTabsMap] = React.useState<Record<string, string>>({});
 
     const draggedItem = props.rows.find(row => row.key === draggedId);
+
+    const onChangeRow = (key: string, newRow: ItemComponent) => {
+        const newRows = props.rows.map(row => {
+            if (row.key === key) {
+                return newRow;
+            }
+            return row;
+        });
+        props.onChange(newRows);
+    }
+
+    const onDuplicateRow = (row?: ItemComponent, index?: number) => {
+        if (!row) {
+            return;
+        }
+        const newRow = { ...row, key: Math.random().toString(36).substring(9) };
+        const newRows = [...props.rows];
+        newRows.splice(index !== undefined ? index + 1 : props.rows.length, 0, newRow);
+        props.onChange(newRows);
+    }
+
+    const onDeleteRow = (row?: ItemComponent) => {
+        if (!row) {
+            return;
+        }
+        if (!confirm('Are you sure you want to delete this row?')) {
+            return;
+        }
+        const newRows = props.rows.filter((o) => {
+            return o.key !== row.key;
+        });
+        props.onChange(newRows);
+    }
 
 
     return <div>
         <p className='font-semibold'>
             Rows ({props.rows.length})
         </p>
-        <p className='text-sm text-muted-foreground'>
-            (drag to reorder)
+        <p className='text-xs text-muted-foreground'>
+            Drag items to reorder
         </p>
 
         <SortableWrapper
@@ -412,51 +446,50 @@ const RowsEditor = (props: {
 
             }}
             dragOverlayItem={(draggedId && draggedItem) ?
-                <RowEditor
-                    row={draggedItem}
-                    onChange={() => { }}
-                    onDelete={() => { }}
-                    preSelectedTab={selectedTabsMap[draggedId]}
+                <ComponentEditor
+                    isDragged={true}
+                    component={draggedItem}
+                    previewContent={RscaCompPreview}
                 />
                 : null}
         >
 
-            <ol className='px-1 space-y-2 py-2'>
+            <ol className='px-1 space-y-1 py-2'>
                 {props.rows.length === 0 && <p className='text-sm text-primary'>
                     No rows defined.
                 </p>}
                 {props.rows.map((row, index) => {
-                    return <RowEditor
+                    return <ComponentEditor
                         key={row.key || index}
-                        row={row}
-                        existingKeys={props.rows.map(o => o.key || index.toString())}
-                        onChange={(newRow) => {
-                            const newOptions = props.rows.map((o) => {
-                                if (o.key === row.key) {
-                                    return newRow;
-                                }
-                                return o;
-                            });
-                            props.onChange(newOptions);
-                        }}
-                        onDelete={() => {
-                            const newOptions = props.rows.filter((o) => {
-                                return o.key !== row.key;
-                            });
-                            props.onChange(newOptions);
-                        }}
-                        isBeingDragged={draggedId === row.key}
-                        onTabSelect={(tabLabel) => {
-                            const newSelectedTabsMap = { ...selectedTabsMap };
-                            newSelectedTabsMap[row.key || index.toString()] = tabLabel;
-                            setSelectedTabsMap(newSelectedTabsMap);
-                        }}
+                        isSortable={true}
+                        isDragged={draggedId === row.key}
+                        component={row}
+                        usedKeys={props.rows.map(o => o.key!)}
+                        onChange={(newComponent) => onChangeRow(row.key!, newComponent)}
+                        contextMenuItems={[
+                            {
+                                type: 'item',
+                                label: 'Duplicate',
+                                icon: <Copy className='size-4' />,
+                                onClick: () => onDuplicateRow(row, index)
+                            },
+                            {
+                                type: 'separator'
+                            },
+                            {
+                                type: 'item',
+                                label: 'Delete',
+                                icon: <Trash2 className='size-4' />,
+                                onClick: onDeleteRow
+                            }
+                        ]}
+                        previewContent={RscaCompPreview}
+                        quickEditorContent={RowQuickEditor}
+                        advancedEditorContent={RowAdvancedEditor}
                     />
                 })}
             </ol>
         </SortableWrapper>
-
-
 
         <div className='w-full flex items-center justify-center'>
             <AddDropdown

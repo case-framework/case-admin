@@ -119,19 +119,21 @@ const BottomContentEditor: React.FC<BottomContentEditorProps> = (props) => {
                     <ContentItem
                         index={-1}
                         component={draggedItem}
+                        isDragged={false}
                         onDeleteComponent={() => { }}
                         onUpdateComponent={() => { }}
                     />
                     : null}
             >
 
-                <div className=' my-2 overflow-y-auto overscroll-y-contain max-w-full'>
-                    <ol className='flex flex-col gap-4 min-w-full'>
+                <div className='my-2 max-w-full'>
+                    <ol className='flex flex-col gap-1 min-w-full'>
                         {topComponents.map((component, index) => {
                             return <ContentItem
                                 key={component.key || index}
                                 index={index}
                                 component={component}
+                                isDragged={draggedId === component.key}
                                 onDeleteComponent={() => {
                                     const newItems = allItemComponents.filter(comp => comp.key !== component.key);
                                     const newSurveyItem = {
@@ -162,7 +164,7 @@ const BottomContentEditor: React.FC<BottomContentEditorProps> = (props) => {
                             />
                         })}
 
-                        <div className='flex justify-center w-full'>
+                        <div className='flex justify-center w-full mt-4'>
                             <AddDropdown
                                 options={[
                                     { key: 'simple-text', label: 'Simple text', icon: <Type className='size-4 me-2 text-muted-foreground' /> },

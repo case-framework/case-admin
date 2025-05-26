@@ -1,25 +1,24 @@
-import SortableItem from "@/components/survey-editor/components/general/SortableItem";
 import SortableWrapper from "@/components/survey-editor/components/general/SortableWrapper";
 import AddDropdown from "@/components/survey-editor/components/general/add-dropdown";
-import TabCard from "@/components/survey-editor/components/general/tab-card";
 import { ItemComponentRole } from "@/components/survey-editor/components/types";
 import { localisedObjectToMap } from "@/components/survey-editor/utils/localeUtils";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ResponsiveBipolarLikertArrayVariant } from "case-editor-tools/surveys/types";
 import { generateLocStrings } from "case-editor-tools/surveys/utils/simple-generators";
-import { Cog, GripVertical, Languages, Rows, ToggleLeft, Trash2 } from "lucide-react";
-import { ItemGroupComponent, SurveySingleItem } from "survey-engine/data_types";
-import { TabWrapper } from "@/components/survey-editor/components/ItemEditor/editor/components/TabWrapper";
+import { Copy, Rows, Trash2 } from "lucide-react";
+import { Expression, ItemGroupComponent, SurveySingleItem } from "survey-engine/data_types";
 import { useSurveyEditorCtx } from "@/components/survey-editor/surveyEditorContext";
 import { PopoverKeyBadge } from "../../KeyBadge";
 import { StyleClassNameEditor } from "./style-class-name-editor";
 import { OptionsEditor } from "./rsca";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
+import ComponentEditor, { ComponentEditorGenericProps } from "../component-editor";
+import SurveyLanguageToggle from "@/components/survey-editor/components/general/SurveyLanguageToggle";
+import SurveyExpressionEditor from "../../survey-expression-editor";
 
 // TODO: Expected name would collide with existing def. Should be ...EditorProps to avoid conflicts, but wouldn't be consistent with others atm.
 interface RblsaProps {
@@ -58,24 +57,123 @@ const ModeSelector = (props: {
     </div>
 }
 
-const RowEditor = (props: {
-    row: ItemGroupComponent;
-    existingKeys?: string[];
-    onChange: (newRow: ItemGroupComponent) => void;
-    onDelete: () => void;
-    isBeingDragged?: boolean;
-    preSelectedTab?: string;
-    onTabSelect?: (tabLabel: string) => void;
-}) => {
+const RowPreview: React.FC<ComponentEditorGenericProps> = (props) => {
     const { selectedLanguage } = useSurveyEditorCtx();
-    const rowStartLabelItem = props.row.items.find(comp => comp.role == ItemComponentRole.StartLabel);
-    const rowStartLabel = localisedObjectToMap(rowStartLabelItem?.content).get(selectedLanguage) || '';
-    const rowEndLabelItem = props.row.items.find(comp => comp.role == ItemComponentRole.EndLabel);
-    const rowEndLabel = localisedObjectToMap(rowEndLabelItem?.content).get(selectedLanguage) || '';
 
+    const rowStartLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.StartLabel);
+    const startLabel = localisedObjectToMap(rowStartLabelItem?.content).get(selectedLanguage) || '';
+    const endLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.EndLabel);
+    const endLabel = localisedObjectToMap(endLabelItem?.content).get(selectedLanguage) || '';
+
+    return <div className='flex items-center gap-4'>
+        <div className='min-w-14 flex justify-center'>
+            <PopoverKeyBadge
+                headerText='Row Key'
+                className='w-full'
+                allOtherKeys={props.usedKeys?.filter(k => k !== props.component.key) ?? []}
+                isHighlighted={props.isSelected}
+                itemKey={props.component.key ?? ''}
+                onKeyChange={(newKey) => {
+                    props.onChange?.({
+                        ...props.component,
+                        key: newKey
+                    })
+                }} />
+        </div>
+        <div className="space-y-1 grow">
+            <p className='text-sm text-start'>
+                <span className='text-xs font-medium me-1 text-muted-foreground inline-block w-20'>
+                    Start Label:
+                </span>
+                {startLabel}
+                {!startLabel && <span className='text-muted-foreground text-xs text-start font-mono uppercase'>
+                    {'- No label defined -'}
+                </span>}
+            </p>
+            <Separator />
+            <p className='text-sm text-start'>
+                <span className='text-xs font-medium me-1 text-muted-foreground inline-block w-20'>
+                    End Label:
+                </span>
+                {endLabel}
+                {!endLabel && <span className='text-muted-foreground text-xs text-start font-mono uppercase'>
+                    {'- No label defined -'}
+                </span>}
+            </p>
+        </div>
+    </div>
+}
+
+const RowQuickEditor: React.FC<ComponentEditorGenericProps> = (props) => {
+    const { selectedLanguage } = useSurveyEditorCtx();
+
+    const rowStartLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.StartLabel);
+    const startLabel = localisedObjectToMap(rowStartLabelItem?.content).get(selectedLanguage) || '';
+    const endLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.EndLabel);
+    const endLabel = localisedObjectToMap(endLabelItem?.content).get(selectedLanguage) || '';
+
+    return <div
+        className="space-y-2"
+    >
+        <div
+            data-no-dnd="true"
+            className='space-y-1.5'
+        >
+            <Label
+                className="text-xs"
+                htmlFor={`row-startlabel-${props.component.key}`}>
+                Start Label
+            </Label>
+            <Input
+                id={`row-startlabel-${props.component.key}`}
+                className='w-full'
+                value={startLabel || ''}
+                placeholder='Enter row start label...'
+                onChange={(e) => {
+                    const value = e.target.value;
+                    const rowStartLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.StartLabel);
+                    const newStartLabelItem = { ...rowStartLabelItem, content: generateLocStrings(localisedObjectToMap(rowStartLabelItem?.content).set(selectedLanguage, value)), role: ItemComponentRole.StartLabel };
+                    const updatedComponent = { ...props.component, items: (props.component as ItemGroupComponent).items.map(comp => comp.role == ItemComponentRole.StartLabel ? newStartLabelItem : comp) } as ItemGroupComponent;
+                    props.onChange?.(updatedComponent);
+                }}
+            />
+        </div>
+        <div
+            data-no-dnd="true"
+            className='space-y-1.5'
+        >
+            <Label
+                className="text-xs"
+                htmlFor={`row-endlabel-${props.component.key}`}>
+                End Label
+            </Label>
+            <Input
+                id={`row-endlabel-${props.component.key}`}
+                className='w-full'
+                value={endLabel || ''}
+                placeholder='Enter row end label...'
+                onChange={(e) => {
+                    const value = e.target.value;
+                    const rowEndLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.EndLabel);
+                    const newEndLabelItem = { ...rowEndLabelItem, content: generateLocStrings(localisedObjectToMap(rowEndLabelItem?.content).set(selectedLanguage, value)) };
+                    const updatedComponent = { ...props.component, items: (props.component as ItemGroupComponent).items.map(comp => comp.role == ItemComponentRole.EndLabel ? newEndLabelItem : comp) } as ItemGroupComponent;
+                    props.onChange?.(updatedComponent);
+                }}
+            />
+        </div>
+    </div>
+}
+
+const RowAdvancedEditor: React.FC<ComponentEditorGenericProps> = (props) => {
+    const { selectedLanguage } = useSurveyEditorCtx();
+
+    const rowStartLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.StartLabel);
+    const startLabel = localisedObjectToMap(rowStartLabelItem?.content).get(selectedLanguage) || '';
+    const endLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.EndLabel);
+    const endLabel = localisedObjectToMap(endLabelItem?.content).get(selectedLanguage) || '';
 
     const onRowStyleChange = (key: string, newValue: string | undefined) => {
-        const existingStyles = [...props.row.style || []];
+        const existingStyles = [...props.component.style || []];
         const index = existingStyles.findIndex(st => st.key === key);
         if (newValue) {
             if (index > -1) {
@@ -88,130 +186,126 @@ const RowEditor = (props: {
                 existingStyles.splice(index, 1);
             }
         }
-        props.onChange({ ...props.row, style: existingStyles });
+        props.onChange?.({ ...props.component, style: existingStyles });
     }
 
-    return <SortableItem
-        id={props.row.key!}
-        className={props.isBeingDragged ? 'invisible' : ''}
-    >
-        <div className='relative'>
-            <div className='absolute left-0 top-1/2'>
-                <GripVertical className='size-4' />
+
+    return <div className='space-y-4 pt-2 pb-8 min-w-[600px]'>
+        <div className='flex justify-between'>
+            <div className='min-w-14 w-fit flex justify-center'>
+                <PopoverKeyBadge
+                    headerText='Row Key'
+                    className='w-full'
+                    allOtherKeys={props.usedKeys?.filter(k => k !== props.component.key) ?? []}
+                    isHighlighted={props.isSelected}
+                    itemKey={props.component.key ?? ''}
+                    onKeyChange={(newKey) => {
+                        props.onChange?.({
+                            ...props.component,
+                            key: newKey
+                        })
+                    }} />
             </div>
-            <TabCard
-                selectedTab={props.preSelectedTab ?? 'General'}
-                onTabSelect={(label) => props.onTabSelect?.(label)}
-                tabs={[
-                    {
-                        label: 'General',
-                        icon: <Languages className='me-1 size-3 text-muted-foreground' />,
-                        content: <TabWrapper>
-                            <div className='flex justify-between gap-2 items-center'>
-                                <PopoverKeyBadge
-                                    headerText="Row Key"
-                                    allOtherKeys={props.existingKeys?.filter(k => k !== props.row.key) ?? []}
-                                    isHighlighted={true}
-                                    itemKey={props.row.key ?? ''}
-                                    onKeyChange={(newKey) => {
-                                        props.onChange({
-                                            ...props.row,
-                                            key: newKey
-                                        })
-                                    }} />
-                                <Button
-                                    variant='ghost'
-                                    size='sm'
-                                    onClick={() => {
-                                        if (!confirm('Are you sure you want to delete this row?')) {
-                                            return;
-                                        }
-                                        props.onDelete();
-                                    }}
-                                >
-                                    <Trash2 className='size-4' />
-                                </Button>
-                            </div>
-                            <div
-                                data-no-dnd="true"
-                                className='flex gap-2 items-center'
-                            >
-                                <Label className="min-w-[100px]" htmlFor={`row-startlabel-${props.row.key}`}>
-                                    Start Label
-                                </Label>
-                                <Input
-                                    id={`row-startlabel-${props.row.key}`}
-                                    className='w-full'
-                                    value={rowStartLabel || ''}
-                                    placeholder='Enter row start label...'
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        const rowStartLabelItem = props.row.items.find(comp => comp.role == ItemComponentRole.StartLabel);
-                                        const newStartLabelItem = { ...rowStartLabelItem, content: generateLocStrings(localisedObjectToMap(rowStartLabelItem?.content).set(selectedLanguage, value)), role: ItemComponentRole.StartLabel };
-                                        const updatedComponent = { ...props.row, items: props.row.items.map(comp => comp.role == ItemComponentRole.StartLabel ? newStartLabelItem : comp) } as ItemGroupComponent;
-                                        props.onChange(updatedComponent);
-                                    }}
-                                />
-                            </div>
-                            <div
-                                data-no-dnd="true"
-                                className='flex gap-2 items-center'
-                            >
-                                <Label className="min-w-[100px]" htmlFor={`row-endlabel-${props.row.key}`}>
-                                    End Label
-                                </Label>
-                                <Input
-                                    id={`row-endlabel-${props.row.key}`}
-                                    className='w-full'
-                                    value={rowEndLabel || ''}
-                                    placeholder='Enter row end label...'
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        const rowEndLabelItem = props.row.items.find(comp => comp.role == ItemComponentRole.EndLabel);
-                                        const newEndLabelItem = { ...rowEndLabelItem, content: generateLocStrings(localisedObjectToMap(rowEndLabelItem?.content).set(selectedLanguage, value)) };
-                                        const updatedComponent = { ...props.row, items: props.row.items.map(comp => comp.role == ItemComponentRole.EndLabel ? newEndLabelItem : comp) } as ItemGroupComponent;
-                                        props.onChange(updatedComponent);
-                                    }}
-                                />
-                            </div>
-                        </TabWrapper>
-                    },
-                    {
-                        label: 'Condition',
-                        icon: <ToggleLeft className='me-1 size-3 text-muted-foreground' />,
-                        content: <TabWrapper>
-                            TODO: condition editor
-                        </TabWrapper>
-                    },
-                    {
-                        label: 'Extras',
-                        icon: <Cog className='me-1 size-3 text-muted-foreground' />,
-                        content:
-                            <TabWrapper>
-                                <StyleClassNameEditor
-                                    styles={props.row.style || []}
-                                    styleKey={RblsaStyleKeys.tableModeClassName}
-                                    label={"Table Mode Class Name"}
-                                    onChange={onRowStyleChange} />
-                                <Separator />
-                                <StyleClassNameEditor
-                                    styles={props.row.style || []}
-                                    styleKey={RblsaStyleKeys.labelRowModeClassName}
-                                    label={"Label Row Mode Class Name"}
-                                    onChange={onRowStyleChange} />
-                                <Separator />
-                                <StyleClassNameEditor
-                                    styles={props.row.style || []}
-                                    styleKey={RblsaStyleKeys.verticalModeClassName}
-                                    label={"Vertical Mode Class Name"}
-                                    onChange={onRowStyleChange} />
-                            </TabWrapper>
-                    }
-                ]}
-            />
+            <div className='flex justify-end'>
+                <SurveyLanguageToggle />
+            </div>
+        </div>
+
+        <div
+            className="space-y-2"
+        >
+            <div
+                data-no-dnd="true"
+                className='space-y-1.5'
+            >
+                <Label
+                    className="text-xs"
+                    htmlFor={`row-startlabel-${props.component.key}`}>
+                    Start Label
+                </Label>
+                <Input
+                    id={`row-startlabel-${props.component.key}`}
+                    className='w-full'
+                    value={startLabel || ''}
+                    placeholder='Enter row start label...'
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        const rowStartLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.StartLabel);
+                        const newStartLabelItem = { ...rowStartLabelItem, content: generateLocStrings(localisedObjectToMap(rowStartLabelItem?.content).set(selectedLanguage, value)), role: ItemComponentRole.StartLabel };
+                        const updatedComponent = { ...props.component, items: (props.component as ItemGroupComponent).items.map(comp => comp.role == ItemComponentRole.StartLabel ? newStartLabelItem : comp) } as ItemGroupComponent;
+                        props.onChange?.(updatedComponent);
+                    }}
+                />
+            </div>
+            <div
+                data-no-dnd="true"
+                className='space-y-1.5'
+            >
+                <Label
+                    className="text-xs"
+                    htmlFor={`row-endlabel-${props.component.key}`}>
+                    End Label
+                </Label>
+                <Input
+                    id={`row-endlabel-${props.component.key}`}
+                    className='w-full'
+                    value={endLabel || ''}
+                    placeholder='Enter row end label...'
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        const rowEndLabelItem = (props.component as ItemGroupComponent).items.find(comp => comp.role == ItemComponentRole.EndLabel);
+                        const newEndLabelItem = { ...rowEndLabelItem, content: generateLocStrings(localisedObjectToMap(rowEndLabelItem?.content).set(selectedLanguage, value)) };
+                        const updatedComponent = { ...props.component, items: (props.component as ItemGroupComponent).items.map(comp => comp.role == ItemComponentRole.EndLabel ? newEndLabelItem : comp) } as ItemGroupComponent;
+                        props.onChange?.(updatedComponent);
+                    }}
+                />
+            </div>
+        </div>
+
+        <Separator />
+        <div className='space-y-2'>
+            <h3 className='text-sm font-semibold'>
+                View mode specific settings
+            </h3>
+
+            <StyleClassNameEditor
+                styles={props.component.style || []}
+                styleKey={RblsaStyleKeys.tableModeClassName}
+                label={"Table Mode Class Name"}
+                onChange={onRowStyleChange} />
+            <Separator />
+            <StyleClassNameEditor
+                styles={props.component.style || []}
+                styleKey={RblsaStyleKeys.labelRowModeClassName}
+                label={"Label Row Mode Class Name"}
+                onChange={onRowStyleChange} />
+            <Separator />
+            <StyleClassNameEditor
+                styles={props.component.style || []}
+                styleKey={RblsaStyleKeys.verticalModeClassName}
+                label={"Vertical Mode Class Name"}
+                onChange={onRowStyleChange} />
+
+
 
         </div>
-    </SortableItem>
+
+        <Separator />
+        <div className='space-y-2'>
+            <h3 className='text-sm font-semibold'>
+                Conditions
+            </h3>
+            <div>
+                <SurveyExpressionEditor
+                    label='Display condition'
+                    expression={props.component.displayCondition as Expression | undefined}
+                    onChange={(newExpression) => {
+                        props.onChange?.({ ...props.component, displayCondition: newExpression });
+                    }}
+                />
+            </div>
+        </div>
+    </div>
 }
 
 const RowsEditor = (props: {
@@ -220,14 +314,36 @@ const RowsEditor = (props: {
 }) => {
     const [draggedId, setDraggedId] = React.useState<string | null>(null);
     const draggedItem = props.rows.find(row => row.key === draggedId);
-    const [selectedTabsMap, setSelectedTabsMap] = React.useState<Record<string, string>>({});
+
+
+    const onDeleteRow = (row: ItemGroupComponent) => {
+        const newRows = props.rows.filter(r => r.key !== row.key);
+        props.onChange(newRows);
+    }
+
+    const onChangeRow = (key: string, newRow: ItemGroupComponent) => {
+        const newRows = props.rows.map((o) => {
+            if (o.key === key) {
+                return newRow;
+            }
+            return o;
+        });
+        props.onChange(newRows);
+    }
+
+    const onDuplicateRow = (row: ItemGroupComponent, index: number) => {
+        const newRow = { ...row, key: Math.random().toString(36).substring(9) };
+        const newRows = [...props.rows];
+        newRows.splice(index + 1, 0, newRow);
+        props.onChange(newRows);
+    }
 
     return <div>
         <p className='font-semibold'>
             Rows ({props.rows.length})
         </p>
-        <p className='text-sm text-muted-foreground'>
-            (drag to reorder)
+        <p className='text-xs text-muted-foreground'>
+            Drag items to reorder rows.
         </p>
 
         <SortableWrapper
@@ -248,45 +364,48 @@ const RowsEditor = (props: {
 
             }}
             dragOverlayItem={(draggedId && draggedItem) ?
-                <RowEditor
-                    row={draggedItem}
+                <ComponentEditor
+                    component={draggedItem}
                     onChange={() => { }}
-                    onDelete={() => { }}
-                    preSelectedTab={selectedTabsMap[draggedId]}
+                    isDragged={true}
+                    previewContent={RowPreview}
                 />
                 : null}
         >
 
-            <ol className='px-1 space-y-2 py-4'>
+            <ol className='px-1 space-y-1 py-2'>
                 {props.rows.length === 0 && <p className='text-sm text-primary'>
                     No rows defined.
                 </p>}
                 {props.rows.map((row, index) => {
-                    return <RowEditor
+                    return <ComponentEditor
                         key={row.key || index}
-                        row={row}
-                        existingKeys={props.rows.map(o => o.key || index.toString())}
-                        isBeingDragged={draggedId === row.key}
-                        onChange={(newRow) => {
-                            const newOptions = props.rows.map((o) => {
-                                if (o.key === row.key) {
-                                    return newRow;
-                                }
-                                return o;
-                            });
-                            props.onChange(newOptions);
-                        }}
-                        onDelete={() => {
-                            const newOptions = props.rows.filter((o) => {
-                                return o.key !== row.key;
-                            });
-                            props.onChange(newOptions);
-                        }}
-                        onTabSelect={(tabLabel) => {
-                            const newSelectedTabsMap = { ...selectedTabsMap };
-                            newSelectedTabsMap[row.key || index.toString()] = tabLabel;
-                            setSelectedTabsMap(newSelectedTabsMap);
-                        }}
+                        isSortable={true}
+                        component={row}
+                        isDragged={draggedId === row.key}
+                        usedKeys={props.rows.map(o => o.key!)}
+                        previewContent={RowPreview}
+                        quickEditorContent={RowQuickEditor}
+                        advancedEditorContent={RowAdvancedEditor}
+                        onChange={(newRow) => onChangeRow(row.key!, newRow as ItemGroupComponent)}
+                        contextMenuItems={[
+                            {
+                                type: 'item',
+                                label: 'Duplicate',
+                                icon: <Copy className='size-4' />,
+                                onClick: () => onDuplicateRow(row, index)
+                            },
+                            {
+                                type: 'separator'
+                            },
+                            {
+                                type: 'item',
+                                label: 'Delete',
+                                icon: <Trash2 className='size-4' />,
+                                onClick: () => onDeleteRow(row)
+                            },
+
+                        ]}
                     />
                 })}
             </ol>
@@ -417,7 +536,7 @@ const Rblsa: React.FC<RblsaProps> = (props) => {
                 <TabsContent value="options-rows">
                     <OptionsEditor
                         options={options}
-                        hideLabel={true}
+                        hideEditor={true}
                         onChange={(newOptions) => {
                             const optionsIndex = rblsaGroup.items.findIndex(comp => comp.role === ItemComponentRole.Options);
                             if (optionsIndex === -1) {
