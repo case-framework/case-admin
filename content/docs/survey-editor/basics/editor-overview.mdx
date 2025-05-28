@@ -2,15 +2,40 @@
 title: Survey Editor Interface Overview
 ---
 
-## Item Editor 
+## Survey Editor Item Dashboard
 
 ![Screenshot of survey editor dashboard](../images/dashboardEditor.png)
 
-This dashboard shows you the content and structure of your survey:
-- **Items**: This section lists all the items of the survey. You can click on an item to open it or drag and drop to reorder them. (Read more about [items](/docs/survey-editor/basics/item-structure#survey-item-structure-and-functions).)
-- **Add a new item**: Click this option to create a new survey item.
-- **Item ordering**: Here you can define whether the items should appear in the listed order or be shown in random order when the survey runs. Toggle the switch to enable random ordering.
+This dashboard shows you the key content and structure of your survey.
+
+### 🧭 Top Navigation Bar
+- **Survey Editor**: displays the currently open editor.
+- **File**: Click here to generate a new survey, open an existing survey, save survey to disk or exit survey editor. 
+- **View**: Click here to go to [Survey Properties](/docs/survey-editor/basics/editor-overview#survey-properties-workspace) section or Survey Simulator.
+- **Survey Name:** Top left shows the unique key name of the current survey. Click on it to change its root key name.
+- **Survey label**: Top center displays the survey label. You can rename the survey label by clicking on it.
+- **Color Selector**: Click here to change the theme color of the survey.
+- **Three-Dot Menu (Top Right):** Provides besides normal mode additional actions for the survey:
+    - `Source code` – View or edit the raw JSON structure of the survey.
+    - `Copy` – Duplicate the survey. You can paste the survey in another survey by adding it as an item to the other survey.
+    - `Move to other group` – Move item to another group of questions. 
+    - `Delete item` – Permanently remove the survey.
+
+
+### 📝 Survey Item List
+- **Items**: This section lists all the [items](/docs/survey-editor/basics/item-structure#survey-item-structure-and-functions) of the survey. Each item has:
+    - an icon symbolizing the type of question (e.g. checkmark in circle for single choice question) 
+    - an unique **Item Key** (e.g., `SCG1`).
+    - an optional **Label** text (e.g., `Single Choice Question`).
+- Open an item by clicking on it or its icon shown in the left bar.
+- New items can be added by
+    - Click on **+ Add new item** at the bottom of the item list
+    - Click on **+** in the left sidebar.
+- Items can be ordered by
+    - drag and drop them in the item list or left sidebar or
+    - toggle the switch `Use random ordering` in the **Item ordering** section to random order items when the survey runs.
 - **Condition tab**: Switch to this tab to define conditional logic that controls when items should be shown based on participant responses.
+
 
 ## Survey Properties Workspace
 
