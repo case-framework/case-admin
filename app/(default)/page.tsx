@@ -47,6 +47,7 @@ const ToolCard: React.FC<ToolCardProps> = (props) => {
 
 export default async function Page() {
     const appName = process.env.NEXT_PUBLIC_APP_NAME || 'Editor Tools';
+    const appVersion = process.env.NEXT_PUBLIC_APP_VERSION;
 
     return (
         <main className="h-screen flex flex-col">
@@ -147,22 +148,29 @@ export default async function Page() {
             <div className="grow"></div>
 
             <footer className="bg-gray-100">
-                <Container className="py-6 flex items-center justify-center text-sm text-neutral-600">
-                    <span className="me-1">© {(new Date()).getFullYear()},</span>
-                    <span>CASE Admin Tool</span>
-                    <span className="mx-1">by</span>
-                    <Button variant={'link'}
-                        asChild
-                        className="text-neutral-600 hover:text-cyan-800"
-                    >
-                        <Link
-                            href="https://coneno.com"
-                            prefetch={false}
-                            target="_blank"
+                <Container className="py-6 gap-2 flex flex-col items-center justify-center text-sm text-neutral-600">
+                    <div>
+                        <span className="me-1">© {(new Date()).getFullYear()},</span>
+                        <span>CASE Admin Tool</span>
+                        <span className="mx-1">by</span>
+                        <Button variant={'link'}
+                            asChild
+                            className="text-neutral-600 hover:text-cyan-800 p-0 h-auto"
                         >
-                            coneno
-                        </Link>
-                    </Button>
+                            <Link
+                                href="https://coneno.com"
+                                prefetch={false}
+                                target="_blank"
+                            >
+                                coneno
+                            </Link>
+                        </Button>
+                    </div>
+                    {appVersion && (
+                        <div className="text-xs">
+                            {appVersion}
+                        </div>
+                    )}
 
                 </Container>
             </footer>
