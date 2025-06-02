@@ -74,7 +74,7 @@
 		"rehype-slug": "^6.0.0",
 		"remark-gfm": "^4.0.0",
 		"sonner": "^1.7.2",
-		"survey-engine": "^1.3.2",
+		"survey-engine": "file:../../libs/survey-engine/build",
 		"swr": "^2.2.4",
 		"tailwind-merge": "^2.5.2",
 		"tailwindcss-animate": "^1.0.7",
