@@ -63,7 +63,7 @@ const resolveComponentGroup = (parentItem: SurveySingleItem, languageCode: strin
 const resolveContent = (contents: LocalizedContent[] | undefined, languageCode: string, component: ItemComponent): LocalizedContent[] | undefined => {
     if (!contents) { return; }
 
-    const noTranslationFound = (key: string) => '!! ' + languageCode + ' translation missing for ' + key + ' !!';
+    const noTranslationFound = (key: string) => '< ' + languageCode + ' translation missing for ' + key + ' >';
 
     return contents.map(cont => {
         let resolvedContent: string;
