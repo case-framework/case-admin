@@ -73,7 +73,6 @@ const LikertGroup: React.FC<LikertGroupProps> = (props) => {
                 return <TextViewComponent
                     key={rowKey}
                     compDef={row}
-                    languageCode={props.languageCode}
                     embedded={true}
                 />
             case 'likert':

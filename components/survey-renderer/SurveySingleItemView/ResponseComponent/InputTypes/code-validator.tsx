@@ -1,5 +1,5 @@
 import { useSurveyCtx } from "@/components/survey-renderer/survey-context";
-import { CommonResponseComponentProps, getItemComponentByRole, getLocaleStringTextByCode } from "../../utils";
+import { CommonResponseComponentProps, getItemComponentByRole } from "../../utils";
 import { useEffect, useState, useTransition } from "react";
 import { ItemGroupComponent, ResponseItem } from "survey-engine/data_types";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import { AlertTriangleIcon, CheckCircle2Icon, Pen } from "lucide-react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/loading-button";
+import { getContentString } from "../../renderUtils";
 
 
 type CodeValidatorProps = CommonResponseComponentProps
@@ -251,7 +252,7 @@ const CodeValidator: React.FC<CodeValidatorProps> = (props) => {
         return <p>unknown code key</p>
     }
 
-    const previewLabelContent = getLocaleStringTextByCode(previewLabel?.content, props.languageCode) || ''
+    const previewLabelContent = getContentString(previewLabel, 'label') || ''
 
     return (
         <div
@@ -264,20 +265,20 @@ const CodeValidator: React.FC<CodeValidatorProps> = (props) => {
                 codeType={codeType}
                 codeKey={codeKey}
                 dialog={{
-                    triggerBtnLabel: response?.value ? <><CheckCircle2Icon className='size-4 text-primary' />{response?.value}</> : (getLocaleStringTextByCode(btnLabel?.content, props.languageCode) || ''),
-                    title: getLocaleStringTextByCode(dialog?.content, props.languageCode) || '',
-                    description: getLocaleStringTextByCode(dialog?.description, props.languageCode) || '',
-                    resetBtnLabel: getLocaleStringTextByCode(resetBtn?.content, props.languageCode) || '',
-                    submitBtnLabel: getLocaleStringTextByCode(saveBtn?.content, props.languageCode) || '',
-                    cancelBtnLabel: getLocaleStringTextByCode(cancelBtn?.content, props.languageCode) || '',
-                    codeInvalidMsg: getLocaleStringTextByCode(codeInvalidMsg?.content, props.languageCode) || 'Error validating code',
+                    triggerBtnLabel: response?.value ? <><CheckCircle2Icon className='size-4 text-primary' />{response?.value}</> : (getContentString(btnLabel, 'label') || ''),
+                    title: getContentString(dialog, 'title') || '',
+                    description: getContentString(dialog, 'description') || '',
+                    resetBtnLabel: getContentString(resetBtn, 'label') || '',
+                    submitBtnLabel: getContentString(saveBtn, 'label') || '',
+                    cancelBtnLabel: getContentString(cancelBtn, 'label') || '',
+                    codeInvalidMsg: getContentString(codeInvalidMsg, 'label') || 'Error validating code',
                 }}
                 codeFieldConfig={{
-                    label: getLocaleStringTextByCode(codeInputComp?.content, props.languageCode) || '',
-                    placeholder: getLocaleStringTextByCode(codeInputComp?.description, props.languageCode) || '',
+                    label: getContentString(codeInputComp, 'label') || '',
+                    placeholder: getContentString(codeInputComp, 'placeholder') || '',
                     pattern: codeInputComp?.properties?.pattern,
-                    error: getLocaleStringTextByCode((codeInputComp as ItemGroupComponent)?.items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                    description: getLocaleStringTextByCode((codeInputComp as ItemGroupComponent)?.items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                    error: getContentString((codeInputComp as ItemGroupComponent)?.items?.find(item => item.role === 'error'), 'label') || '',
+                    description: getContentString((codeInputComp as ItemGroupComponent)?.items?.find(item => item.role === 'hint'), 'label') || '',
                 }}
                 value={response?.value}
                 onChange={(validCode?: string) => {

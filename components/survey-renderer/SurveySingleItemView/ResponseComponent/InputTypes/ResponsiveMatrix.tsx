@@ -1,8 +1,7 @@
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { isItemGroupComponent, ItemComponent, ItemGroupComponent, ResponseItem } from 'survey-engine/data_types';
-import { renderFormattedContent } from '../../renderUtils';
-import { CommonResponseComponentProps, getClassName, getLocaleStringTextByCode, getStyleValueByKey } from '../../utils';
+import { CommonResponseComponentProps, getClassName, getStyleValueByKey } from '../../utils';
 import { getBreakpointValue } from './responsiveUtils';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -10,6 +9,7 @@ import { CircleXIcon, DotIcon } from 'lucide-react';
 import { useSurveyItemCtx } from '../../survey-item-context';
 import TextInput from './TextInput';
 import NumberInput from './NumberInput';
+import { getContentString, renderContent } from '../../renderUtils';
 
 type ResponsiveMatrixProps = CommonResponseComponentProps
 
@@ -138,7 +138,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                 id={id}
             >
                 <SelectValue
-                    placeholder={getLocaleStringTextByCode(dropdownOptions?.content, props.languageCode)}
+                    placeholder={getContentString(dropdownOptions, 'placeholder')}
                 />
             </SelectTrigger>
             <SelectContent>
@@ -154,14 +154,14 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                             <span className='flex-shrink-0'>
                                 <CircleXIcon className='size-3' />
                             </span>
-                            {getLocaleStringTextByCode(dropdownOptions?.description, props.languageCode)}
+                            {getContentString(dropdownOptions, 'resetSelection')}
                         </span>
 
                     </SelectItem>}
                     <SelectSeparator />
                     {
                         dropdownOptions.items.map((option, index) => {
-                            return <SelectItem key={option.key} value={option.key || index.toString()}>{getLocaleStringTextByCode(option.content, props.languageCode)}</SelectItem>
+                            return <SelectItem key={option.key} value={option.key || index.toString()}>{getContentString(option, 'label')}</SelectItem>
                         })
                     }
                     <span className='flex justify-center bg-muted/50 rounded-sm'>
@@ -182,7 +182,6 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
             key: responseSlotKey,
             role: 'input',
             content: inputOptions?.content,
-            description: inputOptions?.description,
             style: inputOptions?.style,
             disabled: inputOptions?.disabled,
         };
@@ -220,7 +219,6 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
             key: responseSlotKey,
             role: 'numberInput',
             content: numberInputOptions?.content,
-            description: numberInputOptions?.description,
             style: numberInputOptions?.style,
             disabled: numberInputOptions?.disabled,
             properties: {
@@ -279,7 +277,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                             return <th scope="col"
                                 key={cat.key}
                                 className='px-2 py-1.5 text-center'>
-                                {renderFormattedContent(cat, props.languageCode, '', props.dateLocales)}
+                                {renderContent(cat, 'content')}
                             </th>
                         }
                     )}
@@ -297,7 +295,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                                 className={cn(
                                     'bg-[--survey-table-heading2-bg] px-2 py-1.5 text-center',
                                     getClassName(row.style))}>
-                                {renderFormattedContent(row, props.languageCode, '', props.dateLocales)}
+                                {renderContent(row, 'content')}
                             </th>
                         </tr>
                     }
@@ -312,7 +310,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                                     getClassName(row.style)
                                 )}
                             >
-                                {getLocaleStringTextByCode(row.content, props.languageCode)}
+                                {renderContent(row, 'content')}
                             </th>
                             {columns.map(
                                 (col: ItemComponent) => {
@@ -342,7 +340,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                                 key={row.key}
                                 colSpan={2}
                                 className={clsx('bg-[--survey-table-heading1-bg] px-2 py-1.5 text-center', getClassName(row.style))}>
-                                {renderFormattedContent(row, props.languageCode, '', props.dateLocales)}
+                                {renderContent(row, 'content')}
                             </th>
                         </tr>
                     }
@@ -355,7 +353,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                                     getClassName(row.style)
                                 )}
                             >
-                                {getLocaleStringTextByCode(row.content, props.languageCode)}
+                                {renderContent(row, 'content')}
                             </th>
                         </tr>
                         {getColumns()?.map(
@@ -370,7 +368,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                                             getClassName(col.style)
                                         )}
                                     >
-                                        {getLocaleStringTextByCode(col.content, props.languageCode)}
+                                        {renderContent(col, 'content')}
                                     </th>
                                     <td
                                         key={`${row.key}_${col.key}_lg-cell`}

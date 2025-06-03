@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ResponseItem } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getClassName, getInputMaxWidth, getLabelPlacementStyle, getLocaleStringTextByCode } from '../../utils';
+import { CommonResponseComponentProps, getClassName, getInputMaxWidth, getLabelPlacementStyle } from '../../utils';
 import clsx from 'clsx';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { getContentString } from '../../renderUtils';
 
 interface NumberInputProps extends CommonResponseComponentProps {
     ignoreClassName?: boolean;
@@ -95,12 +96,11 @@ const NumberInput: React.FC<NumberInputProps> = (props) => {
     const maxValue = props.compDef.properties?.max;
     const stepSize = props.compDef.properties?.stepSize;
 
-    const content = props.compDef.content;
     const placeAfter = getLabelPlacementStyle(props.compDef.style) === 'after';
     const inputMaxWidth = getInputMaxWidth(props.compDef.style);
     const fullKey = [props.parentKey, props.compDef.key].join('.');
 
-    const labelText = getLocaleStringTextByCode(content, props.languageCode);
+    const labelText = getContentString(props.compDef, 'label');
 
     return <Label
         htmlFor={fullKey}
@@ -123,7 +123,7 @@ const NumberInput: React.FC<NumberInputProps> = (props) => {
         )}
             style={{ maxWidth: 'fit-content' }}
         >
-            {getLocaleStringTextByCode(content, props.languageCode)}
+            {labelText}
         </span> : null}
 
         <Input
@@ -137,7 +137,7 @@ const NumberInput: React.FC<NumberInputProps> = (props) => {
             autoComplete="off"
             inputMode='decimal'
             id={fullKey}
-            placeholder={getLocaleStringTextByCode(props.compDef.description, props.languageCode)}
+            placeholder={getContentString(props.compDef, 'placeholder')}
             value={inputValue}
             maxLength={30}
             onFocus={handleFocus}
@@ -158,7 +158,7 @@ const NumberInput: React.FC<NumberInputProps> = (props) => {
                 "sr-only": props.hideLabel
             }
         )}>
-            {getLocaleStringTextByCode(content, props.languageCode)}
+            {labelText}
         </label> : null}
     </Label>
 };

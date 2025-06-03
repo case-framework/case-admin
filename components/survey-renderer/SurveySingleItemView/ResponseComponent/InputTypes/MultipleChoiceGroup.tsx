@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ItemComponent, ResponseItem, ItemGroupComponent, isItemGroupComponent } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getClassName, getLocaleStringTextByCode } from '../../utils';
+import { CommonResponseComponentProps, getClassName } from '../../utils';
 import TextInput from './TextInput';
 import clsx from 'clsx';
 import TextViewComponent from '../../SurveyComponents/TextViewComponent';
 import NumberInput from './NumberInput';
-import { renderFormattedContent } from '../../renderUtils';
 import ClozeQuestion from './ClozeQuestion';
 import Time from './Time';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -13,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import DateInput from '../DateInput/DateInput';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useSurveyItemCtx } from '../../survey-item-context';
+import { getContentString, renderContent } from '../../renderUtils';
 
 
 interface MultipleChoiceGroupProps extends CommonResponseComponentProps {
@@ -178,7 +178,7 @@ const MultipleChoiceGroup: React.FC<MultipleChoiceGroupProps> = (props) => {
         let labelComponent = <p>{'loading...'}</p>;
         const prefill = subResponseCache.find(r => r.key === option.key);
         const optionClassName = getClassName(option.style);
-        const arialLabel = getLocaleStringTextByCode(option.content, props.languageCode) || option.key;
+        const arialLabel = getContentString(option, 'label') || option.key;
 
         // Fix 'legacy' case of ItemGroupComponent & role='option' meaning 'formattedOption'
         if (isItemGroupComponent(option) && option.role === ChoiceResponseOptionType.SimpleText) {
@@ -191,18 +191,17 @@ const MultipleChoiceGroup: React.FC<MultipleChoiceGroupProps> = (props) => {
                 return <TextViewComponent
                     key={option.key}
                     compDef={option}
-                    languageCode={props.languageCode}
                     embedded={true}
                     className='px-[--survey-card-px-sm] @md:px-[--survey-card-px] mt-2'
                 />;
             case ChoiceResponseOptionType.SimpleText:
                 labelComponent = <span className={clsx("w-full")}>
-                    {getLocaleStringTextByCode(option.content, props.languageCode)}
+                    {renderContent(option, 'content')}
                 </span>;
                 break;
             case ChoiceResponseOptionType.FormattedText:
                 labelComponent = <div className={clsx("w-full")}>
-                    {renderFormattedContent(option, props.languageCode, undefined, props.dateLocales)}
+                    {renderContent(option, 'content')}
                 </div>
                 break;
             case ChoiceResponseOptionType.Cloze:

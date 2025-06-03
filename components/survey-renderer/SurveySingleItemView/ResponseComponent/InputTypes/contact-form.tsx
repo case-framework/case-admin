@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CommonResponseComponentProps, getItemComponentByRole, getLocaleStringTextByCode } from '../../utils';
+import { CommonResponseComponentProps, getItemComponentByRole } from '../../utils';
 import { AtSign, Building, Mailbox, Pen, Phone, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogClose, DialogFooter, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '../../../components/ui/dialog';
@@ -11,6 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { ItemGroupComponent, ResponseItem } from 'survey-engine/data_types';
+import { getContentString } from '../../renderUtils';
 
 
 type ContactFormProps = CommonResponseComponentProps
@@ -554,11 +555,11 @@ const ContactForm: React.FC<ContactFormProps> = (props) => {
         >
             <div className='mb-4 space-y-2'>
                 <p className='text-sm mb-1.5'>
-                    {getLocaleStringTextByCode(previewLabel?.content, props.languageCode) || ''}
+                    {getContentString(previewLabel, 'label') || ''}
                 </p>
 
                 {(response === undefined) && <p className='text-primary'>
-                    {getLocaleStringTextByCode(previewLabel?.description, props.languageCode) || ''}
+                    {getContentString(previewLabel, 'placeholder') || ''}
                 </p>}
 
                 {contactValues.fullName &&
@@ -687,88 +688,88 @@ const ContactForm: React.FC<ContactFormProps> = (props) => {
                 }}
                 values={contactValues}
                 dialog={{
-                    triggerBtnLabel: getLocaleStringTextByCode(btnLabel?.content, props.languageCode) || '',
-                    title: getLocaleStringTextByCode(dialog?.content, props.languageCode) || '',
-                    description: getLocaleStringTextByCode(dialog?.description, props.languageCode) || '',
-                    resetBtnLabel: getLocaleStringTextByCode(resetBtn?.content, props.languageCode) || '',
-                    submitBtnLabel: getLocaleStringTextByCode(saveBtn?.content, props.languageCode) || '',
-                    cancelBtnLabel: getLocaleStringTextByCode(cancelBtn?.content, props.languageCode) || '',
+                    triggerBtnLabel: getContentString(btnLabel, 'label') || '',
+                    title: getContentString(dialog, 'title') || '',
+                    description: getContentString(dialog, 'placeholder') || '',
+                    resetBtnLabel: getContentString(resetBtn, 'label') || '',
+                    submitBtnLabel: getContentString(saveBtn, 'label') || '',
+                    cancelBtnLabel: getContentString(cancelBtn, 'label') || '',
                 }}
                 fieldConfig={{
                     fullName: fullNameComp ? {
-                        label: getLocaleStringTextByCode(fullNameComp?.content, props.languageCode) || '',
-                        placeholder: getLocaleStringTextByCode(fullNameComp?.description, props.languageCode) || '',
+                        label: getContentString(fullNameComp, 'label') || '',
+                        placeholder: getContentString(fullNameComp, 'placeholder') || '',
                         pattern: fullNameComp?.properties?.pattern,
-                        error: getLocaleStringTextByCode((fullNameComp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                        description: getLocaleStringTextByCode((fullNameComp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                        error: getContentString((fullNameComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                        description: getContentString((fullNameComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                     } : undefined,
                     company: companyComp ? {
-                        label: getLocaleStringTextByCode(companyComp?.content, props.languageCode) || '',
-                        placeholder: getLocaleStringTextByCode(companyComp?.description, props.languageCode) || '',
+                        label: getContentString(companyComp, 'label') || '',
+                        placeholder: getContentString(companyComp, 'placeholder') || '',
                         pattern: companyComp?.properties?.pattern,
-                        error: getLocaleStringTextByCode((companyComp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                        description: getLocaleStringTextByCode((companyComp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                        error: getContentString((companyComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                        description: getContentString((companyComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                     } : undefined,
                     email: emailComp ? {
-                        label: getLocaleStringTextByCode(emailComp?.content, props.languageCode) || '',
-                        placeholder: getLocaleStringTextByCode(emailComp?.description, props.languageCode) || '',
+                        label: getContentString(emailComp, 'label') || '',
+                        placeholder: getContentString(emailComp, 'placeholder') || '',
                         pattern: emailComp?.properties?.pattern,
-                        error: getLocaleStringTextByCode((emailComp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                        description: getLocaleStringTextByCode((emailComp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                        error: getContentString((emailComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                        description: getContentString((emailComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                     } : undefined,
                     phone: phoneComp ? {
-                        label: getLocaleStringTextByCode(phoneComp?.content, props.languageCode) || '',
-                        placeholder: getLocaleStringTextByCode(phoneComp?.description, props.languageCode) || '',
+                        label: getContentString(phoneComp, 'label') || '',
+                        placeholder: getContentString(phoneComp, 'placeholder') || '',
                         pattern: phoneComp?.properties?.pattern,
-                        error: getLocaleStringTextByCode((phoneComp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                        description: getLocaleStringTextByCode((phoneComp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                        error: getContentString((phoneComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                        description: getContentString((phoneComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                     } : undefined,
                     address: addressComp ? {
-                        label: getLocaleStringTextByCode(addressComp?.content, props.languageCode) || '',
+                        label: getContentString(addressComp, 'label') || '',
                         street: {
-                            label: getLocaleStringTextByCode(streetComp?.content, props.languageCode) || '',
-                            placeholder: getLocaleStringTextByCode(streetComp?.description, props.languageCode) || '',
+                            label: getContentString(streetComp, 'label') || '',
+                            placeholder: getContentString(streetComp, 'placeholder') || '',
                             pattern: streetComp?.properties?.pattern,
-                            error: getLocaleStringTextByCode((streetComp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                            description: getLocaleStringTextByCode((streetComp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                            error: getContentString((streetComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                            description: getContentString((streetComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                         },
                         street2: {
-                            label: getLocaleStringTextByCode(street2Comp?.content, props.languageCode) || '',
-                            placeholder: getLocaleStringTextByCode(street2Comp?.description, props.languageCode) || '',
+                            label: getContentString(street2Comp, 'label') || '',
+                            placeholder: getContentString(street2Comp, 'placeholder') || '',
                             pattern: street2Comp?.properties?.pattern,
-                            error: getLocaleStringTextByCode((street2Comp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                            description: getLocaleStringTextByCode((street2Comp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                            error: getContentString((street2Comp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                            description: getContentString((street2Comp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                         },
                         houseNumber: useHouseNumber ? {
-                            label: getLocaleStringTextByCode(houseNumberComp?.content, props.languageCode) || '',
-                            placeholder: getLocaleStringTextByCode(houseNumberComp?.description, props.languageCode) || '',
+                            label: getContentString(houseNumberComp, 'label') || '',
+                            placeholder: getContentString(houseNumberComp, 'placeholder') || '',
                             pattern: houseNumberComp?.properties?.pattern,
-                            error: getLocaleStringTextByCode((houseNumberComp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                            description: getLocaleStringTextByCode((houseNumberComp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                            error: getContentString((houseNumberComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                            description: getContentString((houseNumberComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                         } : undefined,
                         city: {
-                            label: getLocaleStringTextByCode(cityComp?.content, props.languageCode) || '',
-                            placeholder: getLocaleStringTextByCode(cityComp?.description, props.languageCode) || '',
+                            label: getContentString(cityComp, 'label') || '',
+                            placeholder: getContentString(cityComp, 'placeholder') || '',
                             pattern: cityComp?.properties?.pattern,
-                            error: getLocaleStringTextByCode((cityComp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                            description: getLocaleStringTextByCode((cityComp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                            error: getContentString((cityComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                            description: getContentString((cityComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                         },
                         postalCode: {
-                            label: getLocaleStringTextByCode(postalCodeComp?.content, props.languageCode) || '',
-                            placeholder: getLocaleStringTextByCode(postalCodeComp?.description, props.languageCode) || '',
+                            label: getContentString(postalCodeComp, 'label') || '',
+                            placeholder: getContentString(postalCodeComp, 'placeholder') || '',
                             pattern: postalCodeComp?.properties?.pattern,
-                            error: getLocaleStringTextByCode((postalCodeComp as ItemGroupComponent).items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                            description: getLocaleStringTextByCode((postalCodeComp as ItemGroupComponent).items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                            error: getContentString((postalCodeComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                            description: getContentString((postalCodeComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                         },
                         country: useCountry ? {
-                            label: getLocaleStringTextByCode(countryComp?.content, props.languageCode) || '',
-                            placeholder: getLocaleStringTextByCode(countryComp?.description, props.languageCode) || '',
+                            label: getContentString(countryComp, 'label') || '',
+                            placeholder: getContentString(countryComp, 'placeholder') || '',
                             pattern: countryComp?.properties?.pattern,
-                            error: getLocaleStringTextByCode((countryComp as ItemGroupComponent)?.items?.find(item => item.role === 'error')?.content, props.languageCode) || '',
-                            description: getLocaleStringTextByCode((countryComp as ItemGroupComponent)?.items?.find(item => item.role === 'hint')?.content, props.languageCode) || '',
+                            error: getContentString((countryComp as ItemGroupComponent).items?.find(item => item.role === 'error'), 'label') || '',
+                            description: getContentString((countryComp as ItemGroupComponent).items?.find(item => item.role === 'hint'), 'label') || '',
                             optionItems: ((countryComp as ItemGroupComponent)?.items?.find(item => item.role === 'optionItems') as ItemGroupComponent)?.items?.map((item, index) => ({
                                 key: item.key || index.toString(),
-                                label: getLocaleStringTextByCode(item.content, props.languageCode) || ''
+                                label: getContentString(item, 'label') || ''
                             }))
                         } : undefined,
                     } : undefined,

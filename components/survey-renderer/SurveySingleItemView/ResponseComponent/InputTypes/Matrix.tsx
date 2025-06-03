@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ResponseItem, ItemGroupComponent } from 'survey-engine/data_types';
-import { getLocaleStringTextByCode, getItemComponentByRole, CommonResponseComponentProps } from '../../utils';
+import { getItemComponentByRole, CommonResponseComponentProps } from '../../utils';
 import DropDownGroup from './DropDownGroup';
 import TextViewComponent from '../../SurveyComponents/TextViewComponent';
 import TextInput from './TextInput';
@@ -9,6 +9,7 @@ import Time from './Time';
 import DateInput from '../DateInput/DateInput';
 import { Checkbox } from '../../../components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { getContentString } from '../../renderUtils';
 
 
 type MatrixProps = CommonResponseComponentProps
@@ -128,7 +129,7 @@ const Matrix: React.FC<MatrixProps> = (props) => {
 
     const headerRow = getItemComponentByRole(matrixDef.items, MatrixRowType.HeaderRow);
     const renderResponseRow = (compDef: ItemGroupComponent): React.ReactNode => {
-        const rowLabel = getLocaleStringTextByCode(compDef.content, props.languageCode) || '';
+        const rowLabel = getContentString(compDef, 'label') || '';
         const rowKey = [props.parentKey, compDef.key].join('.');
 
         return <div
@@ -147,7 +148,7 @@ const Matrix: React.FC<MatrixProps> = (props) => {
                 </div>
                 {compDef.items.map((cell, cindex) => {
                     const cellKey = [rowKey, cell.key].join('.');
-                    const headerLabel = (headerRow) && getLocaleStringTextByCode((headerRow as ItemGroupComponent).items.at(cindex)?.content, props.languageCode) || '';
+                    const headerLabel = (headerRow) && getContentString((headerRow as ItemGroupComponent).items.at(cindex), 'label') || '';
 
                     let inputSlot = <p>No input slot found</p>;
                     switch (cell.role) {
@@ -167,7 +168,6 @@ const Matrix: React.FC<MatrixProps> = (props) => {
                             inputSlot = <TextViewComponent
                                 key={cell.key}
                                 compDef={cell}
-                                languageCode={props.languageCode}
                                 embedded={true}
                                 className='text-center'
                             />;
@@ -233,7 +233,7 @@ const Matrix: React.FC<MatrixProps> = (props) => {
                                 />
                                 <span className='text-balance'>
                                     <span className='sr-only'>{cell.key}</span>
-                                    {getLocaleStringTextByCode(cell.content, props.languageCode)}
+                                    {getContentString(cell, 'label')}
                                 </span>
                             </Label>
                             break;
@@ -286,7 +286,7 @@ const Matrix: React.FC<MatrixProps> = (props) => {
             let currentCellContent: React.ReactNode | null;
             switch (cell.role) {
                 case MatrixCellType.Text:
-                    currentCellContent = getLocaleStringTextByCode(cell.content, props.languageCode);
+                    currentCellContent = getContentString(cell, 'label');
                     break;
                 default:
                     console.warn('cell role for matrix header unknown: ', cell.role);

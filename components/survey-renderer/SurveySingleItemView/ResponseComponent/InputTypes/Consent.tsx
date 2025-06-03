@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ItemGroupComponent, ResponseItem } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getClassName, getLocaleStringTextByCode } from '../../utils';
-import { renderFormattedContent } from '../../renderUtils';
+import { CommonResponseComponentProps, getClassName } from '../../utils';
+import { getContentString, renderContent } from '../../renderUtils';
 import ConsentDialog from '../../../components/ConsentDialog';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -50,10 +50,10 @@ const Consent: React.FC<ConsentProps> = (props) => {
     }
     const labelComp = items.find(item => item.role === 'label');
     const contentComp = items.find(item => item.role === 'content')
-    const dialogTitle = getLocaleStringTextByCode(items.find(item => item.role === 'title')?.content, props.languageCode)
-    const dialogDescription = getLocaleStringTextByCode(items.find(item => item.role === 'description')?.content, props.languageCode)
-    const dialogAcceptBtn = getLocaleStringTextByCode(items.find(item => item.role === 'acceptBtn')?.content, props.languageCode)
-    const dialogRejectBtn = getLocaleStringTextByCode(items.find(item => item.role === 'rejectBtn')?.content, props.languageCode)
+    const dialogTitle = getContentString(items.find(item => item.role === 'title'), 'title')
+    const dialogDescription = getContentString(items.find(item => item.role === 'description'), 'label')
+    const dialogAcceptBtn = getContentString(items.find(item => item.role === 'acceptBtn'), 'label')
+    const dialogRejectBtn = getContentString(items.find(item => item.role === 'rejectBtn'), 'label')
 
     if (labelComp === undefined || contentComp === undefined) {
         return <span>Items not found</span>
@@ -82,7 +82,7 @@ const Consent: React.FC<ConsentProps> = (props) => {
                     }}
 
                 />
-                {renderFormattedContent(labelComp, props.languageCode, 'cursor-pointer', props.dateLocales)}
+                {renderContent(labelComp, 'label')}
             </label>
 
 
@@ -92,7 +92,7 @@ const Consent: React.FC<ConsentProps> = (props) => {
                 cancelBtn={dialogRejectBtn ? dialogRejectBtn : 'Reject'}
                 title={dialogTitle ? dialogTitle : 'Consent'}
                 description={dialogDescription ? dialogDescription : ''}
-                content={getLocaleStringTextByCode(contentComp.content, props.languageCode)}
+                content={getContentString(contentComp, 'content')}
                 onConfirmed={() => accept()}
                 onCancelled={() => reject()}
                 onClose={() => setDialogOpen(false)}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ResponseItem } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getClassName, getInputMaxWidth, getLocaleStringTextByCode, getStyleValueByKey } from '../../utils';
+import { CommonResponseComponentProps, getClassName, getInputMaxWidth, getStyleValueByKey } from '../../utils';
 import clsx from 'clsx';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { getContentString } from '../../renderUtils';
 
 interface TextInputProps extends CommonResponseComponentProps {
     updateDelay?: number;
@@ -68,7 +69,7 @@ const TextInput: React.FC<TextInputProps> = (props) => {
         })
     };
 
-    const labelText = getLocaleStringTextByCode(props.compDef.content, props.languageCode);
+    const labelText = getContentString(props.compDef, 'label');
     const inputMaxWidth = getInputMaxWidth(props.compDef.style);
     const maxLengthValue = getStyleValueByKey(props.compDef.style, 'maxLength');
 
@@ -106,7 +107,7 @@ const TextInput: React.FC<TextInputProps> = (props) => {
                 }}
                 autoComplete="off"
                 id={fullKey}
-                placeholder={getLocaleStringTextByCode(props.compDef.description, props.languageCode)}
+                placeholder={getContentString(props.compDef, 'placeholder')}
                 value={inputValue}
                 maxLength={maxLengthValue ? parseInt(maxLengthValue) : 4000}
                 onChange={handleInputValueChange(props.compDef.key)}

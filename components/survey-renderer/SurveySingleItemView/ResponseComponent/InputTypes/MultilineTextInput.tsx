@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ResponseItem } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getClassName, getLocaleStringTextByCode, getStyleValueByKey } from '../../utils';
+import { CommonResponseComponentProps, getClassName, getStyleValueByKey } from '../../utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { getContentString } from '../../renderUtils';
 
 type MultilineTextInputProps = CommonResponseComponentProps
 
@@ -61,13 +62,13 @@ const MultilineTextInput: React.FC<MultilineTextInputProps> = (props) => {
         >
             <Label htmlFor={fullKey} className="space-y-2 w-full">
                 <span>
-                    {getLocaleStringTextByCode(props.compDef.content, props.languageCode)}
+                    {getContentString(props.compDef, 'label')}
                 </span>
 
                 <Textarea
                     autoComplete="off"
                     id={fullKey}
-                    placeholder={getLocaleStringTextByCode(props.compDef.description, props.languageCode)}
+                    placeholder={getContentString(props.compDef, 'placeholder')}
                     value={inputValue}
                     maxLength={maxLengthValue ? parseInt(maxLengthValue) : 4000}
                     className='resize-none field-sizing-content'

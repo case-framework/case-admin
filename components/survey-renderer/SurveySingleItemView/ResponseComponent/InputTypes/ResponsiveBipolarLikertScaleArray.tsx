@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { isItemGroupComponent, ItemComponent, ItemGroupComponent, ResponseItem } from 'survey-engine/data_types';
-import { renderFormattedContent } from '../../renderUtils';
+import { renderContent } from '../../renderUtils';
 import { CommonResponseComponentProps } from '../../utils';
 import { getResponsiveModes, Variant } from './responsiveUtils';
 import { cn } from '@/lib/utils';
@@ -170,7 +170,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
             )}
         >
             <div className="text-center">
-                {renderFormattedContent(startLabelComp, props.languageCode, undefined, props.dateLocales)}
+                {renderContent(startLabelComp, 'content')}
             </div>
             <fieldset
                 id={htmlKey}
@@ -199,7 +199,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
                 }
             </fieldset>
             <div className="text-center">
-                {renderFormattedContent(endLabelComp, props.languageCode, undefined, props.dateLocales)}
+                {renderContent(endLabelComp, 'content')}
             </div>
         </div>
     }
@@ -250,14 +250,14 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
                 <div style={{
                     maxWidth: labelRowMaxLabelWidth
                 }}>
-                    {renderFormattedContent(startLabelComp, props.languageCode, undefined, props.dateLocales)}
+                    {renderContent(startLabelComp, 'content')}
                 </div>
             </div>
             <div className="text-end flex justify-end text-balance">
                 <div style={{
                     maxWidth: labelRowMaxLabelWidth
                 }}>
-                    {renderFormattedContent(endLabelComp, props.languageCode, undefined, props.dateLocales)}
+                    {renderContent(endLabelComp, 'content')}
                 </div>
             </div>
         </div>;
@@ -393,7 +393,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
                                         width: labelColWidth
                                     } : undefined}
                                 >
-                                    {renderFormattedContent(startLabelComp, props.languageCode, undefined, props.dateLocales)}
+                                    {renderContent(startLabelComp, 'content')}
                                 </td>
                                 {options.items.map(oi => {
                                     const optionKey = `${props.compDef.key}.${item.key}.${oi.key}`;
@@ -426,7 +426,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
                                         width: labelColWidth
                                     } : undefined}
                                 >
-                                    {renderFormattedContent(endLabelComp, props.languageCode, undefined, props.dateLocales)}
+                                    {renderContent(endLabelComp, 'content')}
                                 </td>
                             </React.Fragment>
                             break;

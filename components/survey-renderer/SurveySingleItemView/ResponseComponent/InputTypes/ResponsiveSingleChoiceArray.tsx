@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { isItemGroupComponent, ItemComponent, ItemGroupComponent, ResponseItem } from 'survey-engine/data_types';
-import { renderFormattedContent } from '../../renderUtils';
 import { CommonResponseComponentProps, getClassName } from '../../utils';
 import { getResponsiveModes, Variant } from './responsiveUtils';
 import { cn } from '@/lib/utils';
 import { useSurveyItemCtx } from '../../survey-item-context';
+import { renderContent } from '../../renderUtils';
 
 
 type ResponsiveSingleChoiceArrayProps = CommonResponseComponentProps
@@ -42,7 +42,7 @@ const VerticalModeOption: React.FC<VerticalModeOptionProps> = (props) => {
         />
 
         <span className="form-check-label cursor-pointer grow">
-            {renderFormattedContent(props.optionDef, props.languageCode, 'cursor-pointer')}
+            {renderContent(props.optionDef, 'content', 'cursor-pointer')}
         </span>
     </label >
 }
@@ -181,7 +181,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                                     'font-bold mb-2 px-[--survey-card-px-sm] @md:px-[--survey-card-px] '
                                 )}
                             >
-                                {renderFormattedContent(item, props.languageCode, undefined, props.dateLocales)}
+                                {renderContent(item, 'content')}
                             </p>
                             <fieldset
                                 id={props.compDef.key + '.' + item.key}
@@ -208,7 +208,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                                 className='text-[--survey-error-text-color] text-sm font-bold mt-1 px-[--survey-card-px-sm] @md:px-[--survey-card-px]'
                                 role='alert'
                             >
-                                {renderFormattedContent(errorHint, props.languageCode, undefined, props.dateLocales)}
+                                {renderContent(errorHint, 'content')}
                             </div>}
                         </div>;
                     case 'options':
@@ -244,7 +244,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                     'font-bold'
                 )}
             >
-                {renderFormattedContent(rowDef, props.languageCode, undefined, props.dateLocales)}
+                {renderContent(rowDef, 'content')}
             </h6>
             <fieldset
                 id={htmlKey}
@@ -287,7 +287,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                                 optionLabelClassName
                             )}>
                                 <span>
-                                    {renderFormattedContent(option, props.languageCode, 'cursor-pointer', props.dateLocales)}
+                                    {renderContent(option, 'content', 'cursor-pointer')}
                                 </span>
                             </div>);
 
@@ -313,7 +313,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                 className='text-[--survey-error-text-color] text-sm font-bold mt-1'
                 role='alert'
             >
-                {renderFormattedContent(errorHint, props.languageCode, undefined, props.dateLocales)}
+                {renderContent(errorHint, 'content')}
             </div>}
         </div>
     }
@@ -367,7 +367,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                             scope="col"
                             className="text-center"
                         >
-                            {renderFormattedContent(item, props.languageCode, 'cursor-pointer', props.dateLocales)}
+                            {renderContent(item, 'content', 'cursor-pointer')}
                         </th>)}
 
                     </tr>
@@ -385,13 +385,13 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                                     <th scope="row"
                                         className='text-start'
                                     >
-                                        {renderFormattedContent(item, props.languageCode, undefined, props.dateLocales)}
+                                        {renderContent(item, 'content')}
 
                                         {(errorHint && props.showErrors && !rowHasResponse(item.key)) && <div
                                             className='text-[--survey-error-text-color] text-sm'
                                             role='alert'
                                         >
-                                            {renderFormattedContent(errorHint, props.languageCode, undefined, props.dateLocales)}
+                                            {renderContent(errorHint, 'content')}
                                         </div>}
                                     </th>
                                     {options.items.map(oi => <td

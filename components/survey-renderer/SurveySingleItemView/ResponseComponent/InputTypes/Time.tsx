@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ResponseItem } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getClassName, getLabelPlacementStyle, getLocaleStringTextByCode, getStyleValueByKey } from '../../utils';
+import { CommonResponseComponentProps, getClassName, getLabelPlacementStyle, getStyleValueByKey } from '../../utils';
 import clsx from 'clsx';
 import TimeInput, { preprocessTimeInputValue } from '../../../components/TimeInput';
+import { getContentString } from '../../renderUtils';
 
 
 interface TimeProps extends CommonResponseComponentProps {
@@ -78,11 +79,10 @@ const Time: React.FC<TimeProps> = (props) => {
     const defaultValue = getStyleValueByKey(props.compDef.style, 'defaultValue');
     const stepSize = props.compDef.properties?.stepSize;
 
-    const content = props.compDef.content;
     const placeAfter = getLabelPlacementStyle(props.compDef.style) === 'after';
     const fullKey = [props.parentKey, props.compDef.key].join('.');
 
-    const labelText = getLocaleStringTextByCode(content, props.languageCode);
+    const labelText = getContentString(props.compDef, 'label');
 
     return (<div
         className={clsx(
@@ -104,7 +104,7 @@ const Time: React.FC<TimeProps> = (props) => {
         )}
             style={{ maxWidth: 'fit-content' }}
         >
-            {getLocaleStringTextByCode(content, props.languageCode)}
+            {labelText}
         </label> : null}
         <TimeInput
             id={props.parentKey}
@@ -117,7 +117,7 @@ const Time: React.FC<TimeProps> = (props) => {
             onChange={handleInputValueChange(props.compDef.key)}
         />
         {placeAfter ? <label htmlFor={props.parentKey} className="ms-1">
-            {getLocaleStringTextByCode(content, props.languageCode)}
+            {labelText}
         </label> : null}
     </div>
     );

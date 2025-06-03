@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ItemComponent, ItemGroupComponent, ResponseItem } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getClassName, getLocaleStringTextByCode } from '../../utils';
+import { CommonResponseComponentProps, getClassName } from '../../utils';
 import clsx from 'clsx';
+import { getContentString } from '../../renderUtils';
 
 type LikertScaleProps = CommonResponseComponentProps
 
@@ -58,7 +59,7 @@ const LikertScale: React.FC<LikertScaleProps> = (props) => {
     const renderOption = (option: ItemComponent) => {
         const optionKey = props.parentKey + '.' + option.key;
         const isDisabled = option.disabled === true;
-        const content = getLocaleStringTextByCode(option.content, props.languageCode);
+        const content = getContentString(option, 'label');
         const className = getClassName(option.style);
 
         const radioBtn = (<div

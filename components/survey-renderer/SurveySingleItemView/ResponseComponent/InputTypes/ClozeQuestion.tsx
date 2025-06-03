@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { isItemGroupComponent, ItemComponent, ItemGroupComponent, ResponseItem } from 'survey-engine/data_types';
-import { renderFormattedContent } from '../../renderUtils';
+import { renderContent } from '../../renderUtils';
 import MarkdownComponent from '../../SurveyComponents/MarkdownComponent';
 import TextViewComponent from '../../SurveyComponents/TextViewComponent';
 import { CommonResponseComponentProps, getClassName, getStyleValueByKey } from '../../utils';
@@ -105,7 +105,7 @@ const ClozeQuestion: React.FC<ClozeQuestionProps> = (props) => {
             switch (item.role) {
                 case ClozeItemGroupType.Text:
                     return <div key={optionKey}>
-                        {renderFormattedContent(item, props.languageCode, undefined, props.dateLocales)}
+                        {renderContent(item, 'label')}
                     </div>
                 case ClozeItemGroupType.Dropdown:
                     return <DropDownGroup
@@ -129,7 +129,6 @@ const ClozeQuestion: React.FC<ClozeQuestionProps> = (props) => {
                         key={item.key}
                         compDef={item}
                         className={optionClassName}
-                        languageCode={props.languageCode}
                         embedded={true}
                     />
                 case ClozeItemType.Markdown:
@@ -137,7 +136,6 @@ const ClozeQuestion: React.FC<ClozeQuestionProps> = (props) => {
                         key={item.key}
                         className={optionClassName}
                         compDef={item}
-                        languageCode={props.languageCode}
                         embedded={true}
                     />;
                 case ClozeItemType.TextInput:

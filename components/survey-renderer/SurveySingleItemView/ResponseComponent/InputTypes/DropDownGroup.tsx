@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 import React, { useState, useEffect } from 'react';
 import { ResponseItem, ItemGroupComponent } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getLocaleStringTextByCode } from '../../utils';
+import { CommonResponseComponentProps } from '../../utils';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectGroup, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dot } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getContentString } from '../../renderUtils';
 
 
 interface DropDownGroupProps extends CommonResponseComponentProps {
@@ -68,7 +69,7 @@ const DropDownGroup: React.FC<DropDownGroupProps> = (props) => {
             id={props.parentKey}
         >
             <SelectValue
-                placeholder={getLocaleStringTextByCode(props.compDef.description, props.languageCode)} />
+                placeholder={getContentString(props.compDef, 'placeholder')} />
         </SelectTrigger>
         <SelectContent
             className='max-w-[95vw]'
@@ -89,7 +90,7 @@ const DropDownGroup: React.FC<DropDownGroupProps> = (props) => {
                                 className='flex w-full flex-wrap'
                                 key={item.key}
                                 value={item.key || ''}>
-                                {getLocaleStringTextByCode(item.content, props.languageCode)}
+                                {getContentString(item, 'label')}
                             </SelectItem>
                         }
                     )
@@ -101,7 +102,7 @@ const DropDownGroup: React.FC<DropDownGroupProps> = (props) => {
         </SelectContent>
     </Select>;
 
-    const labelText = getLocaleStringTextByCode(props.compDef.content, props.languageCode);
+    const labelText = getContentString(props.compDef, 'label');
 
     return (
         <div className={clsx(

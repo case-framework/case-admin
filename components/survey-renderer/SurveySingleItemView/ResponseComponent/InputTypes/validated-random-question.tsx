@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { CommonResponseComponentProps, getLocaleStringTextByCode } from '../../utils';
+import { CommonResponseComponentProps } from '../../utils';
 import { ItemComponent, ItemGroupComponent, ResponseItem } from 'survey-engine/data_types';
 import clsx from 'clsx';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { getContentString } from '../../renderUtils';
 
 type ValidatedRandomQuestionProps = CommonResponseComponentProps
 
@@ -59,7 +60,7 @@ const ValidatedRandomQuestion: React.FC<ValidatedRandomQuestionProps> = (props) 
     useEffect(() => {
         const value = currentValue.toLowerCase().trim();
 
-        const acceptedAnswers = ((currentQuestion as ItemGroupComponent)?.items || []).map(item => getLocaleStringTextByCode(item.content, props.languageCode)?.toLowerCase().trim());
+        const acceptedAnswers = ((currentQuestion as ItemGroupComponent)?.items || []).map(item => getContentString(item, 'content')?.toLowerCase().trim());
         const hasCorrectValue = acceptedAnswers.indexOf(value) > -1;
 
         const newResponse = hasCorrectValue ? {
@@ -73,9 +74,9 @@ const ValidatedRandomQuestion: React.FC<ValidatedRandomQuestionProps> = (props) 
     }, [currentValue])
 
     const newQuestionButton = (props.compDef as ItemGroupComponent).items?.find(comp => comp.role === 'buttonLabel');
-    const labelText = getLocaleStringTextByCode(currentQuestion?.content, props.languageCode);
-    const placeholderText = getLocaleStringTextByCode(currentQuestion?.description, props.languageCode);
-    const newQuestionLabel = getLocaleStringTextByCode(newQuestionButton?.content, props.languageCode);
+    const labelText = getContentString(currentQuestion, 'label');
+    const placeholderText = getContentString(currentQuestion, 'placeholder');
+    const newQuestionLabel = getContentString(newQuestionButton, 'content');
 
     return (
         <div
