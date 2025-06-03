@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ResponseItem } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getClassName, getLocaleStringTextByCode } from '../../utils';
+import { CommonResponseComponentProps, getClassName } from '../../utils';
 import { format } from 'date-fns';
 import { addYears, getUnixTime } from 'date-fns';
 import YearMonthSelector from './YearMonthSelector';
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
 import 'react-day-picker/dist/style.css';
+import { getContentString } from '../../renderUtils';
 
 
 interface DateInputProps extends CommonResponseComponentProps {
@@ -104,7 +105,7 @@ const DateInput: React.FC<DateInputProps> = (props) => {
                         {selectedDate ? format(selectedDate, "PPP", {
                             locale: props.dateLocales?.find(dl => dl.code === props.languageCode)?.locale
                         }) : <span className='truncate'>
-                            {getLocaleStringTextByCode(props.compDef.description, props.languageCode)}
+                            {getContentString(props.compDef, 'placeholder')}
                         </span>}
                     </Button>
                 </PopoverTrigger>
@@ -133,7 +134,7 @@ const DateInput: React.FC<DateInputProps> = (props) => {
             break;
     }
 
-    const labelText = getLocaleStringTextByCode(props.compDef.content, props.languageCode);
+    const labelText = getContentString(props.compDef, 'label');
 
     return (
         <div className={clsx(

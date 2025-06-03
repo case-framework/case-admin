@@ -32,6 +32,17 @@ export const renderContent = (component: ItemComponent, contentKey: string, clas
     }
 }
 
+export const getContentString = (component: ItemComponent | undefined, contentKey: string) => {
+    if (!component) {
+        return undefined;
+    }
+    const content = component.content?.find(c => c.key === contentKey);
+    if (!content) {
+        return undefined;
+    }
+    return content.resolvedText;
+}
+
 export const renderCQMContent = (content?: string, className?: string) => {
     const parts = parseCQM(content);
 

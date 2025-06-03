@@ -140,13 +140,11 @@ const ResponseComponent: React.FC<ResponseComponentProps> = (props) => {
                     return <TextViewComponent
                         key={respComp.key ? respComp.key : 'p' + index.toString()}
                         compDef={respComp}
-                        languageCode={props.languageCode}
                         embedded={false}
                     />
                 case 'markdown':
                     return <MarkdownComponent key={index.toFixed()}
                         compDef={respComp}
-                        languageCode={props.languageCode}
                         embedded={false}
                     />;
                 case 'singleChoiceGroup':
@@ -238,7 +236,6 @@ const ResponseComponent: React.FC<ResponseComponentProps> = (props) => {
                     return <SliderNumeric
                         parentKey={currentKeyPath}
                         key={respComp.key}
-                        languageCode={props.languageCode}
                         compDef={respComp}
                         prefill={getPrefillForItem(respComp)}
                         responseChanged={handleItemResponse(respComp.key ? respComp.key : 'no key found')}

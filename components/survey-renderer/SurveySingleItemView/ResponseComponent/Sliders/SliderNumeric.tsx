@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ItemComponent, ResponseItem } from 'survey-engine/data_types';
-import { getLocaleStringTextByCode } from '../../utils';
+import { renderContent } from '../../renderUtils';
 import { Slider } from './SliderPrimitive';
 import { cn } from '@/lib/utils';
 
@@ -10,7 +10,6 @@ interface SliderNumericProps {
     compDef: ItemComponent;
     prefill?: ResponseItem;
     responseChanged: (response: ResponseItem | undefined) => void;
-    languageCode: string;
 }
 
 const SliderNumeric: React.FC<SliderNumericProps> = (props) => {
@@ -63,7 +62,7 @@ const SliderNumeric: React.FC<SliderNumericProps> = (props) => {
     };
 
     const fullKey = [props.parentKey, props.compDef.key].join('.');
-    const noResponseText = getLocaleStringTextByCode(props.compDef.description, props.languageCode);
+    const noResponseText = renderContent(props.compDef, 'placeholder');
 
     const minValue = props.compDef.properties?.min as number || 0;
     const maxValue = props.compDef.properties?.max !== undefined ? props.compDef.properties?.max as number : 100;
@@ -80,7 +79,7 @@ const SliderNumeric: React.FC<SliderNumericProps> = (props) => {
                     role='tooltip'
                 >
                     <span className='text-gray-600'>
-                        {getLocaleStringTextByCode(props.compDef.content, props.languageCode)}
+                        {renderContent(props.compDef, 'content')}
                     </span>
                     <span className="ms-2 font-bold text-primary">{response ? inputValue : noResponseText}</span>
                 </div>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { isItemGroupComponent } from 'survey-engine/data_types';
-import { CommonResponseComponentProps, getItemComponentByRole, getLocaleStringTextByCode } from '../../utils';
+import { CommonResponseComponentProps, getItemComponentByRole } from '../../utils';
 import VerticalSlider from './VerticalSlider';
+import { getContentString, renderContent } from '../../renderUtils';
 
 interface EQ5DHealthIndicatorInputProps extends CommonResponseComponentProps {
     isRequired: boolean;
@@ -40,7 +41,7 @@ const EQ5DHealthIndicatorInput: React.FC<EQ5DHealthIndicatorInputProps> = (props
             return null;
         }
         return (<h6>
-            {getLocaleStringTextByCode(instructionComp.content, props.languageCode)}
+            {renderContent(instructionComp, 'content')}
             {props.isRequired ?
                 <span className="ms-2 text-primary">
                     {'*'}
@@ -51,7 +52,7 @@ const EQ5DHealthIndicatorInput: React.FC<EQ5DHealthIndicatorInputProps> = (props
 
     const renderValueBox = () => {
         return <div className="inline-flex flex-wrap bg-primary text-primary-foreground p-2 rounded-[--survey-card-border-radius]">
-            {valueBoxComp ? getLocaleStringTextByCode(valueBoxComp.content, props.languageCode) : null}
+            {valueBoxComp ? renderContent(valueBoxComp, 'content') : null}
             <span className="ms-2">{value}</span>
         </div>
     }
@@ -75,8 +76,8 @@ const EQ5DHealthIndicatorInput: React.FC<EQ5DHealthIndicatorInputProps> = (props
                             setTouched(true);
                             setValue(value);
                         }}
-                        maxValueText={getLocaleStringTextByCode(maxValueComp?.content, props.languageCode)}
-                        minValueText={getLocaleStringTextByCode(minValueComp?.content, props.languageCode)}
+                        maxValueText={getContentString(maxValueComp, 'content')}
+                        minValueText={getContentString(minValueComp, 'content')}
                     />
                 </div>
             </div>
