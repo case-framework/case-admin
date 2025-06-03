@@ -36,7 +36,8 @@
 
     .survey {
         --survey-card-bg: #EDEFF4;
-        --survey-card-header-bg: #D2D8E1;
+        --survey-card-header-bg: #dce4f0;
+        --survey-accent-color: #075400;
 
         --survey-card-invalid-bg: #FBE5EA;
         --survey-error-text-color: #C62447;

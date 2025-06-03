@@ -18,7 +18,7 @@ export const renderContent = (component: ItemComponent, contentKey: string, clas
     const className = classNameOverride || getClassName(component.style);
 
     switch (content?.type) {
-        case 'simple':
+        case 'plain':
             return <span
                 className={className}
             >{content.resolvedText}</span>
@@ -48,10 +48,12 @@ export const renderCQMContent = (content?: string, className?: string) => {
 
     return <span className={className}>
         {parts.map((part, index) => {
+            console.log(part);
             return <span
                 key={index.toFixed()}
                 className={cn({
-                    'text-primary': part.primary,
+                    'text-primary': part.textColor === 'primary',
+                    'text-[var(--survey-accent-color)]': part.textColor === 'accent',
                     'underline': part.underline,
                     'italic': part.italic,
                     'font-bold': part.bold
