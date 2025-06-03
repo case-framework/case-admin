@@ -45,11 +45,14 @@ const EditorView: React.FC<EditorViewProps> = (props) => {
         );
     }
 
+    const hideMoveToOtherGroup = !props.surveyItem.key || props.surveyItem.key.split('.').length === 1;
+
     return (
         <div className='min-w-[400px] w-full min-h-full h-full flex flex-col bg-white'>
             <ItemHeader
                 surveyItem={props.surveyItem}
                 surveyItemList={props.surveyItemList}
+                hideMoveToOtherGroup={hideMoveToOtherGroup}
                 onChangeItemColor={props.onChangeItemColor}
                 currentMode={mode}
                 onChangeMode={setMode}

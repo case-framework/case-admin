@@ -85,10 +85,6 @@ const ItemListEditor: React.FC<ItemListEditorProps> = (props) => {
             }
 
             const oldKey = content.key as string;
-            if (oldKey === parentKey) {
-                toast.error("Can't insert item into itself");
-                return;
-            }
 
             let copiedItemKey = oldKey.split('.').pop();
             if (copiedItemKey === undefined) {
@@ -106,10 +102,13 @@ const ItemListEditor: React.FC<ItemListEditorProps> = (props) => {
             }
 
             const newKey = parentKey + '.' + copiedItemKey;
-            let newClipboardContent = clipboardContent.replaceAll(`"${oldKey}"`, `"${newKey}"`);
-            newClipboardContent = newClipboardContent.replaceAll(`"${oldKey}.`, `"${newKey}.`);
-            const contentToInsert = JSON.parse(newClipboardContent);
 
+            const keyRegex = new RegExp(`"${oldKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\.|")`, 'g');
+            const newClipboardContent = clipboardContent.replace(keyRegex, (_match, suffix) => {
+                return `"${newKey}${suffix}`;
+            });
+
+            const contentToInsert = JSON.parse(newClipboardContent);
             groupItem.items.push(contentToInsert);
             toast.success('New item inserted');
             props.onUpdateSurveyItem(groupItem);
