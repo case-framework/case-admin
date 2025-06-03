@@ -1,7 +1,7 @@
 import { getItemTypeInfos } from '@/components/survey-editor/utils/utils';
 import React from 'react';
 import { SurveyItem } from 'survey-engine/data_types';
-import SurveyEndEditor from './SurveyEndEditor';
+import SurveyEndEditor from './survey-end-editor';
 import '@mdxeditor/editor/style.css'
 import TopContentEditor from './top-content-editor';
 import ComponentSelector from './component-selector';
