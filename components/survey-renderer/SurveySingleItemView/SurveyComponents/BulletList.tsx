@@ -4,7 +4,6 @@ import TextViewComponent from './TextViewComponent';
 
 interface BulletListProps {
     compDef: ItemComponent;
-    languageCode: string;
 }
 
 const BulletList: React.FC<BulletListProps> = (props) => {
@@ -22,7 +21,6 @@ const BulletList: React.FC<BulletListProps> = (props) => {
                 (item: ItemComponent, index: number) => {
                     return <TextViewComponent
                         key={index.toFixed()}
-                        languageCode={props.languageCode}
                         compDef={item}
                         embedded={true}
                     />

@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 
 interface HelpGroupProps {
     componentGroup: ItemGroupComponent;
-    languageCode: string;
     itemKey: string;
 }
 
@@ -23,7 +22,6 @@ const HelpGroup: React.FC<HelpGroupProps> = (props) => {
                     return <MarkdownComponent key={index.toFixed()}
                         className='prose prose-sm'
                         compDef={item}
-                        languageCode={props.languageCode}
                         embedded={true}
                     />
                 })

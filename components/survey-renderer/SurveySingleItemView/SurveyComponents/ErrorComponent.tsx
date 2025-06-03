@@ -1,11 +1,11 @@
 import React from 'react';
 import { ItemComponent } from 'survey-engine/data_types';
-import { getClassName, getLocaleStringTextByCode } from '../utils';
+import { getClassName } from '../utils';
 import clsx from 'clsx';
+import { renderContent } from '../renderUtils';
 
 interface ErrorComponentProps {
     compDef: ItemComponent;
-    languageCode: string;
 }
 
 const ErrorComponent: React.FC<ErrorComponentProps> = (props) => {
@@ -21,7 +21,7 @@ const ErrorComponent: React.FC<ErrorComponentProps> = (props) => {
             }
             role="alert"
         >
-            {getLocaleStringTextByCode(props.compDef.content, props.languageCode)}
+            {renderContent(props.compDef, 'content')}
         </p>
     );
 };

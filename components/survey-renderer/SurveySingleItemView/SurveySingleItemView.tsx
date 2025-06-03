@@ -72,20 +72,18 @@ const ItemBodyComponent: React.FC<{
                 showErrors={props.showErrors}
             />
         case 'text':
-            return <TextViewComponent key={index.toFixed()}
+            return <TextViewComponent
+                key={index.toFixed()}
                 compDef={component}
-                languageCode={props.languageCode}
                 embedded={false}
             />;
         case 'bullets':
             return <BulletList key={index.toFixed()}
                 compDef={component}
-                languageCode={props.languageCode}
             />
         case 'markdown':
             return <MarkdownComponent key={index.toFixed()}
                 compDef={component}
-                languageCode={props.languageCode}
                 embedded={false}
             />;
         case 'error':
@@ -94,12 +92,10 @@ const ItemBodyComponent: React.FC<{
             }
             return <ErrorComponent key={index.toFixed()}
                 compDef={component}
-                languageCode={props.languageCode}
             />
         case 'warning':
             return <WarningComponent key={index.toFixed()}
                 compDef={component}
-                languageCode={props.languageCode}
             />
         default:
             console.warn('component role not implemented: ' + component.role);
@@ -129,7 +125,6 @@ const SurveySingleItemView: React.FC<SurveySingleItemViewProps> = (props) => {
             <HelpGroup
                 itemKey={props.renderItem.key.replace('.', '-')}
                 componentGroup={helpGroup}
-                languageCode={props.languageCode}
             />
         )
     }
@@ -290,7 +285,6 @@ const SurveySingleItemView: React.FC<SurveySingleItemViewProps> = (props) => {
                 className={clsx('mt-2 text-sm italic text-center text-balance')}
                 key={index.toFixed()}
                 compDef={component}
-                languageCode={props.languageCode}
                 embedded={false}
             />
         })

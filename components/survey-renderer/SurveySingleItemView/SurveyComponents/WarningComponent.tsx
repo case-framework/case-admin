@@ -1,11 +1,11 @@
 import React from 'react';
 import { ItemComponent } from 'survey-engine/data_types';
-import { getClassName, getLocaleStringTextByCode } from '../utils';
+import { getClassName } from '../utils';
 import clsx from 'clsx';
+import { renderContent } from '../renderUtils';
 
 interface WarningComponentProps {
     compDef: ItemComponent;
-    languageCode: string;
 }
 
 const WarningComponent: React.FC<WarningComponentProps> = (props) => {
@@ -19,7 +19,7 @@ const WarningComponent: React.FC<WarningComponentProps> = (props) => {
                     getClassName(props.compDef.style),
                 )
             }>
-            {getLocaleStringTextByCode(props.compDef.content, props.languageCode)}
+            {renderContent(props.compDef, 'content')}
         </p>
     );
 };

@@ -2,14 +2,11 @@ import React from 'react';
 import { ItemComponent } from 'survey-engine/data_types';
 import { getClassName } from '../utils';
 import clsx from 'clsx';
-import { renderFormattedContent } from '../renderUtils';
-import { Locale } from 'date-fns';
+import { renderContent } from '../renderUtils';
 
 interface TextViewComponentProps {
     compDef: ItemComponent;
-    languageCode: string;
     className?: string;
-    dateLocales?: Array<{ code: string, locale: Locale, format: string }>;
     embedded: boolean;
 }
 
@@ -49,7 +46,7 @@ const TextViewComponent: React.FC<TextViewComponentProps> = (props) => {
         getClassName(props.compDef.style)
     );
 
-    const content = renderFormattedContent(props.compDef, props.languageCode, undefined, props.dateLocales ? props.dateLocales : []);
+    const content = renderContent(props.compDef, 'content', className);
 
     const TextTag = variant ? variant : 'p';
 
