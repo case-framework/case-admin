@@ -9,7 +9,7 @@ import ResponseComponent, { CustomSurveyResponseComponent } from './ResponseComp
 import clsx from 'clsx';
 import BulletList from './SurveyComponents/BulletList';
 import MarkdownComponent from './SurveyComponents/MarkdownComponent';
-import { renderFormattedContent } from './renderUtils';
+import { renderContent } from './renderUtils';
 import { cn } from '@/lib/utils';
 import { Locale } from 'date-fns';
 import { SurveyItemContextProvider } from './survey-item-context';
@@ -223,23 +223,16 @@ const SurveySingleItemView: React.FC<SurveySingleItemViewProps> = (props) => {
     }
 
     const titleComp = getItemComponentByRole(props.renderItem.components?.items, 'title')
-    let subTitleComp = getItemComponentByRole(props.renderItem.components?.items, 'subtitle')
-    // fallback to legacy survey subtitle
-    if (!subTitleComp && titleComp && titleComp.description) {
-        subTitleComp = {
-            key: 'legacy-subtitle',
-            role: 'text',
-            content: titleComp.description,
-        }
-    }
+    const subTitleComp = getItemComponentByRole(props.renderItem.components?.items, 'subtitle')
+
 
     const renderItemHeader = (): React.ReactNode => {
         if (!titleComp) {
             return null;
         }
 
-        const titleContent = renderFormattedContent(titleComp, props.languageCode, undefined, props.dateLocales ? props.dateLocales : []);
-        const subTitleContent = subTitleComp ? renderFormattedContent(subTitleComp, props.languageCode, 'italic', props.dateLocales ? props.dateLocales : []) : null;
+        const titleContent = renderContent(titleComp, 'content');
+        const subTitleContent = subTitleComp ? renderContent(subTitleComp, 'content', 'italic') : null;
 
         return (
             <legend

@@ -1,24 +1,25 @@
 import SurveySingleItemView from '@/components/survey-renderer/SurveySingleItemView/SurveySingleItemView';
 import React from 'react';
-import { ComponentProperties, Expression, ExpressionArg, ItemGroupComponent, LocalizedObject, LocalizedString, SurveyItem, SurveySingleItem, isItemGroupComponent } from 'survey-engine/data_types';
+import { ComponentProperties, Expression, ExpressionArg, ItemComponent, ItemGroupComponent, LocalizedContent, SurveyItem, SurveySingleItem, isItemGroupComponent } from 'survey-engine/data_types';
 import SurveyLanguageToggle from '../../../../general/SurveyLanguageToggle';
-import { nl } from 'date-fns/locale';
+import { enUS as en, nl } from 'date-fns/locale';
 import { SurveyContextProvider } from '@/components/survey-renderer/survey-context';
 import { useSurveyEditorCtx } from '@/components/survey-editor/surveyEditorContext';
+
 
 
 interface ItemPreviewProps {
     surveyItem: SurveyItem;
 }
 
-const dummyResolveItem = (item: SurveySingleItem): SurveySingleItem => {
+const dummyResolveItem = (item: SurveySingleItem, languageCode: string): SurveySingleItem => {
     const resolvedItem = { ...item };
 
-    resolvedItem.components = resolveComponentGroup(resolvedItem, resolvedItem.components as ItemGroupComponent, false);
+    resolvedItem.components = resolveComponentGroup(resolvedItem, languageCode, resolvedItem.components as ItemGroupComponent, false);
     return resolvedItem;
 }
 
-const resolveComponentGroup = (parentItem: SurveySingleItem, group?: ItemGroupComponent, rerender?: boolean): ItemGroupComponent => {
+const resolveComponentGroup = (parentItem: SurveySingleItem, languageCode: string, group?: ItemGroupComponent, rerender?: boolean): ItemGroupComponent => {
     if (!group) {
         return { role: '', items: [] }
     }
@@ -28,26 +29,23 @@ const resolveComponentGroup = (parentItem: SurveySingleItem, group?: ItemGroupCo
             console.warn(`this should not be a component group, items is missing or empty: ${parentItem.key} -> ${group.key}/${group.role} `);
             return {
                 ...group,
-                content: resolveContent(group.content),
-                description: resolveContent(group.description),
+                content: resolveContent(group.content, languageCode, group),
                 displayCondition: undefined // group.displayCondition ? this.evalConditions(group.displayCondition as Expression, parentItem) : undefined,
             }
         }
         return {
             ...group,
-            content: resolveContent(group.content),
-            description: resolveContent(group.description),
+            content: resolveContent(group.content, languageCode, group),
             displayCondition: undefined, // group.displayCondition ? this.evalConditions(group.displayCondition as Expression, parentItem) : undefined,
             items: group.items.map(comp => {
                 if (isItemGroupComponent(comp)) {
-                    return resolveComponentGroup(parentItem, comp);
+                    return resolveComponentGroup(parentItem, languageCode, comp);
                 }
                 return {
                     ...comp,
                     disabled: undefined, // comp.disabled ? this.evalConditions(comp.disabled as Expression, parentItem) : undefined,
                     displayCondition: undefined, // comp.displayCondition ? this.evalConditions(comp.displayCondition as Expression, parentItem) : undefined,
-                    content: resolveContent(comp.content),
-                    description: resolveContent(comp.description),
+                    content: resolveContent(comp.content, languageCode, comp),
                     properties: resolveComponentProperties(comp.properties),
                 }
             }),
@@ -62,35 +60,28 @@ const resolveComponentGroup = (parentItem: SurveySingleItem, group?: ItemGroupCo
     }
 }
 
-const resolveContent = (contents: LocalizedObject[] | undefined): LocalizedObject[] | undefined => {
+const resolveContent = (contents: LocalizedContent[] | undefined, languageCode: string, component: ItemComponent): LocalizedContent[] | undefined => {
     if (!contents) { return; }
 
+    const noTranslationFound = (key: string) => '!! ' + languageCode + ' translation missing for ' + key + ' !!';
+
     return contents.map(cont => {
-        if ((cont as LocalizedString).parts && (cont as LocalizedString).parts.length > 0) {
-            const resolvedContents = (cont as LocalizedString).parts.map(
-                p => {
-                    if (typeof (p) === 'string' || typeof (p) === "number") {
-                        // should not happen - only after resolved content is generated
-                        return p
-                    }
-                    switch (p.dtype) {
-                        case 'exp':
-                            return '<dynamic value>';
-                        case 'num':
-                            return p.num;
-                        default:
-                            return p.str;
-                    }
-                }
-            );
-            return {
-                code: cont.code,
-                parts: resolvedContents,
-                resolvedText: resolvedContents.join(''),
-            }
+        let resolvedContent: string;
+        const translation = component.translations?.[languageCode];
+        if (translation) {
+            resolvedContent = translation[cont.key] || noTranslationFound(cont.key);
+        } else {
+            resolvedContent = noTranslationFound(cont.key);
         }
+
+        if (cont.type === 'CQM') {
+            console.log('handle preview for CQM');
+        }
+
         return {
-            ...cont
+            type: cont.type,
+            key: cont.key,
+            resolvedText: resolvedContent
         }
     })
 }
@@ -140,27 +131,38 @@ export const expressionArgParser = (arg: ExpressionArg): number | string | Expre
 const ItemPreview: React.FC<ItemPreviewProps> = (props) => {
     const { selectedLanguage } = useSurveyEditorCtx();
 
+    const renderedItem = dummyResolveItem(props.surveyItem as SurveySingleItem, selectedLanguage);
+
+    const isSurveyEnd = renderedItem.type === 'surveyEnd';
+
     return (
         <div className='max-w-[832px] mx-auto py-4 space-y-4 survey'>
             <div className='flex justify-end'>
                 <SurveyLanguageToggle />
             </div>
 
-            <div className='border border-neutral-200 p-4 bg-white shadow-md rounded-sm'>
+            <div className='border border-neutral-200 p-4 bg-white shadow-md rounded-sm @container'>
                 <SurveyContextProvider
                     onRunExternalHandler={undefined}
                 >
                     <SurveySingleItemView
-                        renderItem={dummyResolveItem(props.surveyItem as SurveySingleItem)}
+                        renderItem={renderedItem}
                         languageCode={selectedLanguage}
                         responseChanged={() => { }}
                         invalidWarning={'invalid warning'}
                         showInvalid={false}
                         showKeys={false}
                         dateLocales={[{
+                            code: 'en', locale: en, format: 'PPP'
+                        }, {
                             code: 'nl', locale: nl, format: 'PPP'
                         }]}
                     />
+                    {isSurveyEnd ? <div className='bg-[--survey-card-bg] px-[--survey-card-px-sm] @md:px-[--survey-card-px] py-2 @md:py-4 rounded-b-[--survey-card-border-radius]'>
+                        <p>{'< Button to submit >'}</p>
+                    </div> : null}
+
+
                 </SurveyContextProvider>
             </div>
         </div>

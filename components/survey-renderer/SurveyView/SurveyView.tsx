@@ -8,6 +8,7 @@ import { isFirefox } from 'react-device-detect';
 import { Locale } from 'date-fns';
 import { useWindowSize } from 'usehooks-ts';
 import { HandlerFunction, SurveyContextProvider } from '../survey-context';
+import { compileSurvey } from 'survey-engine';
 
 interface SurveyViewProps {
     instanceKey?: string;
@@ -35,7 +36,16 @@ interface SurveyViewProps {
 
 
 const SurveyView: React.FC<SurveyViewProps> = (props) => {
-    const [surveyEngine, setSurveyEngine] = useState<SurveyEngineCore>(new SurveyEngineCore(props.survey, props.context, props.prefills, props.showEngineDebugMsg));
+    console.log(props.survey);
+    console.log(compileSurvey(props.survey));
+    const [surveyEngine, setSurveyEngine] = useState<SurveyEngineCore>(new SurveyEngineCore(
+        compileSurvey(props.survey),
+        props.context,
+        props.prefills,
+        props.showEngineDebugMsg,
+        props.languageCode,
+        props.dateLocales,
+    ));
     const { width = 0 } = useWindowSize()
     const surveyPages = surveyEngine.getSurveyPages(width < 649 ? 'small' : 'large');
 
@@ -45,8 +55,15 @@ const SurveyView: React.FC<SurveyViewProps> = (props) => {
     const surveyRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        setSurveyEngine(new SurveyEngineCore(props.survey, props.context, props.prefills));
-    }, [props.instanceKey, props.survey, props.context, props.prefills]);
+        setSurveyEngine(new SurveyEngineCore(props.survey, props.context, props.prefills, props.showEngineDebugMsg, props.languageCode, props.dateLocales));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.instanceKey, props.survey, props.context, props.prefills, props.showEngineDebugMsg, props.dateLocales]);
+
+    useEffect(() => {
+        surveyEngine.setSelectedLocale(props.languageCode);
+    }, [props.languageCode, surveyEngine]);
+
+    console.log(surveyEngine.getRenderedSurvey());
 
     const onResponsesChanged = () => {
         if (props.onResponsesChanged) {

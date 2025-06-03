@@ -4,7 +4,8 @@ import { SurveyEngineCore } from 'survey-engine/engine';
 import SurveySingleItemView from '../../SurveySingleItemView/SurveySingleItemView';
 
 import { checkSurveyItemsValidity, checkSurveyItemValidity } from 'survey-engine/validation-checkers';
-import { getItemComponentByRole, getLocaleStringTextByCode } from '../../SurveySingleItemView/utils';
+import { getItemComponentByRole } from '../../SurveySingleItemView/utils';
+import { renderContent } from '../../SurveySingleItemView/renderUtils';
 import { CustomSurveyResponseComponent } from '../../SurveySingleItemView/ResponseComponent/ResponseComponent';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -127,7 +128,9 @@ const SurveyPageView: React.FC<SurveyPageViewProps> = (props) => {
                 "rounded-[--survey-card-border-radius-sm] @md:rounded-[--survey-card-border-radius]"
             )}
         >
-            {titleComp ? <h5 className="text-primary text-xl font-bold mb-4">{getLocaleStringTextByCode(titleComp.content, props.selectedLanguage)}</h5> : null}
+            {titleComp ? <p className="text-primary text-xl font-bold mb-4">
+                {renderContent(titleComp, 'title')}
+            </p> : null}
             <div className='flex gap-2 @md:gap-4'>
                 {props.showBackButton ?
                     <Button

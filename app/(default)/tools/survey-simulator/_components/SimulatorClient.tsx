@@ -6,6 +6,7 @@ import { HandlerFuncArgType } from '@/components/survey-renderer/survey-context'
 import { LoaderIcon } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { useWindowSize } from 'usehooks-ts';
+import { enGB, nl, de } from 'date-fns/locale';
 
 
 const SimulatorClient: React.FC = () => {
@@ -93,7 +94,23 @@ const SimulatorClient: React.FC = () => {
                     context={simulatorConfig.surveyContext || {}}
                     prefills={simulatorConfig.prefills || []}
                     customResponseComponents={[]}
-                    dateLocales={[]}
+                    dateLocales={[
+                        {
+                            code: 'en',
+                            locale: enGB,
+                            format: 'MM/dd/yyyy'
+                        },
+                        {
+                            code: 'nl',
+                            locale: nl,
+                            format: 'dd-MM-yyyy'
+                        },
+                        {
+                            code: 'de',
+                            locale: de,
+                            format: 'dd.MM.yyyy'
+                        }
+                    ]}
                     loading={false}
                     onResponsesChanged={(responses, version, surveyEngine) => {
                         console.log('responses changed', responses, version, surveyEngine);
