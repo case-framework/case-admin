@@ -16,7 +16,7 @@ export const isValidSurveyItemGroup = (item: SurveyItem): item is SurveyGroupIte
 }
 
 
-export const getItemTypeInfos = (item: SurveyItem): { key: string, label: string, description: string, defaultItemClassName: string, icon: LucideIcon } => {
+export const getItemTypeInfos = (item: SurveyItem): { key: ItemTypeKey, label: string, description: string, defaultItemClassName: string, icon: LucideIcon } => {
     if (isValidSurveyItemGroup(item)) {
         return SpecialSurveyItemTypeInfos.groupItem;
     }
@@ -115,8 +115,11 @@ export const determineItemType = (item: SurveySingleItem): string => {
 
 }
 
+export type SurveyItemTypeKey = 'custom' | 'display' | 'singleChoice' | 'multipleChoice' | 'dropdown' | 'textInput' | 'timeInput' | 'dateInput' | 'numericInput' | 'sliderNumeric' | 'codeValidator' | 'matrix' | 'responsiveMatrix' | 'responsiveBipolarLikertScaleArray' | 'responsiveSingleChoiceArray' | 'clozeQuestion' | 'consent' | 'validatedRandomQuestion' | 'contact';
+export type SpecialItemTypeKey = 'group' | 'pageBreak' | 'surveyEnd';
+export type ItemTypeKey = SurveyItemTypeKey | SpecialItemTypeKey;
 
-export const SpecialSurveyItemTypeInfos = {
+export const SpecialSurveyItemTypeInfos: Record<string, { key: SpecialItemTypeKey, label: string, description: string, defaultItemClassName: string, icon: LucideIcon }> = {
     groupItem: {
         key: 'group',
         label: 'Group',
@@ -140,7 +143,7 @@ export const SpecialSurveyItemTypeInfos = {
     }
 }
 
-export const SurveyItemTypeRegistry = [
+export const SurveyItemTypeRegistry: { key: SurveyItemTypeKey, label: string, description: string, className: string, icon: LucideIcon }[] = [
     {
         key: 'display',
         label: 'Display',

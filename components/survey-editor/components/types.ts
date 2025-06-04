@@ -1,5 +1,9 @@
 // TODO: Add all relevant types or remove this enum
 export enum ItemComponentRole {
+    Title = 'title',
+    Subtitle = 'subtitle',
+    HelpGroup = 'helpGroup',
+    Footnote = 'footnote',
     ResponseGroup = 'responseGroup',
     Options = 'options',
     Option = 'option',
@@ -11,7 +15,7 @@ export enum ItemComponentRole {
     HeaderRow = 'headerRow',
     ResponseRow = 'responseRow',
     DropdownGroup = 'dropDownGroup',
-    Text = 'text',
+    TextContent = 'text',
     Cloze = 'cloze',
     TimeInput = 'timeInput',
     DateInput = 'dateInput',
@@ -19,6 +23,10 @@ export enum ItemComponentRole {
     ResponsiveSingleChoiceArray = 'responsiveSingleChoiceArray',
     SingleChoiceGroup = 'singleChoiceGroup',
     MultipleChoiceGroup = 'multipleChoiceGroup',
+    Markdown = 'markdown',
+    Error = 'error',
+    Warning = 'warning',
+    Root = 'root',
 }
 
 export enum EditorMode { Properties = 'properties', ItemEditor = 'itemEditor', Simulator = 'simulator' }

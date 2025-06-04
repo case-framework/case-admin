@@ -1,5 +1,5 @@
-import { SurveyGroupItem, SurveyItem } from "survey-engine/data_types";
-import { getItemColorFromID } from "./utils";
+import { SurveyItem } from "survey-engine/data_types";
+import { ItemTypeKey, getItemColorFromID } from "./utils";
 import { generatePageBreak, generateTitleComponent } from "case-editor-tools/surveys/utils/simple-generators";
 import { Group } from "case-editor-tools/surveys/types";
 import { ItemEditor } from "case-editor-tools/surveys/survey-editor/item-editor";
@@ -35,16 +35,13 @@ class SimpleGroup extends Group {
 
 
 export const generateNewItemForType = (props: {
-    itemType: string;
-    parentGroup: SurveyGroupItem;
+    itemType: ItemTypeKey;
+    parentKey: string;
+    otherKeys: string[];
 }): SurveyItem | null => {
-    const keysInGroupAlready = props.parentGroup.items.map(i => i.key);
-
-    const parentKey = props.parentGroup.key;
-    const newItemType = props.itemType;
-
-    const newItemKey = getUniqueRandomKey(keysInGroupAlready, parentKey);
-
+    const newItemType = props.itemType as ItemTypeKey;
+    const parentKey = props.parentKey;
+    const newItemKey = getUniqueRandomKey(props.otherKeys, parentKey);
     const editorItemColor = getItemColorFromID(newItemKey);
 
     let newSurveyItem: SurveyItem | null = null;
@@ -126,16 +123,6 @@ export const generateNewItemForType = (props: {
             break;
         case 'textInput':
             newSurveyItem = SurveyItems.textInput({
-                parentKey: parentKey,
-                itemKey: newItemKey,
-                questionText: new Map(),
-                metadata: {
-                    editorItemColor: editorItemColor
-                }
-            });
-            break;
-        case 'multilineTextInput':
-            newSurveyItem = SurveyItems.multilineTextInput({
                 parentKey: parentKey,
                 itemKey: newItemKey,
                 questionText: new Map(),

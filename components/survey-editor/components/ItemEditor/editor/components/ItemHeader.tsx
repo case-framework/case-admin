@@ -1,11 +1,11 @@
 import React from 'react';
 import { SurveyItem, SurveySingleItem } from 'survey-engine/data_types';
-import { builtInItemColors, getItemColor, getItemKeyFromFullKey, getItemTypeInfos, getParentKeyFromFullKey } from '../../../../utils/utils';
+import { ItemTypeKey, builtInItemColors, getItemColor, getItemKeyFromFullKey, getItemTypeInfos, getParentKeyFromFullKey } from '../../../../utils/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Popover, PopoverContent } from '@/components/ui/popover';
 import { PopoverClose, PopoverTrigger } from '@radix-ui/react-popover';
 import { Button } from '@/components/ui/button';
-import { ClipboardCopy, CodeSquare, CornerDownRight, MoreVertical, Move, ShieldCheck, SquarePen, Trash2, X } from 'lucide-react';
+import { Blocks, ClipboardCopy, CodeSquare, CornerDownRight, MoreVertical, Move, ShieldCheck, SquarePen, Trash2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
@@ -15,6 +15,7 @@ import MoveItemDialog from './MoveItemDialog';
 import ItemLabelPreviewAndEditor from './item-label-preview-and-editor';
 import { PopoverKeyBadge } from './KeyBadge';
 import { useItemEditorCtx } from '../../item-editor-context';
+import ConvertItemDialog from './ConvertItemDialog';
 
 interface ItemHeaderProps {
     surveyItem: SurveyItem;
@@ -64,6 +65,7 @@ const ItemHeader: React.FC<ItemHeaderProps> = (props) => {
     const popoverCloseRef = React.useRef<HTMLButtonElement>(null);
     const [, copy] = useCopyToClipboard()
     const [moveItemDialogOpen, setMoveItemDialogOpen] = React.useState(false);
+    const [convertItemDialogOpen, setConvertItemDialogOpen] = React.useState(false);
 
     const item = {
         parentKey: getParentKeyFromFullKey(props.surveyItem.key),
@@ -73,6 +75,8 @@ const ItemHeader: React.FC<ItemHeaderProps> = (props) => {
     }
 
     const hideColorPicker = item.typeInfos.key === 'pageBreak' || item.typeInfos.key === 'surveyEnd';
+    const hiddenConvertTypes: ItemTypeKey[] = ['surveyEnd', 'pageBreak', 'group'];
+    const disableConvertItem = hiddenConvertTypes.includes(item.typeInfos.key);
 
     const confidentialSymbol = () => {
         const confidentialMode = (props.surveyItem as SurveySingleItem).confidentialMode;
@@ -204,6 +208,15 @@ const ItemHeader: React.FC<ItemHeaderProps> = (props) => {
                         <p>Move to other group</p>
                     </div>
                 </DropdownMenuItem>}
+                <DropdownMenuItem
+                    disabled={disableConvertItem}
+                    onClick={() => setConvertItemDialogOpen(true)}
+                >
+                    <div className='flex items-center gap-2'>
+                        <Blocks className='text-neutral-500 size-5' />
+                        <p>Convert</p>
+                    </div>
+                </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
@@ -302,6 +315,17 @@ const ItemHeader: React.FC<ItemHeaderProps> = (props) => {
                 {itemMenu}
             </div>
             {moveItemDialog}
+            <ConvertItemDialog open={convertItemDialogOpen}
+                surveyItem={props.surveyItem}
+                onClose={() => setConvertItemDialogOpen(false)}
+                surveyItemList={props.surveyItemList}
+                onItemConverted={(newItem) => {
+                    const surveyItemJSON = JSON.stringify(newItem, null, 2);
+                    copy(surveyItemJSON);
+                    toast('Converted item copied to clipboard');
+                    setConvertItemDialogOpen(false);
+                }}
+            />
 
         </TooltipProvider>
     );

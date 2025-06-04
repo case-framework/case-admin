@@ -6,7 +6,7 @@ import { SurveyEditor as EditorInstance } from 'case-editor-tools/surveys/survey
 import CompactExplorer from './explorer/CompactExplorer';
 import ExplorerColumn from './explorer/ExplorerColumn';
 import EditorView from './editor/EditorView';
-import { getParentKeyFromFullKey, getSurveyItemsAsFlatList, isValidSurveyItemGroup } from '../../utils/utils';
+import { ItemTypeKey, getParentKeyFromFullKey, getSurveyItemsAsFlatList, isValidSurveyItemGroup } from '../../utils/utils';
 import { toast } from 'sonner';
 import { generateNewItemForType } from '../../utils/new-item-init';
 import { SurveyEditorContext } from '../../surveyEditorContext';
@@ -57,8 +57,9 @@ const ItemEditor: React.FC<ItemEditorProps> = (props) => {
         }
 
         const newSurveyItem = generateNewItemForType({
-            itemType: newItemInfos.itemType,
-            parentGroup: parentItem as SurveyGroupItem,
+            itemType: newItemInfos.itemType as ItemTypeKey,
+            parentKey: parentItem.key,
+            otherKeys: parentItem.items?.map(item => item.key) ?? [],
         });
 
         if (newSurveyItem) {
