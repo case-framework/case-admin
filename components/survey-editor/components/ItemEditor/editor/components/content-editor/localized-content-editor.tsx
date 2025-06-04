@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import DynamicValuesEditor from "./dynamic-values-editor";
 
 interface LocalizedContentEditorProps {
     component: ItemComponent;
@@ -121,10 +122,6 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = (props) =>
             break;
     }
 
-
-    // TODO: type: simple, CQM, markdown
-    // TODO: manage dynamic values if CQM is selected
-
     return <div className="space-y-2 mt-4">
         <Label htmlFor={`${props.contentKey}-editor`}>
             <div className="flex items-center gap-2 justify-between">
@@ -176,6 +173,14 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = (props) =>
             </div>
         </Label>
         {renderContentEditor()}
+
+        {/* Dynamic Values Editor - only show for CQM content type */}
+        {currentContent.type === 'CQM' && (
+            <DynamicValuesEditor
+                component={props.component}
+                onChange={props.onChange}
+            />
+        )}
 
         <ClassNameEditor
             styles={props.component.style || []}

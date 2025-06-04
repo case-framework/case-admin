@@ -48,7 +48,6 @@ export const renderCQMContent = (content?: string, className?: string) => {
 
     return <span className={className}>
         {parts.map((part, index) => {
-            console.log(part);
             return <span
                 key={index.toFixed()}
                 className={cn({

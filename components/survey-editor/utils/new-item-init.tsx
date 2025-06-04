@@ -6,6 +6,7 @@ import { ItemEditor } from "case-editor-tools/surveys/survey-editor/item-editor"
 import { SurveyItems } from "case-editor-tools/surveys/survey-items";
 import { ComponentGenerators } from "case-editor-tools/surveys/utils/componentGenerators";
 import { initMatrixQuestion } from "case-editor-tools/surveys/responseTypeGenerators/matrixGroupComponent";
+import { initNewTextComponent } from "./new-component-init";
 
 // generate random 3 letter string
 const randomString = (targetLength: number = 3) => {
@@ -63,7 +64,11 @@ export const generateNewItemForType = (props: {
             const editor = new ItemEditor(undefined, { itemKey: parentKey + '.' + newItemKey, type: 'surveyEnd', isGroup: false });
 
             editor.setTitleComponent(
-                generateTitleComponent(new Map<string, string>())
+                initNewTextComponent(
+                    undefined,
+                    'title',
+                    [{ type: 'plain', key: 'content' }],
+                )
             );
             newSurveyItem = editor.getItem();
             break;

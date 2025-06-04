@@ -129,7 +129,7 @@ const SurveyPageView: React.FC<SurveyPageViewProps> = (props) => {
             )}
         >
             {titleComp ? <p className="text-primary text-xl font-bold mb-4">
-                {renderContent(titleComp, 'title')}
+                {renderContent(titleComp, 'content')}
             </p> : null}
             <div className='flex gap-2 @md:gap-4'>
                 {props.showBackButton ?

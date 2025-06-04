@@ -12,7 +12,7 @@ import { Copy, Rows, Trash2 } from "lucide-react";
 import { Expression, ItemGroupComponent, SurveySingleItem } from "survey-engine/data_types";
 import { useSurveyEditorCtx } from "@/components/survey-editor/surveyEditorContext";
 import { PopoverKeyBadge } from "../../KeyBadge";
-import { StyleClassNameEditor } from "./style-class-name-editor";
+import { ClassNameEditor } from "../classname-editor";
 import { OptionsEditor } from "./rsca";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
@@ -268,19 +268,19 @@ const RowAdvancedEditor: React.FC<ComponentEditorGenericProps> = (props) => {
                 View mode specific settings
             </h3>
 
-            <StyleClassNameEditor
+            <ClassNameEditor
                 styles={props.component.style || []}
                 styleKey={RblsaStyleKeys.tableModeClassName}
                 label={"Table Mode Class Name"}
                 onChange={onRowStyleChange} />
             <Separator />
-            <StyleClassNameEditor
+            <ClassNameEditor
                 styles={props.component.style || []}
                 styleKey={RblsaStyleKeys.labelRowModeClassName}
                 label={"Label Row Mode Class Name"}
                 onChange={onRowStyleChange} />
             <Separator />
-            <StyleClassNameEditor
+            <ClassNameEditor
                 styles={props.component.style || []}
                 styleKey={RblsaStyleKeys.verticalModeClassName}
                 label={"Vertical Mode Class Name"}
@@ -603,27 +603,27 @@ const Rblsa: React.FC<RblsaProps> = (props) => {
                         <p className='font-semibold'>
                             Styling attributes:
                         </p>
-                        <StyleClassNameEditor
+                        <ClassNameEditor
                             styles={styles}
                             styleKey="labelRowPosition"
                             label="labelRowPosition"
                             onChange={(key, newValue) => onStyleChange(key, newValue)} />
-                        <StyleClassNameEditor
+                        <ClassNameEditor
                             styles={styles}
                             styleKey="labelRowMaxLabelWidth"
                             label="labelRowMaxLabelWidth"
                             onChange={(key, newValue) => onStyleChange(key, newValue)} />
-                        <StyleClassNameEditor
+                        <ClassNameEditor
                             styles={styles}
                             styleKey="tableModeLayout"
                             label="tableModeLayout"
                             onChange={(key, newValue) => onStyleChange(key, newValue)} />
-                        <StyleClassNameEditor
+                        <ClassNameEditor
                             styles={styles}
                             styleKey="tableModeLabelColWidth"
                             label="tableModeLabelColWidth"
                             onChange={(key, newValue) => onStyleChange(key, newValue)} />
-                        <StyleClassNameEditor
+                        <ClassNameEditor
                             styles={styles}
                             styleKey="tableModeClassName"
                             label="tableModeClassName"

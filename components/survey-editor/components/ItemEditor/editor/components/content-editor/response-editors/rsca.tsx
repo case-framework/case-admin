@@ -14,7 +14,7 @@ import { useSurveyEditorCtx } from '@/components/survey-editor/surveyEditorConte
 import { PopoverKeyBadge } from '../../KeyBadge';
 import { ItemComponentRole } from '@/components/survey-editor/components/types';
 import { SimpleTextViewContentEditor } from './text-view-content-editor';
-import { StyleClassNameEditor } from './style-class-name-editor';
+import { ClassNameEditor } from '../classname-editor';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ComponentEditor, { ComponentEditorGenericProps } from '../component-editor';
 import SurveyLanguageToggle from '@/components/survey-editor/components/general/SurveyLanguageToggle';
@@ -339,19 +339,19 @@ const RowAdvancedEditor: React.FC<ComponentEditorGenericProps> = (props) => {
 
             </div>
 
-            <StyleClassNameEditor
+            <ClassNameEditor
                 styles={props.component.style || []}
                 styleKey={RscaStyleKeys.horizontalModeClassName}
                 label={"Horizontal Mode Class Name"}
                 onChange={onRowStyleChange} />
 
-            <StyleClassNameEditor
+            <ClassNameEditor
                 styles={props.component.style || []}
                 styleKey={RscaStyleKeys.verticalModeClassName}
                 label={"Vertical Mode Class Name"}
                 onChange={onRowStyleChange} />
 
-            <StyleClassNameEditor
+            <ClassNameEditor
                 styles={props.component.style || []}
                 styleKey={RscaStyleKeys.tableModeClassName}
                 label={"Table Mode Class Name"}
