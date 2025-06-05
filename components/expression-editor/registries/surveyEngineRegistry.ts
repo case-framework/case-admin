@@ -137,7 +137,7 @@ const advancedExpressions: ExpressionDef[] = [
         categories: ['advanced'],
         label: 'Is value defined',
         returnType: 'boolean',
-        icon: 'blocks',
+        icon: 'package-check',
         color: 'teal',
         slots: [
             {
@@ -225,7 +225,7 @@ const advancedExpressions: ExpressionDef[] = [
         categories: ['advanced'],
         label: 'Is user logged in',
         returnType: 'boolean',
-        icon: 'blocks',
+        icon: 'user-check',
         slots: [],
         defaultValue: {
             dtype: 'exp',
@@ -290,6 +290,7 @@ const responseDependencies: ExpressionDef[] = [
         label: 'A specific response is present',
         returnType: 'boolean',
         color: 'yellow',
+        icon: 'circle-check-big',
         slots: [
             {
                 label: 'Item key',
@@ -333,7 +334,7 @@ const responseDependencies: ExpressionDef[] = [
         label: 'Response contains any of these keys',
         returnType: 'boolean',
         color: 'yellow',
-        icon: 'layout-list',
+        icon: 'copy-plus',
         slots: [
             {
                 label: 'Item and option references:',
@@ -368,7 +369,7 @@ const responseDependencies: ExpressionDef[] = [
         id: 'responseHasKeysAll',
         label: 'Response contains all of these keys',
         returnType: 'boolean',
-        icon: 'layout-list',
+        icon: 'copy-check',
         slots: [
             {
                 label: 'Item and option references:',
@@ -400,7 +401,7 @@ const responseDependencies: ExpressionDef[] = [
         label: 'Has response but none of these keys:',
         returnType: 'boolean',
         color: 'yellow',
-        icon: 'layout-list',
+        icon: 'copy-x',
         slots: [
             {
                 label: 'Item and option references:',
@@ -664,7 +665,7 @@ const templates: ExpressionDef[] = [
         id: 'consent-given',
         label: 'Consent question accepted',
         returnType: 'boolean',
-        icon: 'signpost',
+        icon: 'clipboard-check',
         slots: [],
         defaultValue: {
             dtype: 'exp',
@@ -830,7 +831,7 @@ const participantFlags: ExpressionDef[] = [
         id: 'hasParticipantFlagKeyAndValue',
         label: 'Participant flag with key and value exists',
         returnType: 'boolean',
-        icon: 'tag',
+        icon: 'tags',
         color: 'dark',
         slots: [
             {
@@ -950,7 +951,7 @@ export const surveyEngineRegistry: ExpressionDef[] = [
         id: 'getSurveyItemValidation',
         label: 'Is survey item validation true',
         returnType: 'boolean',
-        icon: 'terminal',
+        icon: 'badge-check',
         color: 'cyan',
         slots: [
             {

@@ -75,7 +75,9 @@ export interface SlotDef {
 
 export type ColorVariant = 'blue' | 'green' | 'yellow' | 'purple' | 'teal' | 'cyan' | 'dark' | 'lime' | 'orange';
 export type IconVariant = 'braces' | 'function' | 'code' | 'box' | 'variable' | 'brackets' | 'regex' | 'square-code' | 'terminal' | 'signpost' | 'layout-list' |
-    'tag' | 'calendar' | 'text-cursor' | 'form-input' | 'parentheses' | 'pyramid' | 'triangle' | 'square' | 'diamond' | 'database' | 'split' | 'circle-slash' | 'blocks';
+    'tag' | 'calendar' | 'text-cursor' | 'form-input' | 'parentheses' | 'pyramid' | 'triangle' | 'square' | 'diamond' | 'database' | 'split' | 'circle-slash' | 'blocks' |
+    'ampersands' | 'tally' | 'clipboard-check' | 'tags' | 'user-check' | 'badge-check' | 'package-check' | 'copy-check' | 'copy-x' | 'copy-plus' | 'circle-check-big'
+    | 'chevron-left' | 'chevrons-left' | 'chevron-right' | 'chevrons-right' | 'equal'
 
 
 interface SlotInputDefBase {

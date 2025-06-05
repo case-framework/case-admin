@@ -101,7 +101,7 @@ export const logicalOperators: ExpressionDef[] = [
         id: 'and',
         label: 'and',
         returnType: 'boolean',
-        icon: 'brackets',
+        icon: 'ampersands',
         color: 'blue',
         slots: [
             {
@@ -130,7 +130,7 @@ export const logicalOperators: ExpressionDef[] = [
         id: 'or',
         label: 'or',
         returnType: 'boolean',
-        icon: 'braces',
+        icon: 'tally',
         color: 'blue',
         slots: [
             {
@@ -190,7 +190,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'eq',
         label: 'Equals (L == R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'equal',
         color: 'teal',
         slots: [
             {
@@ -245,7 +245,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'lte',
         label: 'Less than or equal (L <= R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'chevrons-left',
         color: 'teal',
         slots: [
             {
@@ -309,7 +309,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'lt',
         label: 'Less than (L < R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'chevron-left',
         color: 'teal',
         slots: [
             {
@@ -373,7 +373,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'gte',
         label: 'Greater than or equal (L >= R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'chevrons-right',
         color: 'teal',
         slots: [
             {
@@ -437,7 +437,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'gt',
         label: 'Greater than (L > R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'chevron-right',
         color: 'blue',
         slots: [
             {

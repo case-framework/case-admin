@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { ColorVariant, IconVariant } from '../utils';
-import { Blocks, Box, Braces, Brackets, Calendar, CircleSlash2, Code, Database, Diamond, FormInput, FunctionSquare, LayoutList, Parentheses, Pyramid, Regex, Signpost, Split, Square, SquareCode, Tag, Terminal, TextCursor, Triangle, Variable } from 'lucide-react';
+import { Ampersands, BadgeCheck, Blocks, Box, Braces, Brackets, Calendar, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, CircleCheckBig, CircleSlash2, ClipboardCheck, Code, CopyCheck, CopyPlus, CopyX, Database, Diamond, Equal, FormInput, FunctionSquare, LayoutList, PackageCheck, Parentheses, Pyramid, Regex, Signpost, Split, Square, SquareCode, Tag, Tags, Tally2, Terminal, TextCursor, Triangle, UserCheck, Variable } from 'lucide-react';
 
 interface ExpressionIconProps {
     icon?: IconVariant;
@@ -33,6 +33,8 @@ const getIconNode = (icon?: IconVariant) => {
             return <LayoutList />;
         case 'tag':
             return <Tag />;
+        case 'tags':
+            return <Tags />;
         case 'text-cursor':
             return <TextCursor />;
         case 'calendar':
@@ -57,6 +59,36 @@ const getIconNode = (icon?: IconVariant) => {
             return <CircleSlash2 />;
         case 'blocks':
             return <Blocks />;
+        case 'ampersands':
+            return <Ampersands />;
+        case 'tally':
+            return <Tally2 />;
+        case 'clipboard-check':
+            return <ClipboardCheck />;
+        case 'user-check':
+            return <UserCheck />;
+        case 'badge-check':
+            return <BadgeCheck />;
+        case 'package-check':
+            return <PackageCheck />;
+        case 'copy-check':
+            return <CopyCheck />;
+        case 'copy-x':
+            return <CopyX />;
+        case 'copy-plus':
+            return <CopyPlus />;
+        case 'circle-check-big':
+            return <CircleCheckBig />;
+        case 'chevron-left':
+            return <ChevronLeft />;
+        case 'chevrons-left':
+            return <ChevronsLeft />;
+        case 'chevron-right':
+            return <ChevronRight />;
+        case 'chevrons-right':
+            return <ChevronsRight />;
+        case 'equal':
+            return <Equal />;
         case 'box':
         default:
             return <Box />;
