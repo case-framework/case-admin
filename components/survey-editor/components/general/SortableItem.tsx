@@ -31,6 +31,7 @@ export default function SortableItem(props: {
                 { 'opacity-75': isDragging },
                 props.className
             )}
+            tabIndex={-1}
         >
             {props.children}
         </li>

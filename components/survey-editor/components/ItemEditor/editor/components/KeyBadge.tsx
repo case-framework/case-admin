@@ -24,15 +24,6 @@ export const KeyBadge = (props: { itemKey: string, isHighlighted: boolean, highl
     );
 }
 
-export const KeyBadgeAndType = (props: { compKey?: string, type: string }) => {
-    return <div className='text-xs font-semibold flex justify-between w-full'>
-        <KeyBadge itemKey={props.compKey ?? ''} isHighlighted={false} />
-        <span className='text-muted-foreground'>
-            {props.type}
-        </span>
-    </div>
-}
-
 export const PopoverKeyBadge: React.FC<{
     allOtherKeys: string[],
     itemKey: string,
@@ -40,7 +31,6 @@ export const PopoverKeyBadge: React.FC<{
     highlightColor?: string,
     headerText?: string,
     className?: string,
-    onClick?: MouseEventHandler<HTMLDivElement> | undefined,
     onKeyChange?: (newKey: string) => void,
 }> = (props) => {
     const popoverCloseRef = React.useRef<HTMLButtonElement>(null);
@@ -51,6 +41,10 @@ export const PopoverKeyBadge: React.FC<{
     const headerText = props.headerText ?? 'Item Key';
 
     const [isOpen, setIsOpen] = React.useState(false);
+
+    useEffect(() => {
+        setCurrentKey(props.itemKey);
+    }, [props.itemKey]);
 
     useEffect(() => {
         if (currentKey.length <= 0) {
@@ -85,21 +79,34 @@ export const PopoverKeyBadge: React.FC<{
             }
         }}
     >
-        <PopoverTrigger className={cn("flex items-center justify-center", props.className)}
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsOpen(prev => !prev);
-            }}
+        <PopoverTrigger
+            asChild
         >
-            <KeyBadge itemKey={props.itemKey}
-                isHighlighted={props.isHighlighted || isOpen}
-                highlightColor={props.highlightColor}
+            <div
+                tabIndex={0}
+                className={cn(
+                    'flex items-center justify-center cursor-pointer',
+                    'rounded-full focus:outline focus:outline-offset-0.5 focus:outline-2 focus:outline-primary/50 hover:outline hover:outline-2 hover:outline-primary/30',
+                    props.className
+                )}
                 onClick={(e) => {
-                    if (props.onClick != undefined) {
-                        props.onClick(e);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsOpen(prev => !prev);
+                }}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsOpen(prev => !prev);
                     }
-                }} />
+                }}
+            >
+                <KeyBadge itemKey={props.itemKey}
+                    isHighlighted={props.isHighlighted || isOpen}
+                    highlightColor={props.highlightColor}
+                />
+            </div>
         </PopoverTrigger>
         <PopoverContent className="max-w-80 relative"
             side='right'
