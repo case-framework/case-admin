@@ -4,24 +4,24 @@ title: Conditions and Expressions
 
 ## Understanding Conditional Logic Expressions in Surveys
 
-Expressions are used to define **conditional logic** for displaying survey items. This means that a specific item (and its children for groups) will only be shown to a particpant if certain conditions related to their previous answers or their properties evaluate to `true`. 
+Expressions are used to define **conditional logic** for displaying survey items. This means that a specific item (and its children for groups) will only be shown to a participant if certain conditions related to their previous answers or their properties evaluate to `true`. 
 
 ### Logical Operators
 
 These operators allow you to combine two or more individual conditions to form a single, more complex condition.
 
-#### 1. "`&& and` (AND operator)"
+#### 1. "and (AND operator)"
     * **Meaning:** This operator requires *all* the conditions it connects to be `true` for the overall combined condition to be `true`. If even one of the connected conditions is `false`, the entire `and` condition becomes `false`.
     * **Use Case:** To display a question only when *multiple specific criteria* are met from different parts of the survey.
-        * **Example:** Display the question 'Please describe the onset and progression of the rash' **if** (patient selected 'Yes' to 'Have you experienced fever in the last 24 hours?') **AND** (patient selected 'Yes' to 'Do you have a new skin rash?')
+        * **Example:** Display the question 'Please describe the onset and progression of the rash' **if** (participant selected 'Yes' to 'Have you experienced fever in the last 24 hours?') **AND** (participant selected 'Yes' to 'Do you have a new skin rash?')
     * **How it works:** Wrap two or more individual conditions with an `and` operator.
 
 ---
 
-#### 2. "|| or (OR operator)"
+#### 2. "or (OR operator)"
     * **Meaning:** This operator requires *at least one* of the conditions it connects to be `true` for the overall combined condition to be `true`. The entire `or` condition is only `false` if *all* of the connected conditions are `false`.
     * **Use Case:** To display a question if any of several possible situations applies.
-        * **Example:** Display the alert 'Requires urgent physician review' **if** (patient's 'Heart Rate' > 100 bpm) OR (patient's 'Systolic Blood Pressure' `< 90 mmHg') **OR** (patient reports 'Severe Chest Pain').
+        * **Example:** Display the alert 'Requires urgent physician review' **if** (participant's 'Heart Rate' > 100 bpm) OR (participant's 'Systolic Blood Pressure' `< 90 mmHg') **OR** (participant reports 'Severe Chest Pain').
     * **How it works:** Wrap two or more individual conditions with an `or` operator.
 
 ---
@@ -29,7 +29,7 @@ These operators allow you to combine two or more individual conditions to form a
 #### 3. "not (NOT operator)"
     * **Meaning:** This operator inverts the truth value of a single condition. If the original condition is `true`, `not` makes it `false`. If the original condition is `false`, `not` makes it `true`.
     * **Use Case:** To display a question when a specific criterion is *not* met, or when a user *didn't* select a particular option.
-        * **Example:** Display question 'Please specify your allergies or sensitivities to common medications' **if** (`not` (patient selected 'No known allergies' to 'Do you have any known allergies?')). This means if the patient selected anything other than 'No known allergies'.
+        * **Example:** Display question 'Please specify your allergies or sensitivities to common medications' **if** (`not` (participant selected 'No known allergies' to 'Do you have any known allergies?')). This means if the participant selected anything other than 'No known allergies'.
     * **How it works:** Apply the `not` operator directly to another condition.
 
 ---
@@ -41,7 +41,7 @@ These operators are used to compare the value of a respondent's answer (Left sid
 #### 1. "Equals (L `==` R)"
     * **Meaning:** Checks if the value on the left side (`L`) is exactly equal to the value on the right side (`R`).
     * **Use Case:** To display a question if a numerical input matches a precise value.
-        * **Example:** Display 'Initiate emergency protocol for hypoglycemia' if (patient's `'Blood Glucose Level' == 70 mg/dL`). (Assuming 70 is a critical threshold).
+        * **Example:** Display 'Initiate emergency protocol for hypoglycemia' if (participant's `'Blood Glucose Level' == 70 mg/dL`). (Assuming 70 is a critical threshold).
     * **How it works:** Select item key and response slot key of the answer (for `L`) and then provide a specific value or another question's answer (for `R`).
 
 ---
@@ -49,7 +49,7 @@ These operators are used to compare the value of a respondent's answer (Left sid
 #### 2. "Less than or equal (L `<=` R)"
     * **Meaning:** Checks if the value on the left side (`L`) is less than or equal to the value on the right side (`R`).
     * **Use Case:** To group respondents numerical thresholds (e.g. age ranges).
-        * **Example:** Display question 'Is the child's vaccination record up to date?' **if** (patient's 'Age' `<= 12 years`)
+        * **Example:** Display question 'Is the child's vaccination record up to date?' **if** (participant's 'Age' `<= 12 years`)
     * **How it works:** Select item key and response slot key of the answer (for `L`) and then provide a specific value or another question's answer (for `R`).
 
 ---
@@ -57,7 +57,7 @@ These operators are used to compare the value of a respondent's answer (Left sid
 #### 3. "Less than (L < R)"
     * **Meaning:** Checks if the value on the left side (`L`) is strictly less than the value on the right side (`R`).
     * **Use Case:** Similar to "less than or equal," but excludes the threshold value itself.
-        * **Example:** Display recommendation 'Consider iron supplementation' **if** (patient's 'Hemoglobin Level' < 12.0 g/dL).
+        * **Example:** Display recommendation 'Consider iron supplementation' **if** (participant's 'Hemoglobin Level' < 12.0 g/dL).
     * **How it works:** Select item key and response slot key of the answer (for `L`) and then provide a specific value or another question's answer (for `R`).
 
 ---
@@ -65,7 +65,7 @@ These operators are used to compare the value of a respondent's answer (Left sid
 #### 4. "Greater than or equal (L `>=` R)"
     * **Meaning:** Checks if the value on the left side (`L`) is greater than or equal to the value on the right side (`R`).
     * **Use Case:** To filter respondents based on minimum requirements or thresholds.
-        * **Example:** Display warning 'Requires immediate physician review for hypertension' **if** (patient's 'Systolic Blood Pressure' `>= 160 mmHg`).
+        * **Example:** Display warning 'Requires immediate physician review for hypertension' **if** (participant's 'Systolic Blood Pressure' `>= 160 mmHg`).
     * **How it works:** Select item key and response slot key of the answer (for `L`) and then provide a specific value or another question's answer (for `R`).
 
 ---
@@ -73,7 +73,7 @@ These operators are used to compare the value of a respondent's answer (Left sid
 #### 5. "Greater than (L > R)"
     * **Meaning:** Checks if the value on the left side (`L`) is strictly greater than the value on the right side (`R`).
     * **Use Case:** Similar to "greater than or equal," but excludes the threshold value itself.
-        * **Example:** Display recommendation 'Consider weight management program' **if** (patient's 'BMI' > 25.0).
+        * **Example:** Display recommendation 'Consider weight management program' **if** (participant's 'BMI' > 25.0).
     * **How it works:** Select item key and response slot key of the answer (for `L`) and then provide a specific value or another question's answer (for `R`).
 
 
@@ -156,7 +156,7 @@ Response dependencies conditions define rules for displaying survey items based 
 * **Meaning:** This condition checks if the built-in validation rules for a specific previous survey item have been met. 
 * **Use Case:** To ensure data quality or to guide the user if they entered invalid information.
     * **Example:** "Show question 'Please review your input as it appears to be incorrect' if the 'Postal Code' question's validation is *not* true."
-* **How it works:** You select the item key and validation key of a previous question that has validation rules applied to it. The condition evaluates to `true` if the particpants input for that question passes all its defined validation rules.
+* **How it works:** You select the item key and validation key of a previous question that has validation rules applied to it. The condition evaluates to `true` if the participants input for that question passes all its defined validation rules.
 
 ---
 
@@ -165,13 +165,13 @@ Response dependencies conditions define rules for displaying survey items based 
 
 These conditions often interact with the underlying system or data beyond immediate user responses.
 
-### 1. "Is value defined"
+#### 1. "Is value defined"
     * **Meaning:** This condition checks if a data field or variable contains any value. It might be used in older versions of the software and can usually be replaced by "A specific response is present" or "Participant flag with key exists" conditions.
-    * **Use Case:** To confirm pre-existing information if certain patient data is already available in the system, or to ensure that critical fields are populated.
-        * **Example:** Display question 'Please verify your pre-filled medication list from your EHR' if (patient's 'Current Medication List' Is value defined). (The medication list variable could be populated from a patient's electronic health record or answered directly by the patient in the current or previous survey).
+    * **Use Case:** To confirm pre-existing information if certain participant data is already available in the system, or to ensure that critical fields are populated.
+        * **Example:** Display question 'Please verify your pre-filled medication list from your EHR' if (participant's 'Current Medication List' Is value defined). (The medication list variable could be populated from a participant's electronic health record or answered directly by the participant in the current or previous survey).
     * **How it works:** You select a specific data field, variable, or parameter. The condition evaluates to `true` if that data element contains any non-null or non-empty value.
 
-### 2. "Is user logged in"
+#### 2. "Is user logged in"
     * **Meaning:** This condition checks if the individual currently accessing the survey or application is authenticated (i.e., has successfully logged in).
     * **Use Case:** To restrict access to sensitive sections, personalize content for registered users, or ensure only authorized users can fill out certain forms.
         * **Example:** Pre-fill demographic data or ask for follow-up is only accessible if the specific participant is authenticated.
@@ -185,7 +185,7 @@ These are pre-configured conditions designed for common scenarios, simplifying t
 
 #### 1. "Consent question accepted"
     * **Meaning:** This is a specialized, ready-to-use condition that specifically checks if a designated "consent" question (usually a legal or ethical agreement) has been affirmatively accepted by the respondent. It simplifies the setup for common consent flows.
-    * **Use Case:** To ensure legal and ethical compliance by only proceeding with data collection or treatment details after explicit patient consent has been given.
+    * **Use Case:** To ensure legal and ethical compliance by only proceeding with data collection or treatment details after explicit participant consent has been given.
         * **Example:** Display message 'Thank you for your participation in the study' **if** (`Consent question accepted` for 'Clinical Trial Participation Agreement').
     * **How it works:** You would typically fill in the item key of a specific "Consent" type question within your survey. The system then automatically evaluates if that consent was given.
 
