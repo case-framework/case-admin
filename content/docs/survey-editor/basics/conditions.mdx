@@ -6,8 +6,6 @@ title: Conditions and Expressions
 
 Expressions are used to define **conditional logic** for displaying survey items. This means that a specific item (and its children for groups) will only be shown to a particpant if certain conditions related to their previous answers or their properties evaluate to `true`. 
 
----
-
 ### Logical Operators
 
 These operators allow you to combine two or more individual conditions to form a single, more complex condition.
@@ -83,13 +81,12 @@ These operators are used to compare the value of a respondent's answer (Left sid
 
 ### Participant flags
 
-These conditions evaluate the presence and value of specific flags (key-value pairs) assigned to the survey participant.
+These conditions evaluate the presence and value of specific pre-existing flags (key-value pairs) assigned to the survey participant.
 
 #### 1. "Participant flag with key exists"
     * **Meaning:** This condition checks if a particular "flag" (a named attribute or marker) has been assigned to the current participant. It doesn't care *what* the value of that flag is (or even if it has an explicit value beyond its mere existence), only that the flag with the specified name (key) is present for this participant.
-    * **Use Case:** To display specific sections or questions only to patients who have been categorized or tagged with a certain status.
-        * **Example:** "Display section 'High-Risk Patient Protocol Questions' **if** (Participant flag 'high_risk_category' `with key exists`)."
-            * **Explanation:** This would show a set of questions designed for high-risk patients if the participant has simply been marked with a flag called 'high_risk_category' (e.g., from their EHR or an initial screening, implying they are high risk, even if the flag's value might be "True," "Level 1," or just an empty string).
+    * **Use Case:** To display specific sections or questions only to participants who have been categorized or tagged with a certain status.
+        * **Example:** Display section 'High-Risk Patient Protocol Questions' **if** (Participant flag 'high_risk_category' `with key exists`). This would show a set of questions designed for high-risk participants if the participant has simply been marked with a flag called 'high_risk_category'.
     * **How it works:** You specify the name (key) of the participant flag you are looking for. The condition evaluates to `true` if that flag is attached to the current participant.
 
 ---
@@ -97,17 +94,14 @@ These conditions evaluate the presence and value of specific flags (key-value pa
 #### 2. "Participant flag with key and value exists"
     * **Meaning:** This condition is more specific. It checks if a particular "flag" (named attribute) exists for the current participant, **AND** that flag has a *specific, predetermined value*. Both the key and the value must match for the condition to be `true`.
     * **Use Case:** To tailor the survey very precisely to participants belonging to specific groups or having particular diagnoses/statuses that are defined by a specific flag value.
-        * **Example:** "Display survey version 'Pediatric Study Arm B' **if** (Participant flag 'study_group' `with key and value exists` and its value is 'Pediatric_B')."
-            * **Explanation:** This allows different versions of a clinical study survey to be presented only to participants formally assigned to a specific group within that study.
+        * **Example:** Display survey version 'Pediatric Study Arm B' **if** (Participant flag 'study_group' `with key and value exists` and its value is 'Pediatric_B').
     * **How it works:** You specify the name (key) of the participant flag and the exact value it must hold. The condition evaluates to `true` only if both the flag exists AND its value matches the one you specified.
 
 ---
 
-These "Participant flags" conditions are extremely useful in medical and research settings where participants often come with pre-existing classifications, diagnoses, or study assignments that need to influence the survey path without requiring the participant to answer those classification questions directly within the survey itself.
-
----
-
 ### Response dependencies
+
+Response dependencies conditions define rules for displaying survey items based directly on how a respondent has answered, or not answered, previous questions within the survey itself.
 
 #### 1. "A specific response is present"
 
@@ -115,7 +109,7 @@ These "Participant flags" conditions are extremely useful in medical and researc
     - For Radio Button/Dropdown Questions: the participant has selected the specified option.
     - For Entry Fields (text, numerical, date, etc.): the participant has entered any characters or data into the field, meaning the field is not empty. The content of the answer is not relevant. This also applies to the subsequent conditions.
 * **Use Case:** You might use this if you want to show a follow-up question only if the user has selected a specific option of a preceding question.
-    * **Example:** Display 'Please describe the location and intensity of your pain (on a scale of 1-10):' only if the patient selected 'Yes' in the question 'Are you currently experiencing any pain?'.
+    * **Example:** Display 'Please describe the location and intensity of your pain (on a scale of 1-10):' only if the participant selected 'Yes' in the question 'Are you currently experiencing any pain?'.
 * **How it works:** Select a previous question item key and specify the option key.
 
 ---
@@ -124,7 +118,7 @@ These "Participant flags" conditions are extremely useful in medical and researc
 
 * **Meaning:** This condition checks if the response to a specific previous question includes *at least one* of a predefined set of options keys. This is particularly useful for multiple-choice questions where a user can select several options.
 * **Use Case:** To display a follow-up question based on one or more specific choices made by the respondent.
-    * **Example:** Display the question 'Please describe the frequency and severity of your attacks' if the patient selected 'Epilepsy' OR 'Migraine' OR 'Multiple Sclerosis' (or a combination thereof) in response to the question 'Which chronic conditions do you have?'
+    * **Example:** Display the question 'Please describe the frequency and severity of your attacks' if participant selected 'Epilepsy' OR 'Migraine' OR 'Multiple Sclerosis' (or a combination thereof) in response to the question 'Which chronic conditions do you have?'
 * **How it works:** Select a previous question item key, select slot keys if necessary and then specify a list of option keys. The condition evaluates to `true` if the respondent's answer for that question matches *any* of the specified keys.
 
 ---
@@ -133,7 +127,7 @@ These "Participant flags" conditions are extremely useful in medical and researc
 
 * **Meaning:** This condition is stricter than "any of these keys." It checks if the response to a specific previous question includes *all* of a predefined set of option keys. Again, this is typically for multiple-choice questions where multiple selections are possible.
 * **Use Case:** To display a question only when a respondent has selected a very specific combination of options.
-    * **Example:** Display the info text 'Please schedule an urgent consultation with the Nephrology department and Cardiology department' if the participant, in response to the question 'Which of the following chronic conditions do you have? (Select all that apply)', selected both 'Chronic Kidney Disease' AND 'Congestive Heart Failure'.
+    * **Example:** Display the info text 'Please schedule an urgent consultation with the Nephrology department and Cardiology department' if participant, in response to the question 'Which of the following chronic conditions do you have? (Select all that apply)', selected both 'Chronic Kidney Disease' AND 'Congestive Heart Failure'.
 * **How it works:** Select a previous question item key, select slot keys if necessary and then specify a list of option keys. The condition evaluates to `true` only if the respondent's answer for that question matches *every single one* of the specified keys.
 
 ---
@@ -163,11 +157,9 @@ These "Participant flags" conditions are extremely useful in medical and researc
 * **Use Case:** To ensure data quality or to guide the user if they entered invalid information.
     * **Example:** "Show question 'Please review your input as it appears to be incorrect' if the 'Postal Code' question's validation is *not* true."
 * **How it works:** You select the item key and validation key of a previous question that has validation rules applied to it. The condition evaluates to `true` if the particpants input for that question passes all its defined validation rules.
----
-
-By leveraging these expressions, you can create highly intelligent and user-friendly surveys that only present relevant questions, reducing survey fatigue and improving data quality. Remember to plan your survey flow carefully before implementing complex conditional logic!
 
 ---
+
 
 ### Advanced
 
@@ -176,7 +168,7 @@ These conditions often interact with the underlying system or data beyond immedi
 ### 1. "Is value defined"
     * **Meaning:** This condition checks if a data field or variable contains any value. It might be used in older versions of the software and can usually be replaced by "A specific response is present" or "Participant flag with key exists" conditions.
     * **Use Case:** To confirm pre-existing information if certain patient data is already available in the system, or to ensure that critical fields are populated.
-        * **Example:** "Display question 'Please verify your pre-filled medication list from your EHR' if (patient's 'Current Medication List' Is value defined)." (The medication list variable could be populated from a patient's electronic health record or answered directly by the patient in the current or previous survey).
+        * **Example:** Display question 'Please verify your pre-filled medication list from your EHR' if (patient's 'Current Medication List' Is value defined). (The medication list variable could be populated from a patient's electronic health record or answered directly by the patient in the current or previous survey).
     * **How it works:** You select a specific data field, variable, or parameter. The condition evaluates to `true` if that data element contains any non-null or non-empty value.
 
 ### 2. "Is user logged in"
@@ -187,14 +179,16 @@ These conditions often interact with the underlying system or data beyond immedi
 
 ---
 
-#### Templates
+### Templates
 
 These are pre-configured conditions designed for common scenarios, simplifying the setup of frequently needed logic.
 
-### 1. "Consent question accepted"
+#### 1. "Consent question accepted"
     * **Meaning:** This is a specialized, ready-to-use condition that specifically checks if a designated "consent" question (usually a legal or ethical agreement) has been affirmatively accepted by the respondent. It simplifies the setup for common consent flows.
     * **Use Case:** To ensure legal and ethical compliance by only proceeding with data collection or treatment details after explicit patient consent has been given.
-        * **Example:** "Display message 'Thank you for your participation in the study' **if** (`Consent question accepted` for 'Clinical Trial Participation Agreement')."
-    * **How it works:** You would typically link this template to a specific "Consent" type question item within your survey. The system then automatically evaluates if that consent was given.
+        * **Example:** Display message 'Thank you for your participation in the study' **if** (`Consent question accepted` for 'Clinical Trial Participation Agreement').
+    * **How it works:** You would typically fill in the item key of a specific "Consent" type question within your survey. The system then automatically evaluates if that consent was given.
 
 ---
+
+By leveraging these expressions, you can create highly intelligent and user-friendly surveys that only present relevant questions, reducing survey fatigue and improving data quality. Remember to plan your survey flow carefully before implementing complex conditional logic!
