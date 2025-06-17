@@ -10,7 +10,7 @@ Expressions are used to define **conditional logic** for displaying survey items
 
 These operators allow you to combine two or more individual conditions to form a single, more complex condition.
 
-#### 1. "and (AND operator)"
+#### 1. "and (`AND` operator)"
     * **Meaning:** This operator requires *all* the conditions it connects to be `true` for the overall combined condition to be `true`. If even one of the connected conditions is `false`, the entire `and` condition becomes `false`.
     * **Use Case:** To display a question only when *multiple specific criteria* are met from different parts of the survey.
         * **Example:** Display the question 'Please describe the onset and progression of the rash' **if** (participant selected 'Yes' to 'Have you experienced fever in the last 24 hours?') **AND** (participant selected 'Yes' to 'Do you have a new skin rash?')
@@ -18,7 +18,7 @@ These operators allow you to combine two or more individual conditions to form a
 
 ---
 
-#### 2. "or (OR operator)"
+#### 2. "or (`OR` operator)"
     * **Meaning:** This operator requires *at least one* of the conditions it connects to be `true` for the overall combined condition to be `true`. The entire `or` condition is only `false` if *all* of the connected conditions are `false`.
     * **Use Case:** To display a question if any of several possible situations applies.
         * **Example:** Display the alert 'Requires urgent physician review' **if** (participant's 'Heart Rate' > 100 bpm) OR (participant's 'Systolic Blood Pressure' `< 90 mmHg') **OR** (participant reports 'Severe Chest Pain').
@@ -26,7 +26,7 @@ These operators allow you to combine two or more individual conditions to form a
 
 ---
 
-#### 3. "not (NOT operator)"
+#### 3. "not (`NOT` operator)"
     * **Meaning:** This operator inverts the truth value of a single condition. If the original condition is `true`, `not` makes it `false`. If the original condition is `false`, `not` makes it `true`.
     * **Use Case:** To display a question when a specific criterion is *not* met, or when a user *didn't* select a particular option.
         * **Example:** Display question 'Please specify your allergies or sensitivities to common medications' **if** (`not` (participant selected 'No known allergies' to 'Do you have any known allergies?')). This means if the participant selected anything other than 'No known allergies'.
@@ -156,7 +156,7 @@ Response dependencies conditions define rules for displaying survey items based 
 * **Meaning:** This condition checks if the built-in validation rules for a specific previous survey item have been met. 
 * **Use Case:** To ensure data quality or to guide the user if they entered invalid information.
     * **Example:** "Show question 'Please review your input as it appears to be incorrect' if the 'Postal Code' question's validation is *not* true."
-* **How it works:** You select the item key and validation key of a previous question that has validation rules applied to it. The condition evaluates to `true` if the participants input for that question passes all its defined validation rules.
+* **How it works:** You select the item key and validation key of a previous question that has validation rules applied to it. The condition evaluates to `true` if the participant's input for that question passes all its defined validation rules.
 
 ---
 
