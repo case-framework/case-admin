@@ -1,6 +1,6 @@
 'use client';
 
-import { SimulatorConfig } from '@/components/survey-editor/components/SurveySimulator';
+import { SimulatorConfig } from '@/components/survey-editor/old/components/SurveySimulator';
 import SurveyView from '@/components/survey-renderer/SurveyView/SurveyView';
 import { HandlerFuncArgType } from '@/components/survey-renderer/survey-context';
 import { LoaderIcon } from 'lucide-react';

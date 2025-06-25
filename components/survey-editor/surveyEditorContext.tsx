@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { Survey } from "survey-engine/data_types";
-import { StoredSurvey } from "./utils/SurveyStorage";
+import { StoredSurvey } from "./old/utils/SurveyStorage";
 
 interface SurveyEditorContextValue {
     storedSurvey?: StoredSurvey,

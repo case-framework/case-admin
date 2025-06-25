@@ -1,7 +1,16 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import SurveyEditorMenu from './components/SurveyEditorMenu';
+
+import TestPreview from './test-preview';
+import SurveyEditor from '.';
+
+const SurveyEditorWrapper: React.FC = () => {
+    return <SurveyEditor />
+    return <TestPreview />;
+}
+
+/* import SurveyEditorMenu from './components/SurveyEditorMenu';
 import ItemEditor from './components/ItemEditor/ItemEditor';
 import { Survey } from 'survey-engine/data_types';
 import { EditorMode } from './components/types';
@@ -16,6 +25,7 @@ import InitNewSurveyDialog from './components/init-new-survey-dialog';
 import { useDebounceCallback, useLocalStorage } from 'usehooks-ts';
 import { StoredSurvey, SurveyStorage } from './utils/SurveyStorage';
 import { getSurveyIdentifier } from './utils/utils';
+import TestPreview from './test-preview';
 
 interface SurveyEditorProps {
     initialSurvey?: Survey;
@@ -156,6 +166,7 @@ const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
             selectedLanguage={selectedLanguage}
             setSelectedLanguage={setSelectedLanguage}
         >
+
             <div className='bg-center bg-cover bg-[url(/images/sailing-ship.png)] h-screen absolute top-0 left-0 w-screen z-40 flex flex-col'>
                 <SurveyEditorMenu
                     currentEditorMode={mode}
@@ -193,6 +204,6 @@ const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
             </div >
         </SurveyEditorContextProvider>
     );
-};
+}; */
 
-export default SurveyEditor;
+export default SurveyEditorWrapper;

@@ -1,10 +1,17 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { RenderedSurveyItem, ResponseItem, SurveyItem, SurveyItemTranslations } from "survey-engine";
+import { useSurveyCtx } from "../survey-context";
 
 
 interface SurveyItemContextValue {
-    itemKey: string;
+    item: SurveyItem;
+    renderedItemInfos: RenderedSurveyItem;
+    itemTranslations?: SurveyItemTranslations;
+    currentResponse?: ResponseItem;
     headerId: string;
     width: number;
+
+    setResponse(response?: ResponseItem): void;
 }
 
 
@@ -13,18 +20,23 @@ const SurveyItemContext = createContext<SurveyItemContextValue | null>(null);
 
 interface SurveyItemContextProviderProps {
     children: React.ReactNode;
-    itemKey: string;
+    renderedItemInfos: RenderedSurveyItem;
 }
 
 export const SurveyItemContextProvider: React.FC<SurveyItemContextProviderProps> = ({
     children,
-    itemKey,
+    renderedItemInfos,
 }) => {
+    const { survey, surveyEngine } = useSurveyCtx();
     const [width, setWidth] = useState<number | null>(null);
+    const [currentResponse, setCurrentResponse] = useState<ResponseItem | undefined>(
+        surveyEngine.getResponseItem(renderedItemInfos.key.fullKey)?.response
+    );
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (!containerRef.current) return;
+
 
         const updateWidth = () => {
             setWidth(containerRef.current?.offsetWidth ?? null);
@@ -45,10 +57,21 @@ export const SurveyItemContextProvider: React.FC<SurveyItemContextProviderProps>
         };
     }, []);
 
+    useEffect(() => {
+        surveyEngine.onQuestionDisplayed(renderedItemInfos.key.fullKey);
+    }, [surveyEngine, renderedItemInfos]);
+
     const contextValue: SurveyItemContextValue = {
-        itemKey,
-        headerId: `${itemKey}-header`,
+        item: survey.surveyItems[renderedItemInfos.key.fullKey],
+        renderedItemInfos,
+        itemTranslations: survey.getItemTranslations(renderedItemInfos.key.fullKey),
+        headerId: `${renderedItemInfos.key.fullKey}-header`,
         width: width || 0,
+        currentResponse,
+        setResponse: (response?: ResponseItem) => {
+            surveyEngine.setResponse(renderedItemInfos.key.fullKey, response);
+            setCurrentResponse(surveyEngine.getResponseItem(renderedItemInfos.key.fullKey)?.response);
+        },
     };
 
     return <SurveyItemContext.Provider value={contextValue}>

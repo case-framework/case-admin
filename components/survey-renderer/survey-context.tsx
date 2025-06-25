@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react';
+import { Survey, SurveyEngineCore } from 'survey-engine';
 
 export type HandlerFuncArgType = string | number | boolean | null | undefined;
 
@@ -8,6 +9,9 @@ export type HandlerFunction = (handlerId: string, args?: HandlerFuncArgType[]) =
 }>;
 
 interface SurveyContextValue {
+    survey: Survey;
+    locale: string;
+    surveyEngine: SurveyEngineCore;
     runExternalHandler?: HandlerFunction;
 }
 
@@ -15,12 +19,24 @@ const SurveyContext = createContext<SurveyContextValue | null>(null);
 
 
 interface SurveyContextProviderProps {
+    survey: Survey;
+    locale: string;
+    surveyEngine: SurveyEngineCore;
     children: React.ReactNode;
     onRunExternalHandler?: HandlerFunction;
 }
 
-export const SurveyContextProvider: React.FC<SurveyContextProviderProps> = ({ children, onRunExternalHandler }) => {
+export const SurveyContextProvider: React.FC<SurveyContextProviderProps> = ({
+    survey,
+    locale,
+    surveyEngine,
+    children,
+    onRunExternalHandler
+}) => {
     const contextValue: SurveyContextValue = {
+        survey,
+        locale,
+        surveyEngine,
         runExternalHandler: onRunExternalHandler,
     };
 
