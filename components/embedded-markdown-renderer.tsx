@@ -70,7 +70,7 @@ const EmbeddedMarkdownRenderer: React.FC<MarkdownRendererProps> = (props) => {
                 ),
                 p: ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
                     <p
-                        className={cn("leading-7 [&:not(:first-child)]:mt-2", className)}
+                        className={cn("leading-7 not-first:mt-2", className)}
                         {...props}
                     />
                 ),

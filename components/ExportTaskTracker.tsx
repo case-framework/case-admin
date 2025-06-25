@@ -129,7 +129,7 @@ const TaskTracker: React.FC<TaskTrackerProps> = (props) => {
                     </p>
                     <LoadingButton
                         onClick={onDownloadResult}
-                        variant={'outline'}
+                        variant={'outline-solid'}
                         isLoading={isPending}
                     >
                         <span>

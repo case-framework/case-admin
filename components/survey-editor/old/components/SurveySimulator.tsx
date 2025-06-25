@@ -179,7 +179,7 @@ const SurveySimulator: React.FC<{ simulatorUrl: string }> = ({
                     </p>
                     <Button
                         disabled={currentResponses.length === 0}
-                        variant={'outline'}
+                        variant={'outline-solid'}
                         size={'sm'}
                         onClick={() => {
                             setCurrentResponses([]);

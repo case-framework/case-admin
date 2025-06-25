@@ -95,7 +95,7 @@ const StudyConfigExporter: React.FC<StudyConfigExporterProps> = (props) => {
 
             <LoadingButton
                 isLoading={isPending}
-                variant={'outline'}
+                variant={'outline-solid'}
                 onClick={onPrepAndDownloadExport}
                 disabled={!includeConfig && !includeSurveys && !includeRules}
             >

@@ -89,7 +89,7 @@ const Time: React.FC<TimeProps> = (props) => {
             props.defaultClassName,
             "flex items-center",
             {
-                'px-[--survey-card-px-sm] @md:px-[--survey-card-px]': !props.embedded,
+                'px-(--survey-card-px-sm) @md:px-(--survey-card-px)': !props.embedded,
                 'w-full': !props.nonFullWidth,
             },
             props.ignoreClassName !== true ? getClassName(props.compDef.style) : undefined

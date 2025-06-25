@@ -118,7 +118,7 @@ const NewNotificationSubDialog: React.FC<NewNotificationSubDialogProps> = (props
                                 ref={closeBtnRef}
                                 asChild
                             >
-                                <Button variant={'outline'}>
+                                <Button variant={'outline-solid'}>
                                     Cancel
                                 </Button>
                             </DialogClose>

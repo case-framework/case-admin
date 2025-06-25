@@ -14,7 +14,7 @@ interface HelpGroupProps {
 const HelpGroup: React.FC<HelpGroupProps> = (props) => {
     const renderContent = () => {
         if (props.componentGroup.items === undefined) {
-            return <p className='text-[--survey-error-text-color]'> items is missing in the helpGroup component </p>
+            return <p className='text-(--survey-error-text-color)'> items is missing in the helpGroup component </p>
         }
         return <React.Fragment>
             {

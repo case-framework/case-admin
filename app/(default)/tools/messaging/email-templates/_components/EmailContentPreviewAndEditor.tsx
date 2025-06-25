@@ -147,7 +147,7 @@ const EmailContentPreviewAndEditor: React.FC<EmailContentPreviewAndEditorProps> 
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button
-                                    variant={'outline'}
+                                    variant={'outline-solid'}
                                     size='icon'
                                     onClick={() => {
                                         setMode(prev => {
@@ -170,7 +170,7 @@ const EmailContentPreviewAndEditor: React.FC<EmailContentPreviewAndEditorProps> 
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button
-                                    variant={'outline'}
+                                    variant={'outline-solid'}
                                     size='icon'
                                     onClick={() => {
                                         setLoadFileDialogOpen(true);
@@ -187,7 +187,7 @@ const EmailContentPreviewAndEditor: React.FC<EmailContentPreviewAndEditorProps> 
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button
-                                    variant={'outline'}
+                                    variant={'outline-solid'}
                                     size='icon'
                                     onClick={onDownloadCurrentHtml}
                                 >

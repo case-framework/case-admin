@@ -17,7 +17,7 @@ export const TabNavLink: React.FC<TabNavLinkProps> = (props) => {
     return (
         <li>
             <Button asChild
-                variant={props.isActive ? 'outline' : 'link'}
+                variant={props.isActive ? 'outline-solid' : 'link'}
             >
                 <Link
                     href={props.href}

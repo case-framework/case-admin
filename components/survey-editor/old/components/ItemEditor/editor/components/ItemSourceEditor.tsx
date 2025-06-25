@@ -45,7 +45,7 @@ const ItemSourceEditor: React.FC<ItemSourceEditorProps> = (props) => {
 
             <div className='z-10 flex gap-3 justify-end'>
                 <Button
-                    variant={'outline'}
+                    variant={'outline-solid'}
                     onClick={() => {
                         if (hasChanges()) {
                             if (!confirm('Are you sure you want to discard your changes?')) {

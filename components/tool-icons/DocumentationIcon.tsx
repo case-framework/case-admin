@@ -11,7 +11,7 @@ const MessagingIcon: React.FC<MessagingIconProps> = (props) => {
         <ToolIconBase
             size={props.size}
             icon={<BookIcon />}
-            color='bg-gradient-to-b from-blue-400 to-blue-600 text-white'
+            color='bg-linear-to-b from-blue-400 to-blue-600 text-white'
         />
     );
 };

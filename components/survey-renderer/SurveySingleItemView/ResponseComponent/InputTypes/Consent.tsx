@@ -66,7 +66,7 @@ const Consent: React.FC<ConsentProps> = (props) => {
                 htmlFor={props.parentKey + optionKey}
                 className={cn(
                     "flex items-center gap-2",
-                    'px-[--survey-card-px-sm] @md:px-[--survey-card-px] py-1.5',
+                    'px-(--survey-card-px-sm) @md:px-(--survey-card-px) py-1.5',
                     'hover:bg-black/5',
                     'font-normal text-base cursor-pointer',
                     getClassName(props.compDef.style),

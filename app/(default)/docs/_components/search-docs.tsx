@@ -78,7 +78,7 @@ const SearchDocs: React.FC = () => {
                         <SearchIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
 
                         <input
-                            className='flex h-11 w-full rounded-md bg-transparent py-3 text-sm ring-none outline-none placeholder:text-slate-500 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-slate-400'
+                            className='flex h-11 w-full rounded-md bg-transparent py-3 text-sm ring-none outline-hidden placeholder:text-slate-500 disabled:cursor-not-allowed disabled:opacity-50 dark:placeholder:text-slate-400'
                             defaultValue={search}
                             onChange={e => setSearch(e.target.value)}
                             placeholder="Search docs..."

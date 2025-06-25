@@ -72,8 +72,8 @@ const ComponentEditor: React.FC<ComponentEditorProps> = (props) => {
     const hasNoQuickEditor = props.quickEditorContent === undefined;
 
     let preview: React.ReactNode = <PopoverTrigger asChild>
-        <button className={cn("relative w-full bg-background border border-border rounded-md px-3 py-2 group focus:outline focus:outline-2 focus:outline-primary/50 hover:outline hover:outline-2 hover:outline-primary/30", {
-            "outline outline-2 outline-primary/50": isPopoverOpen || isPreviewMenuOpen
+        <button className={cn("relative w-full bg-background border border-border rounded-md px-3 py-2 group focus:outline-solid focus:outline-2 focus:outline-primary/50 hover:outline-solid hover:outline-2 hover:outline-primary/30", {
+            "outline-solid outline-2 outline-primary/50": isPopoverOpen || isPreviewMenuOpen
         })}
             onContextMenu={(e) => {
                 e.preventDefault();
@@ -155,7 +155,7 @@ const ComponentEditor: React.FC<ComponentEditorProps> = (props) => {
                             className="text-xs w-full h-fit"
                         >
                             <span className="text-muted-foreground mr-1">
-                                <SettingsIcon className="!size-3" />
+                                <SettingsIcon className="size-3!" />
                             </span> Show more settings...
                         </Button>
                     }
@@ -169,7 +169,7 @@ const ComponentEditor: React.FC<ComponentEditorProps> = (props) => {
                             }}
                         >
                             <span className="text-muted-foreground mr-1">
-                                <ArrowLeftIcon className="!size-3" />
+                                <ArrowLeftIcon className="size-3!" />
                             </span>
                             Back to quick editor
                         </Button>}

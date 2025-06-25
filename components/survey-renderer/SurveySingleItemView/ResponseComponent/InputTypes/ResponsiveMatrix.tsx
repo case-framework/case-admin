@@ -151,7 +151,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                         className='text-muted-foreground'
                     >
                         <span className='flex items-center gap-2'>
-                            <span className='flex-shrink-0'>
+                            <span className='shrink-0'>
                                 <CircleXIcon className='size-3' />
                             </span>
                             {getContentString(dropdownOptions, 'resetSelection')}
@@ -270,7 +270,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
         }
         return <table className={"table w-full m-0 "}>
             <thead>
-                <tr className='bg-[--survey-table-heading1-bg] sticky top-0'>
+                <tr className='bg-(--survey-table-heading1-bg) sticky top-0'>
                     <th scope="col"></th>
                     {columns.map(
                         (cat: ItemComponent) => {
@@ -293,7 +293,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                                 key={row.key}
                                 colSpan={columns.length + 1}
                                 className={cn(
-                                    'bg-[--survey-table-heading2-bg] px-2 py-1.5 text-center',
+                                    'bg-(--survey-table-heading2-bg) px-2 py-1.5 text-center',
                                     getClassName(row.style))}>
                                 {renderContent(row, 'content')}
                             </th>
@@ -301,7 +301,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                     }
                     return <React.Fragment key={row.key}>
                         <tr
-                            className={'border-b border-[--survey-card-table-border-color] last:border-b-0'}
+                            className={'border-b border-(--survey-card-table-border-color) last:border-b-0'}
                         >
                             <th scope="row"
                                 // rowSpan={row.items.length}
@@ -339,7 +339,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                             <th
                                 key={row.key}
                                 colSpan={2}
-                                className={clsx('bg-[--survey-table-heading1-bg] px-2 py-1.5 text-center', getClassName(row.style))}>
+                                className={clsx('bg-(--survey-table-heading1-bg) px-2 py-1.5 text-center', getClassName(row.style))}>
                                 {renderContent(row, 'content')}
                             </th>
                         </tr>
@@ -349,7 +349,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                             <th scope="row"
                                 colSpan={2}
                                 className={clsx(
-                                    "text-start align-middle bg-[--survey-table-heading2-bg] px-2 py-1.5",
+                                    "text-start align-middle bg-(--survey-table-heading2-bg) px-2 py-1.5",
                                     getClassName(row.style)
                                 )}
                             >
@@ -360,7 +360,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
                             (col: ItemComponent) => {
                                 return <tr
                                     key={col.key}
-                                    className={'border-b border-[--survey-card-table-border-color] last:border-b-0'}
+                                    className={'border-b border-(--survey-card-table-border-color) last:border-b-0'}
                                 >
                                     <th scope="row"
                                         className={clsx(
@@ -394,7 +394,7 @@ const ResponsiveMatrix: React.FC<ResponsiveMatrixProps> = (props) => {
     } else {
         content = renderLargeView();
     }
-    return <div className={cn('px-[--survey-card-px-sm] @md:px-[--survey-card-px]', className)}>
+    return <div className={cn('px-(--survey-card-px-sm) @md:px-(--survey-card-px)', className)}>
         {content}
     </div>
 };

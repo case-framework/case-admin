@@ -102,7 +102,7 @@ const LikertScale: React.FC<LikertScaleProps> = (props) => {
             htmlFor={optionKey}
             className={clsx(
                 "grow",
-                'hover:bg-black/5 cursor-pointer rounded-[--survey-card-border-radius-sm] py-2',
+                'hover:bg-black/5 cursor-pointer rounded-(--survey-card-border-radius-sm) py-2',
                 {
                     "flex @sm:block mb-2 mb-sm-1 items-center": shouldStackOnSmallScreen(),
                 })}

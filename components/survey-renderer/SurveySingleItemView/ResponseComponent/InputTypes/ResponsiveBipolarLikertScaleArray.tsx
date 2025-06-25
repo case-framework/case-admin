@@ -182,7 +182,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
                         option => {
                             const optionKey = option.key;
                             return <label key={optionKey}
-                                className='flex cursor-pointer justify-center items-center hover:bg-black/5 rounded-[--survey-card-border-radius-sm] py-1 '
+                                className='flex cursor-pointer justify-center items-center hover:bg-black/5 rounded-(--survey-card-border-radius-sm) py-1 '
                             >
                                 <input
                                     className="form-check-input cursor-pointer size-5"
@@ -214,7 +214,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
         }
 
         const rows = props.compDef.items.filter(item => item.role === "row");
-        return <ul className='divide-y divide-[--survey-card-table-border-color]'>
+        return <ul className='divide-y divide-(--survey-card-table-border-color)'>
             {rows.map((item, index) => {
                 if (item.displayCondition === false) {
                     return null;
@@ -287,7 +287,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
 
                     return <Label
                         key={optionKey}
-                        className={cn("grow w-full flex flex-col p-2 justify-center items-center space-y-2 cursor-pointer hover:bg-black/5 rounded-[--survey-card-border-radius-sm]",
+                        className={cn("grow w-full flex flex-col p-2 justify-center items-center space-y-2 cursor-pointer hover:bg-black/5 rounded-(--survey-card-border-radius-sm)",
                             {
                                 'bg-black/5': isResponseSet(rowKey, option.key)
                             }
@@ -317,7 +317,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
         }
 
         const rows = props.compDef.items.filter(item => item.role === "row");
-        return <ul className='divide-y divide-[--survey-card-table-border-color]'>
+        return <ul className='divide-y divide-(--survey-card-table-border-color)'>
             {rows.map((item, index) => {
                 if (item.displayCondition === false) {
                     return null;
@@ -402,7 +402,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
                                         className="text-center align-middle"
                                     >
                                         <label
-                                            className='h-full w-full p-2 cursor-pointer hover:bg-black/5 flex items-center justify-center rounded-[--survey-card-border-radius-sm]'
+                                            className='h-full w-full p-2 cursor-pointer hover:bg-black/5 flex items-center justify-center rounded-(--survey-card-border-radius-sm)'
                                             htmlFor={optionKey}
                                         >
                                             <input
@@ -440,10 +440,10 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
 
                     return <tr key={props.compDef + '.' + item.key}
                         className={cn(
-                            'border-b border-[--survey-card-table-border-color] last:border-b-0',
+                            'border-b border-(--survey-card-table-border-color) last:border-b-0',
                             rowClassName,
                             {
-                                'bg-[--survey-card-invalid-bg]': props.showErrors && !rowHasResponse(item.key)
+                                'bg-(--survey-card-invalid-bg)': props.showErrors && !rowHasResponse(item.key)
                             },
                         )}
                     >
@@ -468,7 +468,7 @@ const ResponsiveBipolarLikertScaleArray: React.FC<ResponsiveBipolarLikertScaleAr
     }
 
     return (
-        <div className='px-[--survey-card-px-sm] @md:px-[--survey-card-px]'>
+        <div className='px-(--survey-card-px-sm) @md:px-(--survey-card-px)'>
             {getResponsiveModes(width, renderMode, props.compDef.style)}
         </div>
     );

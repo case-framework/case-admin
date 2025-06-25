@@ -51,7 +51,7 @@ const CreateApiKeyDialog = (props: {
         <Dialog>
             <DialogTrigger asChild>
                 <Button
-                    variant={'outline'}
+                    variant={'outline-solid'}
                     size={'icon'}
                 >
                     <PlusIcon className='size-4' />
@@ -92,7 +92,7 @@ const CreateApiKeyDialog = (props: {
                         <DialogClose asChild
                             ref={dialogCloseRef}
                         >
-                            <Button type='button' variant={'outline'}>Cancel</Button>
+                            <Button type='button' variant={'outline-solid'}>Cancel</Button>
                         </DialogClose>
                     </div>
                 </form>

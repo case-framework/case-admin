@@ -113,7 +113,7 @@ const DeleteResponsesDialog: React.FC<DeleteResponsesDialogProps> = (props) => {
                             <DialogClose
                                 asChild
                             >
-                                <Button variant={'outline'}
+                                <Button variant={'outline-solid'}
                                     type='button'
                                 >
                                     Cancel

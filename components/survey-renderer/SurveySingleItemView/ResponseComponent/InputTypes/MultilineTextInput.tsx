@@ -57,7 +57,7 @@ const MultilineTextInput: React.FC<MultilineTextInputProps> = (props) => {
         <div
             className={cn(
                 "flex items-start",
-                'px-[--survey-card-px-sm] @md:px-[--survey-card-px]',
+                'px-(--survey-card-px-sm) @md:px-(--survey-card-px)',
                 getClassName(props.compDef.style))}
         >
             <Label htmlFor={fullKey} className="space-y-2 w-full">

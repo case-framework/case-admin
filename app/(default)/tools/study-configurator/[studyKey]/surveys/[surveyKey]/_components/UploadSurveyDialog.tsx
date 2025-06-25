@@ -134,7 +134,7 @@ const UploadSurveyDialog: React.FC<UploadSurveyDialogProps> = ({
                         asChild
                     >
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                         >
                             Cancel
                         </Button>

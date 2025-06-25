@@ -125,7 +125,7 @@ const UpdatePermissionLimiterDialog: React.FC<UpdatePermissionLimiterDialogProps
                     >
                         <div>
                             <Badge
-                                variant={'outline'}
+                                variant={'outline-solid'}
                             >
                                 {props.permission.resourceType}
                             </Badge>
@@ -156,7 +156,7 @@ const UpdatePermissionLimiterDialog: React.FC<UpdatePermissionLimiterDialogProps
                                 asChild
                             >
                                 <Button
-                                    variant={'outline'}
+                                    variant={'outline-solid'}
                                     type='button'
                                 >
                                     Cancel

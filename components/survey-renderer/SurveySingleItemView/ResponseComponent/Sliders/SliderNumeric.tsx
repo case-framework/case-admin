@@ -71,7 +71,7 @@ const SliderNumeric: React.FC<SliderNumericProps> = (props) => {
 
     return (
         <div className={cn(
-            'px-[--survey-card-px-sm] @md:px-[--survey-card-px]',
+            'px-(--survey-card-px-sm) @md:px-(--survey-card-px)',
         )}>
             {props.compDef.content ?
                 <div

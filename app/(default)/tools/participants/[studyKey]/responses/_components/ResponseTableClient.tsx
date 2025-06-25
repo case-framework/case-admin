@@ -196,7 +196,7 @@ const ResponseTableClient: React.FC<ResponseTableClientProps> = (props) => {
             <div className='overflow-y-scroll h-full pb-6'>
                 <ScrollArea className='block ps-2 pt-2 pb-3 pe-3 h-full overscroll-x-contain'>
                     <table className='text-xs border border-neutral-300 mx-1 shadow-md drop-shadow-md mb-2'>
-                        <thead className='sticky top-0 z-10 shadow-sm border-b-4'>
+                        <thead className='sticky top-0 z-10 shadow-xs border-b-4'>
                             <tr className='bg-slate-200/70 backdrop-blur-md '>
                                 {columns.map((column, index) => {
                                     return (

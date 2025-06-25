@@ -81,7 +81,7 @@ const TextInput: React.FC<TextInputProps> = (props) => {
                 props.defaultClassName,
                 "flex flex-col items-start md:flex-row md:items-center flex-wrap text-base font-normal",
                 {
-                    'px-[--survey-card-px-sm] @md:px-[--survey-card-px]': !props.embedded,
+                    'px-(--survey-card-px-sm) @md:px-(--survey-card-px)': !props.embedded,
                     'w-full': !props.nonFullWidth,
                 },
                 getClassName(props.compDef.style),

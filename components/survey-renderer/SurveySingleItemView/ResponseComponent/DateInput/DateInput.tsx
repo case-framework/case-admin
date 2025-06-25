@@ -95,7 +95,7 @@ const DateInput: React.FC<DateInputProps> = (props) => {
             datepicker = <Popover>
                 <PopoverTrigger asChild>
                     <Button
-                        variant={"outline"}
+                        variant={"outline-solid"}
                         className={cn(
                             "w-full justify-start text-left font-normal",
                             !selectedDate && "text-muted-foreground"
@@ -141,7 +141,7 @@ const DateInput: React.FC<DateInputProps> = (props) => {
             props.defaultClassName,
             "flex items-center gap-2 grow flex-wrap md:flex-nowrap",
             {
-                'px-[--survey-card-px-sm] @md:px-[--survey-card-px]': !props.embedded,
+                'px-(--survey-card-px-sm) @md:px-(--survey-card-px)': !props.embedded,
             },
             getClassName(props.compDef.style),
         )}>

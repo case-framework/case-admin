@@ -113,7 +113,7 @@ const StudyRulesOverview: React.FC<StudyRulesOverviewProps> = async (props) => {
                     studyKey={props.studyKey}
                 />
                 <Button
-                    variant={'outline'}
+                    variant={'outline-solid'}
                     asChild
                 >
                     <Link

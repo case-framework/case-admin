@@ -156,7 +156,7 @@ const DynamicValueEditor: React.FC<DynamicValueEditorProps> = ({ dynamicValue, i
                                 <Button variant="ghost" size="sm"
                                     className="text-xs"
                                 >
-                                    <PenIcon className="!size-3 mr-1 text-muted-foreground" />
+                                    <PenIcon className="size-3! mr-1 text-muted-foreground" />
                                     Edit Expression
                                 </Button >
                             </div>

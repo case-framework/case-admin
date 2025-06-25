@@ -130,7 +130,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = (props) =>
                 </span>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant={'outline'} className="px-2 py-1 h-auto">
+                        <Button variant={'outline-solid'} className="px-2 py-1 h-auto">
                             <span className="text-xs font-mono font-semibold">
                                 {currentContent.type}
                             </span>

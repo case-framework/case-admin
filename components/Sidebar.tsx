@@ -81,7 +81,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = (props) => {
                 </Button>
             </div>
             {props.tooltip &&
-                <div className={clsx('absolute w-auto px-3 py-1 m-2 min-w-max left-14 rounded-sm shadow-sm text-sm font-bold transition-all duration-100 scale-0 origin-left group-hover:scale-100',
+                <div className={clsx('absolute w-auto px-3 py-1 m-2 min-w-max left-14 rounded-sm shadow-xs text-sm font-bold transition-all duration-100 scale-0 origin-left group-hover:scale-100',
                     'bg-slate-100 z-50 h-10 flex items-center'
                 )}>
                     {props.tooltip}

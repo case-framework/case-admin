@@ -212,7 +212,7 @@ const ClozeQuestion: React.FC<ClozeQuestionProps> = (props) => {
     return (
         <div className={cn(
             "flex items-center flex-wrap gap-2",
-            { 'px-[--survey-card-px-sm] @md:px-[--survey-card-px]': !props.embedded }
+            { 'px-(--survey-card-px-sm) @md:px-(--survey-card-px)': !props.embedded }
         )}>
             {
                 (props.compDef as ItemGroupComponent).items.map(

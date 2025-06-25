@@ -196,7 +196,7 @@ const StudyConfigImporter: React.FC<StudyConfigImporterProps> = (props) => {
                 }}
             >
                 <SheetTrigger asChild>
-                    <Button variant={'outline'}>
+                    <Button variant={'outline-solid'}>
                         Open Importer
                     </Button>
 

@@ -243,12 +243,12 @@ const SurveySingleItemView: React.FC<SurveySingleItemViewProps> = (props) => {
                         className={
                             clsx(
                                 'flex items-center w-full',
-                                'rounded-t-[--survey-card-border-radius-sm] @md:rounded-t-[--survey-card-border-radius]',
-                                'px-[--survey-card-px-sm] @md:px-[--survey-card-px] py-2 @md:py-4',
-                                'bg-[--survey-card-header-bg]',
+                                'rounded-t-(--survey-card-border-radius-sm) @md:rounded-t-(--survey-card-border-radius)',
+                                'px-(--survey-card-px-sm) @md:px-(--survey-card-px) py-2 @md:py-4',
+                                'bg-(--survey-card-header-bg)',
                                 getClassName(titleComp.style),
                                 {
-                                    'bg-[--survey-card-invalid-bg]': props.showInvalid
+                                    'bg-(--survey-card-invalid-bg)': props.showInvalid
                                 }
                             )}
                     >
@@ -262,7 +262,7 @@ const SurveySingleItemView: React.FC<SurveySingleItemViewProps> = (props) => {
                                             'ms-1',
                                             {
                                                 'text-primary': !props.showInvalid,
-                                                'text-[--survey-error-text-color]': props.showInvalid
+                                                'text-(--survey-error-text-color)': props.showInvalid
                                             }
                                         )}
                                     >
@@ -304,7 +304,7 @@ const SurveySingleItemView: React.FC<SurveySingleItemViewProps> = (props) => {
                         role='group'
                         className={cn(
 
-                            'bg-[--survey-card-bg] rounded-[--survey-card-border-radius-sm] @md:rounded-[--survey-card-border-radius] relative',
+                            'bg-(--survey-card-bg) rounded-(--survey-card-border-radius-sm) @md:rounded-(--survey-card-border-radius) relative',
                             {
                                 'mt-2': props.showKeys,
                             }
@@ -324,9 +324,9 @@ const SurveySingleItemView: React.FC<SurveySingleItemViewProps> = (props) => {
                             {props.showInvalid ?
                                 <p className={clsx(
                                     'font-bold text-base @md:text-lg',
-                                    'px-[--survey-card-px-sm] @md:px-[--survey-card-px] py-2 @md:py-4',
-                                    'rounded-b-[--survey-card-border-radius-sm] @md:rounded-b-[--survey-card-border-radius]',
-                                    'bg-[--survey-card-invalid-bg]  m-0 text-[--survey-error-text-color]'
+                                    'px-(--survey-card-px-sm) @md:px-(--survey-card-px) py-2 @md:py-4',
+                                    'rounded-b-(--survey-card-border-radius-sm) @md:rounded-b-(--survey-card-border-radius)',
+                                    'bg-(--survey-card-invalid-bg)  m-0 text-(--survey-error-text-color)'
                                 )}
                                     role="alert"
                                 >

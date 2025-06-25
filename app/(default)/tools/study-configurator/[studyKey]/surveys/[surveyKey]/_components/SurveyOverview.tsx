@@ -77,7 +77,7 @@ const SurveyOverview: React.FC<SurveyOverviewProps> = async (props) => {
                     surveyKey={props.surveyKey}
                 />
                 <Button
-                    variant={'outline'}
+                    variant={'outline-solid'}
                     asChild
                 >
                     <Link

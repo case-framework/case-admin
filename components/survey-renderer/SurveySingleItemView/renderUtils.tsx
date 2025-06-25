@@ -52,7 +52,7 @@ export const renderCQMContent = (content?: string, className?: string) => {
                 key={index.toFixed()}
                 className={cn({
                     'text-primary': part.textColor === 'primary',
-                    'text-[var(--survey-accent-color)]': part.textColor === 'accent',
+                    'text-(--survey-accent-color)': part.textColor === 'accent',
                     'underline': part.underline,
                     'italic': part.italic,
                     'font-bold': part.bold

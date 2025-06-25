@@ -1,6 +1,6 @@
 
 const EditorHeader: React.FC = () => {
-    return <header className="h-[var(--header-height)] bg-red-50/50">
+    return <header className="h-(--header-height) bg-red-50/50">
         todo: header
     </header>
 }

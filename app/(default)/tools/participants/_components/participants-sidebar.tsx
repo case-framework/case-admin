@@ -93,8 +93,8 @@ const ParticipantsSidebar: React.FC<ParticipantsSidebarProps> = (props) => {
                 <div className='flex items-center gap-2 justify-start group-data-[collapsible=icon]:px-0 px-2'>
                     <div
                         className={cn(
-                            'shadow-sm rounded-md flex items-center justify-center text-center',
-                            'bg-gradient-to-b from-orange-400 to-orange-600 text-white',
+                            'shadow-xs rounded-md flex items-center justify-center text-center',
+                            'bg-linear-to-b from-orange-400 to-orange-600 text-white',
                             'group-data-[collapsible=icon]:p-1 p-2'
                         )}>
                         <ClipboardListIcon
@@ -172,7 +172,7 @@ const ParticipantsSidebar: React.FC<ParticipantsSidebarProps> = (props) => {
                                 </SidebarMenuButton>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
-                                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                                className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
                                 side="right"
                                 align="end"
                                 sideOffset={10}

@@ -135,14 +135,14 @@ const Matrix: React.FC<MatrixProps> = (props) => {
         return <div
             key={rowKey}
             role="row"
-            className="flex flex-col md:flex-row  border-b border-[--survey-card-table-border-color] last:border-b-0">
+            className="flex flex-col md:flex-row  border-b border-(--survey-card-table-border-color) last:border-b-0">
             <div role='rowheader'
-                className="font-bold flex-1 px-[--survey-card-px-sm] @md:px-[--survey-card-px] py-1.5 md:hidden">
+                className="font-bold flex-1 px-(--survey-card-px-sm) @md:px-(--survey-card-px) py-1.5 md:hidden">
                 {rowLabel}
             </div>
 
 
-            <div className='flex flex-col @md:flex-row grow px-[--survey-card-px-sm] @md:px-[--survey-card-px] -mx-2 md:items-center'>
+            <div className='flex flex-col @md:flex-row grow px-(--survey-card-px-sm) @md:px-(--survey-card-px) -mx-2 md:items-center'>
                 <div role="rowheader" className="hidden md:flex font-bold flex-1 min-w-0 px-2 py-1.5">
                     {rowLabel}
                 </div>
@@ -224,7 +224,7 @@ const Matrix: React.FC<MatrixProps> = (props) => {
                             />;
                             break;
                         case MatrixCellType.Checkbox:
-                            inputSlot = <Label className='-my-2 py-2 px-1 flex items-center gap-2 justify-center cursor-pointer hover:bg-black/5 rounded-[--survey-card-border-radius-sm]'>
+                            inputSlot = <Label className='-my-2 py-2 px-1 flex items-center gap-2 justify-center cursor-pointer hover:bg-black/5 rounded-(--survey-card-border-radius-sm)'>
                                 <Checkbox
                                     className='bg-background size-5'
                                     checked={isResponseSet(compDef.key, cell.key)}
@@ -300,8 +300,8 @@ const Matrix: React.FC<MatrixProps> = (props) => {
             </div>
         });
 
-        return <div role="rowgroup" className="hidden md:flex border-b border-[--survey-card-table-border-color] w-full">
-            <div role="row" className='flex flex-col @md:flex-row w-full px-[--survey-card-px-sm] @md:px-[--survey-card-px] grow -mx-2'>
+        return <div role="rowgroup" className="hidden md:flex border-b border-(--survey-card-table-border-color) w-full">
+            <div role="row" className='flex flex-col @md:flex-row w-full px-(--survey-card-px-sm) @md:px-(--survey-card-px) grow -mx-2'>
                 <div role="columnheader" className="font-bold flex-1 px-2 py-1.5"></div>
                 {cells}
             </div>

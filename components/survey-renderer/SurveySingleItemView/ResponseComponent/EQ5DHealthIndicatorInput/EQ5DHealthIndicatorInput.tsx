@@ -51,7 +51,7 @@ const EQ5DHealthIndicatorInput: React.FC<EQ5DHealthIndicatorInputProps> = (props
     }
 
     const renderValueBox = () => {
-        return <div className="inline-flex flex-wrap bg-primary text-primary-foreground p-2 rounded-[--survey-card-border-radius]">
+        return <div className="inline-flex flex-wrap bg-primary text-primary-foreground p-2 rounded-(--survey-card-border-radius)">
             {valueBoxComp ? renderContent(valueBoxComp, 'content') : null}
             <span className="ms-2">{value}</span>
         </div>

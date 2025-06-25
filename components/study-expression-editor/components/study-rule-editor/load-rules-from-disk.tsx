@@ -141,7 +141,7 @@ const LoadRulesFromDisk: React.FC<LoadRulesFromDiskProps> = (props) => {
                     )}
                 </div>
                 <DialogFooter>
-                    <Button variant={'outline'}
+                    <Button variant={'outline-solid'}
                         onClick={() => props.onClose()}
                     >Cancel</Button>
                     <Button

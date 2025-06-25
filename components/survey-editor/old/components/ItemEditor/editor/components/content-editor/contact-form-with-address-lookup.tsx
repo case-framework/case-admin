@@ -237,7 +237,7 @@ const ContactFormDialog: React.FC<ContactFormDialogProps> = (props) => {
         >
             <DialogTrigger asChild>
                 <Button
-                    variant={'outline'}
+                    variant={'outline-solid'}
                     className='gap-2'
                 >
                     {props.dialog.triggerBtnLabel}
@@ -654,7 +654,7 @@ const ContactForm: React.FC<ContactFormProps> = (props) => {
 
     return (
         <div
-            className='px-[--survey-card-px-sm] @md:px-[--survey-card-px]'
+            className='px-(--survey-card-px-sm) @md:px-(--survey-card-px)'
         >
             <div className='mb-4 space-y-2'>
                 <p className='text-sm mb-1.5'>

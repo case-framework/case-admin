@@ -20,7 +20,7 @@ const ContentLink: React.FC<ContentLinkProps> = ({
 
     return (
         <Link
-            className='mx-1 inline-flex items-center font-medium underline underline-offset-4 text-primary hover:text-coneno-1 focus:ring-primary focus:ring rounded-sm focus:ring-offset-1 focus:outline-none'
+            className='mx-1 inline-flex items-center font-medium underline underline-offset-4 text-primary hover:text-coneno-1 focus:ring-primary focus:ring-3 rounded-sm focus:ring-offset-1 focus:outline-hidden'
             target={isExternal ? '_blank' : undefined}
             rel='noopener noreferrer'
             {...props}>

@@ -147,7 +147,7 @@ const CreateStudyForm: React.FC = () => {
                         className='gap-3'
                     >
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                             type='button'
                             asChild
                         >

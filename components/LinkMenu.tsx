@@ -18,7 +18,7 @@ export const LinkMenu: React.FC<LinkMenuProps> = (props) => {
         <nav>
             <ul
                 className={cn(
-                    'divide-y divide-neutral-200 rounded-lg overflow-hidden border drop-shadow-sm',
+                    'divide-y divide-neutral-200 rounded-lg overflow-hidden border drop-shadow-xs',
                     props.className
                 )}
             >

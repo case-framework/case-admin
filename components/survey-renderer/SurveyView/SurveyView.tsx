@@ -141,7 +141,7 @@ const SurveyView: React.FC<SurveyViewProps> = (props) => {
         >
             <div
                 ref={surveyRef}
-                className='focus:outline-none survey'
+                className='focus:outline-hidden survey'
                 tabIndex={-1}>
                 {surveyPages.length > 1 ?
                     <div className="p-6">

@@ -11,7 +11,7 @@ const EditorsIcon: React.FC<EditorsIconProps> = (props) => {
         <ToolIconBase
             size={props.size}
             icon={<BsPencilSquare />}
-            color='bg-gradient-to-br from-fuchsia-500 to-purple-500 text-white'
+            color='bg-linear-to-br from-fuchsia-500 to-purple-500 text-white'
         />
     );
 };

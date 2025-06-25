@@ -22,7 +22,7 @@ export const StudyCardWithTags = ({
     tags: Array<string | undefined>,
 }) => {
     return (
-        <div className='bg-slate-200 px-6 py-4 rounded-lg drop-shadow-sm'>
+        <div className='bg-slate-200 px-6 py-4 rounded-lg drop-shadow-xs'>
             <p className='font-bold'>
                 <span className="text-xl">
                     {name || '<study name>'}

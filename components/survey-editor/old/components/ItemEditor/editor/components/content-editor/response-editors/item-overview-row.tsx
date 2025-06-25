@@ -72,8 +72,8 @@ export const ItemOverviewRow: React.FC<ItemOverviewRowProps> = (props) => {
     return <div
         className={cn(
             'group relative w-full gap-2 py-2 h-auto px-3 text-start flex flex-row items-center rounded-md border text-sm font-medium transition-colors user-select-none',
-            { 'bg-gray-100 text-accent-foreground shadow-sm': props.isSelected },
-            { 'bg-white hover:shadow-sm hover:bg-gray-50': !props.isSelected },
+            { 'bg-gray-100 text-accent-foreground shadow-xs': props.isSelected },
+            { 'bg-white hover:shadow-xs hover:bg-gray-50': !props.isSelected },
             (props.isBeingDragged && !props.isDragOverlay) && 'invisible')}
         onClick={props.isDragOverlay ? undefined : () => { props.onSelectionUpdate?.(item.key ?? ''); }}
         onContextMenu={(e) => {

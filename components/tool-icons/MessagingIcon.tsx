@@ -11,7 +11,7 @@ const MessagingIcon: React.FC<MessagingIconProps> = (props) => {
         <ToolIconBase
             size={props.size}
             icon={<BsEnvelopeAt />}
-            color='bg-gradient-to-b from-indigo-400 to-indigo-600 text-white'
+            color='bg-linear-to-b from-indigo-400 to-indigo-600 text-white'
         />
     );
 };

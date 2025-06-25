@@ -47,10 +47,10 @@ const ItemLabelPreviewAndEditor: React.FC<ItemLabelPreviewAndEditorProps> = (pro
             }}
             id='new-item-label'
             autoComplete='off'
-            className='w-full text-center focus:border-none px-1 py-0 h-auto font-medium !text-lg bg-transparent border-none'
+            className='w-full text-center focus:border-none px-1 py-0 h-auto font-medium text-lg! bg-transparent border-none'
             placeholder='Enter item label'
             onBlur={() => {
-                console.log('blur');
+                console.log('blur-sm');
                 setEditMode(false);
             }}
 

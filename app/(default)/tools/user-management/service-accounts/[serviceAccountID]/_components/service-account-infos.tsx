@@ -116,7 +116,7 @@ const ServiceAccountInfos: React.FC<ServiceAccountInfosProps> = (props) => {
 
                     <CardFooter>
                         <LoadingButton
-                            variant={'outline'}
+                            variant={'outline-solid'}
                             isLoading={isPending}
                         >
                             Update

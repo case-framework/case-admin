@@ -31,7 +31,7 @@ export const SurveyContextEditorDialog: React.FC<{
 
 
     return (<Dialog open={props.isOpen} onOpenChange={props.onClose}>
-        <DialogContent className='max-w-screen-sm'>
+        <DialogContent className='max-w-(--breakpoint-sm)'>
             <DialogHeader>
                 <DialogTitle>
                     Survey Context Variables

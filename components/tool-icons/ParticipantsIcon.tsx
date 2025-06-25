@@ -11,7 +11,7 @@ const ParticipantsIcon: React.FC<ParticipantsIconProps> = (props) => {
         <ToolIconBase
             size={props.size}
             icon={<BsClipboard2Data />}
-            color='bg-gradient-to-b from-orange-400 to-orange-600 text-white'
+            color='bg-linear-to-b from-orange-400 to-orange-600 text-white'
         />
     );
 };

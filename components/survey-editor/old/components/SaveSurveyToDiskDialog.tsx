@@ -95,7 +95,7 @@ const SaveSurveyToDiskDialog: React.FC<SaveSurveyToDiskDialogProps> = ({
                     <DialogClose
                         asChild
                     >
-                        <Button variant={'outline'}>
+                        <Button variant={'outline-solid'}>
                             Cancel
                         </Button>
                     </DialogClose>

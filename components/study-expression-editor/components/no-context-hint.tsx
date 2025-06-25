@@ -24,7 +24,7 @@ const NoContextHint: React.FC = () => {
                     changeView('context-editor');
                 }}
                     size={'sm'}
-                    variant={'outline'}
+                    variant={'outline-solid'}
                 >
                     <span>
                         <PenIcon className='size-4' />

@@ -42,7 +42,7 @@ const DatePicker: React.FC<DatePickerProps> = (props) => {
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
-                            variant={"outline"}
+                            variant={"outline-solid"}
                             className={cn(
                                 'w-full',
                                 "justify-start text-left font-normal",

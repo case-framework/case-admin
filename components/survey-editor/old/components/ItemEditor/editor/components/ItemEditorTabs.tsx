@@ -87,7 +87,7 @@ const ItemEditorTabs: React.FC<ItemEditorTabsProps> = (props) => {
                     <TabsList className='flex flex-wrap justify-start p-0 px-4 pt-0.5 h-auto  gap-1 bg-secondary w-full rounded-none'>
                         {tabs.map(tab => (
                             <TabsTrigger value={tab.label.toLowerCase()} key={tab.label}
-                                className='rounded-none rounded-t-md shadow-none border-t border-s border-e border-neutral-300 drop-shadow-none data-[state=active]:shadow-none mb-[-1px] data-[state=active]:ring-offset-0'
+                                className='rounded-none rounded-t-md shadow-none border-t border-s border-e border-neutral-300 drop-shadow-none data-[state=active]:shadow-none -mb-px data-[state=active]:ring-offset-0'
                             >
                                 <span>
                                     {tab.icon}

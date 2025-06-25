@@ -29,7 +29,7 @@ export default function Page() {
                     </p>
                     <div className="mt-6 flex gap-6">
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                             asChild
                         >
                             <Link

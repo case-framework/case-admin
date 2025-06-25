@@ -66,9 +66,9 @@ const OverviewMatrixCellContent: React.FC<{
             <ContextMenuTrigger>
                 <div className={cn(
                     "flex flex-row items-center gap-2 h-5 box-content",
-                    'p-2 hover:bg-gray-100 cursor-pointer overflow-ellipsis whitespace-nowrap overflow-hidden',
+                    'p-2 hover:bg-gray-100 cursor-pointer text-ellipsis whitespace-nowrap overflow-hidden',
                     {
-                        'bg-secondary ring ring-primary ring-inset': isSelected,
+                        'bg-secondary ring-3 ring-primary ring-inset': isSelected,
                     }
                 )}>
                     {!hideIcon && <span className="text-muted-foreground">{icon(cell)}</span>}

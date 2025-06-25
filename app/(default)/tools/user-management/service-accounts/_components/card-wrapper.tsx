@@ -20,7 +20,7 @@ const CardWrapper: React.FC<CardWrapperProps> = (props) => {
 
                     <Button
                         asChild
-                        variant={'outline'}
+                        variant={'outline-solid'}
                         size={'icon'}
                     >
                         <Link

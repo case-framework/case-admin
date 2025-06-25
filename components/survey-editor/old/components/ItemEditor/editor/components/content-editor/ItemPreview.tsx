@@ -158,7 +158,7 @@ const ItemPreview: React.FC<ItemPreviewProps> = (props) => {
                             code: 'nl', locale: nl, format: 'PPP'
                         }]}
                     />
-                    {isSurveyEnd ? <div className='bg-[--survey-card-bg] px-[--survey-card-px-sm] @md:px-[--survey-card-px] py-2 @md:py-4 rounded-b-[--survey-card-border-radius]'>
+                    {isSurveyEnd ? <div className='bg-(--survey-card-bg) px-(--survey-card-px-sm) @md:px-(--survey-card-px) py-2 @md:py-4 rounded-b-(--survey-card-border-radius)'>
                         <p>{'< Button to submit >'}</p>
                     </div> : null}
 

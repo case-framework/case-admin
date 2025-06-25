@@ -15,7 +15,7 @@ interface AddDropdownProps {
 const AddDropdown: React.FC<AddDropdownProps> = (props) => {
     if (props.options.length === 1) {
         return <Button
-            variant={'outline'}
+            variant={'outline-solid'}
             size={'sm'}
             className=''
             onClick={() => {
@@ -29,7 +29,7 @@ const AddDropdown: React.FC<AddDropdownProps> = (props) => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant={'outline'} size={'sm'} className=''>
+                <Button variant={'outline-solid'} size={'sm'} className=''>
                     <span><Plus className='size-4 me-2' /></span>Add new
                 </Button>
             </DropdownMenuTrigger>

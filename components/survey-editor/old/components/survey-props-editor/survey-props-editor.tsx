@@ -28,7 +28,7 @@ const SurveyProperties: React.FC = () => {
 
     return (
         <div className='md:p-6 overflow-auto'>
-            <section className='grow md:rounded-[0.5rem] md:border md:shadow mx-auto max-w-screen-lg bg-white'>
+            <section className='grow md:rounded-[0.5rem] md:border md:shadow-sm mx-auto max-w-(--breakpoint-lg) bg-white'>
                 <div className="space-y-6 p-6">
                     <div className="space-y-0.5">
                         <h2 className="text-2xl font-bold tracking-tight">Survey Properties</h2>

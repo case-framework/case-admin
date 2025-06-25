@@ -35,7 +35,7 @@ const StudyActionEditor: React.FC = () => {
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant={'outline'}
+                            <Button variant={'outline-solid'}
                                 size={'sm'}
                             >
                                 <span>Options</span>

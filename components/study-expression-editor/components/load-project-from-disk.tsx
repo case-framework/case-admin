@@ -45,7 +45,7 @@ const LoadRulesFromDisk: React.FC = () => {
                     </h2>
                     <div className='flex gap-2 items-center'>
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                             className='grow'
                             onClick={() => { initNewProject('study-rules') }}
                         >
@@ -55,7 +55,7 @@ const LoadRulesFromDisk: React.FC = () => {
                             New study rules project
                         </Button>
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                             className='grow'
                             onClick={() => { initNewProject('action') }}
                         >
@@ -143,7 +143,7 @@ const LoadRulesFromDisk: React.FC = () => {
                                 <ContextMenu>
                                     <ContextMenuTrigger>
                                         <Button
-                                            variant={'outline'}
+                                            variant={'outline-solid'}
                                             className='w-full h-auto'
                                             onClick={() => {
                                                 loadSession(session.id);
@@ -161,7 +161,7 @@ const LoadRulesFromDisk: React.FC = () => {
                                                 <div className='flex items-center gap-2'>
                                                     <Badge
                                                         className='text-xs'
-                                                        variant={session.mode === 'study-rules' ? 'outline' : 'primaryOutline'}
+                                                        variant={session.mode === 'study-rules' ? 'outline-solid' : 'primaryOutline'}
                                                     >
                                                         {session.mode === 'study-rules' ? 'Study rules' : 'Actions'}
                                                     </Badge>

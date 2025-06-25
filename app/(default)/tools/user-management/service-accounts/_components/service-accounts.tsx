@@ -41,7 +41,7 @@ const ServiceAccounts: React.FC = async () => {
 
                         asChild
                         className='w-full justify-between gap-2 items-center h-fit overflow-x-hidden'
-                        variant={'outline'}
+                        variant={'outline-solid'}
 
                     >
                         <Link

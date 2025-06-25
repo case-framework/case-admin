@@ -269,10 +269,10 @@ const TestPreview: React.FC = () => {
     return (
         <div className="min-h-screen relative overflow-hidden">
             {/* Liquid Glass Background */}
-            <div className="absolute hidden inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/30 via-purple-100/20 to-pink-100/30"></div>
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-200/20 to-purple-200/20 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
+            <div className="absolute hidden inset-0 bg-linear-to-br from-blue-50 via-purple-50 to-pink-50">
+                <div className="absolute inset-0 bg-linear-to-tr from-blue-100/30 via-purple-100/20 to-pink-100/30"></div>
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-linear-to-r from-blue-200/20 to-purple-200/20 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-linear-to-r from-purple-200/20 to-pink-200/20 rounded-full blur-3xl"></div>
             </div>
 
             <div className="relative z-10 flex flex-col items-center justify-center min-h-screen py-8 px-4 gap-6">
@@ -297,9 +297,9 @@ const TestPreview: React.FC = () => {
                         //    className='backdrop-blur-xl bg-white/10 border border-white/20 p-8 rounded-3xl shadow-2xl @container relative overflow-hidden'
                         className='backdrop-blur-xl bg-white/10 border border-black/10 p-8 rounded-xl shadow-s2xl @container relative overflow-hidden'>
                         {/* Inner glass reflection effect */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-3xl"></div>
-                        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
-                        <div className="absolute top-0 left-0 h-full w-px bg-gradient-to-b from-transparent via-white/40 to-transparent"></div>
+                        <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent rounded-3xl"></div>
+                        <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-white/40 to-transparent"></div>
+                        <div className="absolute top-0 left-0 h-full w-px bg-linear-to-b from-transparent via-white/40 to-transparent"></div>
 
                         {/* Content */}
                         <div className="relative z-10">

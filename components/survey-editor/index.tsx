@@ -10,7 +10,7 @@ interface SurveyEditorProps {
 
 const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
 
-    return <div className="[--header-height:calc(theme(spacing.10))] [--footer-height:calc(theme(spacing.8))]">
+    return <div className="[--header-height:calc(--spacing(10))] [--footer-height:calc(--spacing(8))]">
         <TooltipProvider>
             <div className="flex flex-col h-screen w-screen overflow-hidden">
                 <EditorHeader />

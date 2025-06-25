@@ -344,7 +344,7 @@ const KeyValueListFromContext: React.FC<KeyValueListFromContextProps> = (props) 
                             onChange={(e) => setNewOptionKey(e.target.value)}
                             autoComplete='off'
                             onKeyDown={handleKeyDown}
-                            className="flex-1 bg-transparent border-none outline-none min-w-[120px] p-0 text-xs font-mono"
+                            className="flex-1 bg-transparent border-none outline-hidden min-w-[120px] p-0 text-xs font-mono"
                             placeholder={"Type and press Enter to add"}
                         />
                         <datalist id={optionKeyInputSuggestionsId}>

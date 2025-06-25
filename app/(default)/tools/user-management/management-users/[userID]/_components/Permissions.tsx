@@ -96,7 +96,7 @@ const Permissions: React.FC<PermissionsProps> = async (props) => {
                         <TableRow key={permission.id}>
                             <TableCell className=''>
                                 <Badge
-                                    variant={'outline'}
+                                    variant={'outline-solid'}
                                 >
                                     {permission.resourceType}
                                 </Badge>

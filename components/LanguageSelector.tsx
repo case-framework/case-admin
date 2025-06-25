@@ -44,7 +44,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                         >
                             <RadioGroup.Option
                                 value={lang}
-                                className='px-1.5 py-0.5 cursor-pointer rounded-sm text-sm hover:underline ui-checked:font-bold ui-checked:bg-white ui-checked:underline ui-checked:shadow-sm border border-transparent ui-checked:border-slate-200'>
+                                className='px-1.5 py-0.5 cursor-pointer rounded-sm text-sm hover:underline ui-checked:font-bold ui-checked:bg-white ui-checked:underline ui-checked:shadow-xs border border-transparent ui-checked:border-slate-200'>
                                 {lang}
                             </RadioGroup.Option>
 

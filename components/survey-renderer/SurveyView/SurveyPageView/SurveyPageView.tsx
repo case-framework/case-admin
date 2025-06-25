@@ -123,9 +123,9 @@ const SurveyPageView: React.FC<SurveyPageViewProps> = (props) => {
         const titleComp = getItemComponentByRole(props.surveyEndItem?.components?.items, 'title');
         return <div
             className={cn(
-                "bg-[--survey-card-bg]",
-                'px-[--survey-card-px-sm] @md:px-[--survey-card-px] py-2 @md:py-4',
-                "rounded-[--survey-card-border-radius-sm] @md:rounded-[--survey-card-border-radius]"
+                "bg-(--survey-card-bg)",
+                'px-(--survey-card-px-sm) @md:px-(--survey-card-px) py-2 @md:py-4',
+                "rounded-(--survey-card-border-radius-sm) @md:rounded-(--survey-card-border-radius)"
             )}
         >
             {titleComp ? <p className="text-primary text-xl font-bold mb-4">
@@ -174,7 +174,7 @@ const SurveyPageView: React.FC<SurveyPageViewProps> = (props) => {
                     type="button"
                     id="back"
                     color='primary'
-                    variant={'outline'}
+                    variant={'outline-solid'}
                     className='text-lg font-semibold'
                     onClick={() => {
                         props.onPreviousPage()

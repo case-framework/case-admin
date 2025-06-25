@@ -24,10 +24,10 @@ const SurveyProgress: React.FC<SurveyProgressProps> = (props) => {
                                 key={index.toString()}
                                 className={
                                     clsx(
-                                        'h-full rounded-[--survey-card-border-radius-sm]',
+                                        'h-full rounded-(--survey-card-border-radius-sm)',
                                         'grow',
                                         {
-                                            'bg-[--survey-card-header-bg]': index > props.currentIndex,
+                                            'bg-(--survey-card-header-bg)': index > props.currentIndex,
                                             'bg-primary': index <= props.currentIndex,
                                         })}
                                 style={{ maxWidth: maxPageBarWidth }}

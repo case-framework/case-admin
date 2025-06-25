@@ -214,7 +214,7 @@ const FormattedPartEditor: React.FC<{
         <SortableItem
             id={props.part.key || ''}
         >
-            <div className='p-4 border border-border bg-white rounded-md relative space-y-1 min-w-60 shadow-sm'>
+            <div className='p-4 border border-border bg-white rounded-md relative space-y-1 min-w-60 shadow-xs'>
                 <div className='absolute top-0 left-0 w-full flex justify-center'>
                     <GripHorizontal className='size-5 text-neutral-500' />
                 </div>

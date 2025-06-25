@@ -12,7 +12,7 @@ const ToolIconBase: React.FC<ToolIconBaseProps> = (props) => {
     return (
         <div
             className={clsx(
-                'shadow-sm rounded-md flex items-center justify-center text-center',
+                'shadow-xs rounded-md flex items-center justify-center text-center',
                 props.color,
                 {
                     'size-8 text-lg': props.size === 'md',

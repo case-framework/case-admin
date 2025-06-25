@@ -14,7 +14,7 @@ const SlotLabel = (props: {
 
     const content = <div className={cn(
         'text-[12px] relative grow font-semibold text-slate-600 flex items-center group',
-        '-mb-3 pb-4 z-[1] rounded-t border border-transparent ',
+        '-mb-3 pb-4 z-1 rounded-t border border-transparent ',
         {
             'cursor-pointer hover:border-slate-300': canToggleHide || hasContextMenu,
             'hover:bg-slate-50  ': (canToggleHide || hasContextMenu) && (props.depth || 0) % 2 === 0,

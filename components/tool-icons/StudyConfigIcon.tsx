@@ -11,7 +11,7 @@ const StudyConfigIcon: React.FC<StudyConfigIconProps> = (props) => {
         <ToolIconBase
             size={props.size}
             icon={<BsJournalMedical />}
-            color='bg-gradient-to-b from-sky-400 to-sky-600 text-white'
+            color='bg-linear-to-b from-sky-400 to-sky-600 text-white'
         />
     );
 };

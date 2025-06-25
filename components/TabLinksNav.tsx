@@ -55,7 +55,7 @@ export const TabNavLink: React.FC<TabNavLinkProps> = (props) => {
     return (
         <li>
             <Button asChild
-                variant={props.isActive ? 'outline' : 'link'}
+                variant={props.isActive ? 'outline-solid' : 'link'}
                 className={cn('font-semibold h-9',
                     {
                         'underline font-bold': props.isActive,

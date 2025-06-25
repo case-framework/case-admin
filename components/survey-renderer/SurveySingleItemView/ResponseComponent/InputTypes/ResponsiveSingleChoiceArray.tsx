@@ -25,7 +25,7 @@ const VerticalModeOption: React.FC<VerticalModeOptionProps> = (props) => {
     const optionFullKey = props.slotFullKey + '.' + props.optionKey;
     // console.log(optionFullKey)
     return <label className={clsx(
-        "form-check flex items-center gap-2 hover:bg-black/5 py-1 px-[--survey-card-px-sm] @md:px-[--survey-card-px] ",
+        "form-check flex items-center gap-2 hover:bg-black/5 py-1 px-(--survey-card-px-sm) @md:px-(--survey-card-px) ",
         props.className,
     )}
         htmlFor={optionFullKey}
@@ -154,7 +154,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
         const rows = props.compDef.items;
 
         return <ul
-            className='flex flex-col divide-y divide-[--survey-card-table-border-color]'
+            className='flex flex-col divide-y divide-(--survey-card-table-border-color)'
         >
             {rows.map((item) => {
                 if (item.displayCondition === false) {
@@ -171,14 +171,14 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                                 'py-2',
                                 rowClassName,
                                 {
-                                    'bg-[--survey-card-invalid-bg]': props.showErrors && !rowHasResponse(item.key)
+                                    'bg-(--survey-card-invalid-bg)': props.showErrors && !rowHasResponse(item.key)
                                 },
                             )}
                         >
                             <p
                                 id={rowKey + 'label'}
                                 className={clsx(
-                                    'font-bold mb-2 px-[--survey-card-px-sm] @md:px-[--survey-card-px] '
+                                    'font-bold mb-2 px-(--survey-card-px-sm) @md:px-(--survey-card-px) '
                                 )}
                             >
                                 {renderContent(item, 'content')}
@@ -205,7 +205,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                                 })}
                             </fieldset>
                             {(errorHint && props.showErrors && !rowHasResponse(item.key)) && <div
-                                className='text-[--survey-error-text-color] text-sm font-bold mt-1 px-[--survey-card-px-sm] @md:px-[--survey-card-px]'
+                                className='text-(--survey-error-text-color) text-sm font-bold mt-1 px-(--survey-card-px-sm) @md:px-(--survey-card-px)'
                                 role='alert'
                             >
                                 {renderContent(errorHint, 'content')}
@@ -252,7 +252,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                 className={clsx(
                     "flex text-xs @md:text-base font-medium @md:font-normal",
                     {
-                        'bg-[--survey-card-invalid-bg] rounded-sm': props.showErrors && !rowHasResponse(rowKey)
+                        'bg-(--survey-card-invalid-bg) rounded-sm': props.showErrors && !rowHasResponse(rowKey)
                     },
                 )}
                 aria-describedby={htmlLabelKey}
@@ -310,7 +310,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                 }
             </fieldset>
             {(errorHint && props.showErrors && !rowHasResponse(rowKey)) && <div
-                className='text-[--survey-error-text-color] text-sm font-bold mt-1'
+                className='text-(--survey-error-text-color) text-sm font-bold mt-1'
                 role='alert'
             >
                 {renderContent(errorHint, 'content')}
@@ -329,7 +329,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
 
         const rows = props.compDef.items;
 
-        return <ul className='px-[--survey-card-px-sm] @md:px-[--survey-card-px] divide-y divide-[--survey-card-table-border-color]'>
+        return <ul className='px-(--survey-card-px-sm) @md:px-(--survey-card-px) divide-y divide-(--survey-card-table-border-color)'>
             {rows.map((item, index) => {
                 if (item.displayCondition === false) {
                     return null;
@@ -356,7 +356,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
             return <p>No options found.</p>;
         }
 
-        return <div className='px-[--survey-card-px-sm] @md:px-[--survey-card-px]'>
+        return <div className='px-(--survey-card-px-sm) @md:px-(--survey-card-px)'>
             <table className={"table m-0 "}>
                 <thead>
                     <tr>
@@ -388,7 +388,7 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
                                         {renderContent(item, 'content')}
 
                                         {(errorHint && props.showErrors && !rowHasResponse(item.key)) && <div
-                                            className='text-[--survey-error-text-color] text-sm'
+                                            className='text-(--survey-error-text-color) text-sm'
                                             role='alert'
                                         >
                                             {renderContent(errorHint, 'content')}
@@ -423,10 +423,10 @@ const ResponsiveSingleChoiceArray: React.FC<ResponsiveSingleChoiceArrayProps> = 
 
                         return <tr key={props.compDef + '.' + item.key}
                             className={cn(
-                                'border-b border-[--survey-card-table-border-color] last:border-b-0',
+                                'border-b border-(--survey-card-table-border-color) last:border-b-0',
                                 rowClassName,
                                 {
-                                    'bg-[--survey-card-invalid-bg]': props.showErrors && !rowHasResponse(item.key)
+                                    'bg-(--survey-card-invalid-bg)': props.showErrors && !rowHasResponse(item.key)
                                 },
                             )}
 

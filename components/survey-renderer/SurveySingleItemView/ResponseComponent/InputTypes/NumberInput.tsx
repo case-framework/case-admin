@@ -108,7 +108,7 @@ const NumberInput: React.FC<NumberInputProps> = (props) => {
             props.defaultClassName,
             "flex items-center text-base font-normal",
             {
-                'px-[--survey-card-px-sm] @md:px-[--survey-card-px]': !props.embedded,
+                'px-(--survey-card-px-sm) @md:px-(--survey-card-px)': !props.embedded,
                 'w-full': !props.nonFullWidth,
             },
             props.ignoreClassName !== true ? getClassName(props.compDef.style) : undefined

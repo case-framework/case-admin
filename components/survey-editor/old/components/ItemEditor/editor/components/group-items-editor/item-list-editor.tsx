@@ -126,7 +126,7 @@ const ItemListEditor: React.FC<ItemListEditorProps> = (props) => {
                 asChild
             >
                 <Button
-                    variant={'outline'}
+                    variant={'outline-solid'}
                     className={cn(
                         'w-full gap-2 py-3 h-auto px-3 text-start group relative',
                         item.className,

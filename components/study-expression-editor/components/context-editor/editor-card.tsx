@@ -125,7 +125,7 @@ const EditorCard: React.FC<EditorCardProps> = (props) => {
                 <AddPopover
                     trigger={
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                         >
                             <PlusIcon className='size-4' />
                             <span>Add first entry</span>

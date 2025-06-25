@@ -115,7 +115,7 @@ const CodeValidatorDialog: React.FC<CodeValidatorDialogProps> = (props) => {
         >
             <DialogTrigger asChild>
                 <Button
-                    variant={'outline'}
+                    variant={'outline-solid'}
                     className='gap-2'
                 >
                     {props.dialog.triggerBtnLabel}
@@ -256,7 +256,7 @@ const CodeValidator: React.FC<CodeValidatorProps> = (props) => {
 
     return (
         <div
-            className='px-[--survey-card-px-sm] @md:px-[--survey-card-px]'
+            className='px-(--survey-card-px-sm) @md:px-(--survey-card-px)'
         >
             {previewLabelContent && <p className='text-sm mb-1.5'>
                 {previewLabelContent}

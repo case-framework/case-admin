@@ -91,7 +91,7 @@ const MoveItemDialog: React.FC<MoveItemDialogProps> = (props) => {
                 </div>
                 <DialogFooter>
                     <Button
-                        variant={'outline'}
+                        variant={'outline-solid'}
                         onClick={() => { props.onClose() }}
                     >
                         Cancel

@@ -129,7 +129,7 @@ const VerticalSlider: React.FC<VerticalSliderProps> = (props) => {
     }
 
     return (
-        <div className="focus-within:outline-none rounded focus-within:ring-2 focus-within:ring-primary/50">
+        <div className="focus-within:outline-hidden rounded focus-within:ring-2 focus-within:ring-primary/50">
             {props.maxValueText ?
                 <p className="m-0 font-bold select-none">
                     {props.maxValueText}

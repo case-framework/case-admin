@@ -25,7 +25,7 @@ const TabCard: React.FC<TabCardProps> = (props) => {
                     <TabsList className='flex flex-wrap justify-start p-0  pt-0.5 h-auto bg-transparent gap-1 w-full rounded-none'>
                         {props.tabs.map(tab => (
                             <TabsTrigger value={tab.label.toLowerCase()} key={tab.label}
-                                className='rounded-none text-xs py-1 rounded-t-md shadow-none border-t border-s border-e border-border drop-shadow-none data-[state=active]:shadow-none mb-[-1px] data-[state=active]:ring-offset-0'
+                                className='rounded-none text-xs py-1 rounded-t-md shadow-none border-t border-s border-e border-border drop-shadow-none data-[state=active]:shadow-none -mb-px data-[state=active]:ring-offset-0'
                             >
                                 <span>
                                     {tab.icon}

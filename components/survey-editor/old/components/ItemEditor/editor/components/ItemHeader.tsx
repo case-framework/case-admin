@@ -117,7 +117,7 @@ const ItemHeader: React.FC<ItemHeaderProps> = (props) => {
                     className={cn(
                         "size-8 rounded-lg p-0 hover:opacity-80",
                         {
-                            'ring ring-slate-600 ring-offset-2': color === item.color
+                            'ring-3 ring-slate-600 ring-offset-2': color === item.color
                         }
                     )}
                     size='icon'
@@ -269,7 +269,7 @@ const ItemHeader: React.FC<ItemHeaderProps> = (props) => {
                     <div className='flex'>
                         <KeyPathDisplay fullKey={props.surveyItem.key} color={item.color ?? ''} />
                     </div>
-                    <div className='flex-grow flex flex-row gap-1 items-center'>
+                    <div className='grow flex flex-row gap-1 items-center'>
                         {!isRoot && <CornerDownRight size={16} color={item.color} />}
                         <PopoverKeyBadge
                             allOtherKeys={relevantKeys.filter(i => i !== item.itemKey)}

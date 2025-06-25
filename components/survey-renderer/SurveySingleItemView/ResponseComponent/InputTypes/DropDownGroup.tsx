@@ -109,7 +109,7 @@ const DropDownGroup: React.FC<DropDownGroupProps> = (props) => {
             props.defaultClassName,
             "flex items-center my-2",
             {
-                'px-[--survey-card-px-sm] @md:px-[--survey-card-px]': !props.embedded,
+                'px-(--survey-card-px-sm) @md:px-(--survey-card-px)': !props.embedded,
 
             },
         )}>

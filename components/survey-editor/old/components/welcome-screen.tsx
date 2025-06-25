@@ -42,7 +42,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = (props) => {
                     <div className='flex flex-col gap-4'>
 
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                             className='gap-4 text-lg py-2 h-auto justify-start'
                             onClick={props.onOpenRecentlyEditedSurvey}
                             disabled={!hasRecentlyEditedSurvey}
@@ -55,7 +55,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = (props) => {
 
                         </Button>
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                             className='gap-4 text-lg py-2 h-auto justify-start'
                             onClick={props.onOpenSurvey}
                         >
@@ -63,7 +63,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = (props) => {
                             Open survey
                         </Button>
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                             className='gap-4 text-lg py-2 h-auto justify-start'
                             onClick={props.onCreateSurvey}
                         >

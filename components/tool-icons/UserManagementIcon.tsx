@@ -11,7 +11,7 @@ const UserManagementIcon: React.FC<UserManagementIconProps> = (props) => {
         <ToolIconBase
             size={props.size}
             icon={<BsPersonFillGear />}
-            color='bg-gradient-to-b from-emerald-400 to-emerald-600 text-white'
+            color='bg-linear-to-b from-emerald-400 to-emerald-600 text-white'
         />
     );
 };

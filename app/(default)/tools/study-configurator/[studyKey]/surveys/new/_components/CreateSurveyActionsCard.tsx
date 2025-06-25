@@ -118,9 +118,9 @@ const CreateSurveyActionsCard: React.FC<CreateSurveyActionsCardProps> = (props) 
                 </div>
 
                 <div className='flex row items-center my-4'>
-                    <div className='border-t border-t-neutral-400 grow h-[1px]'></div>
+                    <div className='border-t border-t-neutral-400 grow h-px'></div>
                     <span className='px-2 text-neutral-400'>OR</span>
-                    <div className='border-t border-t-neutral-400 grow h-[1px]'></div>
+                    <div className='border-t border-t-neutral-400 grow h-px'></div>
                 </div>
 
                 <div className='flex flex-col gap-1'>

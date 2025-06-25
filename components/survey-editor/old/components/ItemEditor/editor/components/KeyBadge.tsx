@@ -13,7 +13,7 @@ export const KeyBadge = (props: { itemKey: string, isHighlighted: boolean, highl
     return (
         <Badge
             onClick={props.onClick}
-            variant={props.isHighlighted ? 'default' : 'outline'}
+            variant={props.isHighlighted ? 'default' : 'outline-solid'}
             className={cn("h-auto border-2 py-0 w-full flex justify-center", {
                 "hover:opacity-80": props.isHighlighted,
             })}
@@ -115,7 +115,7 @@ export const PopoverKeyBadge: React.FC<{
 
                 <PopoverClose
                     ref={popoverCloseRef}
-                    className='absolute top-2 right-2 rounded-full p-1 hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background'
+                    className='absolute top-2 right-2 rounded-full p-1 hover:bg-muted/50 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background'
                 >
                     <X className='size-4' />
                 </PopoverClose>
@@ -147,7 +147,7 @@ export const PopoverKeyBadge: React.FC<{
                         disabled={!hasChanges}
                         className="shrink-0"
                         size={'icon'}
-                        variant={'outline'}
+                        variant={'outline-solid'}
                         onClick={() => {
                             setCurrentKey(props.itemKey)
                         }}
@@ -157,7 +157,7 @@ export const PopoverKeyBadge: React.FC<{
                     <Button
                         className="shrink-0"
                         size={'icon'}
-                        variant={'outline'}
+                        variant={'outline-solid'}
                         disabled={!isValidKey || !hasChanges}
                         onClick={handleKeyChange}
                     >

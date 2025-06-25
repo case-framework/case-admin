@@ -19,7 +19,7 @@ const StudyExpressionEditor: React.FC<StudyExpressionEditorProps> = (props) => {
             mode: props.mode ?? 'study-rules',
             studyContext: props.studyContext,
         }}>
-            <div className='z-40 flex flex-col h-screen from-slate-50 to-neutral-50 bg-gradient-to-b'>
+            <div className='z-40 flex flex-col h-screen from-slate-50 to-neutral-50 bg-linear-to-b'>
                 <KeyboardShortcuts />
                 <Menu
                     onExit={() => console.log('todo: exit')}

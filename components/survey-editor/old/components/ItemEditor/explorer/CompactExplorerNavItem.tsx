@@ -36,16 +36,16 @@ const CompactExplorerNavItem: React.FC<CompactExplorerNavItemProps> & { EmptyLis
             <TooltipTrigger asChild>
                 <Button
                     size={'icon'}
-                    variant={variant as 'ghost' | 'link' | 'default' | 'secondary' | 'destructive' | 'outline' | null | undefined}
+                    variant={variant as 'ghost' | 'link' | 'default' | 'secondary' | 'destructive' | 'outline-solid' | null | undefined}
                     className={cn(props.className)}
                     onDoubleClick={props.onDoubleClick}
                     onClick={props.onClick}
                     style={props.style}
                 >
                     {props.isConfidential && <div className='p-1 absolute -top-1 -right-1 bg-neutral-600/90 rounded-full text-white'>
-                        <Shield className='!size-2' />
+                        <Shield className='size-2!' />
                     </div>}
-                    <props.icon className='!size-6' />
+                    <props.icon className='size-6!' />
                 </Button>
             </TooltipTrigger>
             <TooltipContent side="right" className="space-y-1">

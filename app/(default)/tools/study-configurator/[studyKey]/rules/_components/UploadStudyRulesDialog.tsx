@@ -135,7 +135,7 @@ const UploadStudyRulesDialog: React.FC<UploadStudyRulesDialogProps> = (props) =>
                         asChild
                     >
                         <Button
-                            variant={'outline'}
+                            variant={'outline-solid'}
                         >
                             Cancel
                         </Button>
