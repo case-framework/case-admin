@@ -4,13 +4,18 @@ import ReportsDownloader from "./_components/ReportsDownloader";
 import { ReportsPageLinkContent } from "../../../_components/breacrumbs-contents";
 import SidebarToggleWithBreadcrumbs from "@/components/sidebar-toggle-with-breadcrumbs";
 
-export default function Page({
-    params: { studyKey }
-}: {
-    params: {
-        studyKey: string;
-    };
-}) {
+export default async function Page(
+    props: {
+        params: Promise<{
+            studyKey: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+
+    const {
+        studyKey
+    } = params;
 
     return (
         <div

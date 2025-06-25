@@ -4,7 +4,13 @@ import { auth } from "@/auth";
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: NextRequest, { params: { segments } }: { params: { segments: string[] } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ segments: string[] }> }) {
+    const params = await props.params;
+
+    const {
+        segments
+    } = params;
+
     const session = await auth();
     if (!session || !session.CASEaccessToken) {
         console.error(`Unauthorized access to case-api: ${request.nextUrl.toString()}`)
@@ -35,11 +41,16 @@ export async function GET(request: NextRequest, { params: { segments } }: { para
         }
     });
     return resp;
-
 }
 
 
-export async function POST(request: NextRequest, { params: { segments } }: { params: { segments: string[] } }) {
+export async function POST(request: NextRequest, props: { params: Promise<{ segments: string[] }> }) {
+    const params = await props.params;
+
+    const {
+        segments
+    } = params;
+
     const session = await auth();
     if (!session || !session.CASEaccessToken) {
         console.error(`Unauthorized access to case-api: ${request.nextUrl.toString()}`)
@@ -69,7 +80,13 @@ export async function POST(request: NextRequest, { params: { segments } }: { par
     return resp;
 }
 
-export async function DELETE(request: NextRequest, { params: { segments } }: { params: { segments: string[] } }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ segments: string[] }> }) {
+    const params = await props.params;
+
+    const {
+        segments
+    } = params;
+
     const session = await auth();
     if (!session || !session.CASEaccessToken) {
         console.error(`Unauthorized access to case-api: ${request.nextUrl.toString()}`)

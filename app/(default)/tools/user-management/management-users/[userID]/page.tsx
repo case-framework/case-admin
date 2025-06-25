@@ -8,15 +8,18 @@ import Permissions, { PermissionsSkeleton } from "./_components/Permissions";
 import DeleteUserCard from "./_components/DeleteUserCard";
 
 
-export default function Page({
-    params: {
-        userID,
-    },
-}: {
-    params: {
-        userID: string;
-    };
-}) {
+export default async function Page(
+    props: {
+        params: Promise<{
+            userID: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+
+    const {
+        userID
+    } = params;
 
     return (
         <div className="space-y-6">

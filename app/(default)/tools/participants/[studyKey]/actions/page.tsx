@@ -10,7 +10,7 @@ interface PageProps {
 export const dynamic = 'force-dynamic';
 
 const Page: React.FC<PageProps> = async (props) => {
-    redirect(`/tools/participants/${props.params.studyKey}/actions/general`);
+    redirect(`/tools/participants/${(await props.params).studyKey}/actions/general`);
     return null;
 };
 

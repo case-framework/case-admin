@@ -18,33 +18,31 @@ export const metadata = {
 
 
 interface PageProps {
-    params: {
+    params: Promise<{
         studyKey: string;
-    }
-    searchParams?: {
+    }>
+    searchParams?: Promise<{
         filter?: string;
         page?: string;
         selectedParticipant?: string;
-    };
+    }>;
 }
 
 export default async function Page(props: PageProps) {
 
     return (
-        <div className="flex flex-col h-screen overflow-y-hidden">
+        (<div className="flex flex-col h-screen overflow-y-hidden">
             <SidebarToggleWithBreadcrumbs
                 breadcrumbs={[
                     {
                         href: "/tools/participants",
-                        content: props.params.studyKey
+                        content: (await props.params).studyKey
                     },
                     {
                         content: <ParticipantsPageLinkContent />
                     }
                 ]}
             />
-
-
             <main className="px-4 flex flex-col gap-4 grow overflow-hidden pb-1">
                 <Card
                     className="p-4 gap-1 bg-neutral-50"
@@ -57,7 +55,7 @@ export default async function Page(props: PageProps) {
                             className="font-bold"
                         >
                             <Link
-                                href={`/tools/participants/${props.params.studyKey}/participants/exporter`}
+                                href={`/tools/participants/${(await props.params).studyKey}/participants/exporter`}
                             >
                                 <HardDriveDownload className="size-4 me-2" />
                                 Open Exporter
@@ -82,25 +80,25 @@ export default async function Page(props: PageProps) {
 
                     <div className="grow flex overflow-hidden">
                         <Suspense
-                            key={props.params.studyKey + props.searchParams?.filter + props.searchParams?.page}
+                            key={(await props.params).studyKey + (await props.searchParams)?.filter + (await props.searchParams)?.page}
                             fallback={<ParticipantListSkeleton />}
                         >
                             <ParticipantList
-                                studyKey={props.params.studyKey}
-                                filter={props.searchParams?.filter}
-                                page={props.searchParams?.page}
-                                selectedParticipant={props.searchParams?.selectedParticipant}
+                                studyKey={(await props.params).studyKey}
+                                filter={(await props.searchParams)?.filter}
+                                page={(await props.searchParams)?.page}
+                                selectedParticipant={(await props.searchParams)?.selectedParticipant}
                             />
                         </Suspense>
 
                         <div className="grow h-full overflow-auto">
                             <Suspense
-                                key={props.params.studyKey + props.searchParams?.selectedParticipant}
+                                key={(await props.params).studyKey + (await props.searchParams)?.selectedParticipant}
                                 fallback={<ParticipantDetailsSkeleton />}
                             >
                                 <ParticipantDetails
-                                    studyKey={props.params.studyKey}
-                                    participantID={props.searchParams?.selectedParticipant}
+                                    studyKey={(await props.params).studyKey}
+                                    participantID={(await props.searchParams)?.selectedParticipant}
                                 />
 
                             </Suspense>
@@ -108,8 +106,6 @@ export default async function Page(props: PageProps) {
                     </div>
                 </Card >
             </main>
-
-
-        </div >
-    )
+        </div >)
+    );
 }

@@ -4,14 +4,14 @@ import SimpleBreadcrumbsPageLayout from "@/components/SimpleBreadcrumbsPageLayou
 
 export const dynamic = 'force-dynamic';
 
-export default function Page(
+export default async function Page(
     props: {
-        params: { scheduleId: string; }
+        params: Promise<{ scheduleId: string; }>
     }
 ) {
 
     return (
-        <SimpleBreadcrumbsPageLayout
+        (<SimpleBreadcrumbsPageLayout
             links={[
                 {
                     title: 'Messaging Tools',
@@ -22,7 +22,7 @@ export default function Page(
                     href: '/tools/messaging/schedules',
                 },
                 {
-                    title: props.params.scheduleId,
+                    title: (await props.params).scheduleId,
                 },
             ]}
         >
@@ -30,11 +30,11 @@ export default function Page(
                 <div className="grow flex overflow-hidden">
                     <Suspense fallback={<ScheduleEditorLoaderSkeleton />}>
                         <ScheduleEditorLoader
-                            id={props.params.scheduleId}
+                            id={(await props.params).scheduleId}
                         />
                     </Suspense>
                 </div>
             </div>
-        </SimpleBreadcrumbsPageLayout>
+        </SimpleBreadcrumbsPageLayout>)
     );
 }

@@ -3,12 +3,13 @@ import { EmailTemplate } from "@/utils/server/types/messaging";
 import ScheduleMessageActionForm from "./_components/schedule-message-action-form";
 
 export default async function Page(
-    { params }: {
-        params: {
+    props: {
+        params: Promise<{
             studyKey: string;
-        }
+        }>
     }
 ) {
+    const params = await props.params;
 
     const studyEmailTemplatesResp = await getStudyMessageTemplates();
 

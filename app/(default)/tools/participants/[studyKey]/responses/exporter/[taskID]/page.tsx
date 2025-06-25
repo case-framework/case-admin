@@ -4,16 +4,20 @@ import TaskTracker from "../../../../../../../../components/ExportTaskTracker";
 import { ResponsesPageLinkContent } from "../../../../_components/breacrumbs-contents";
 import SidebarToggleWithBreadcrumbs from "@/components/sidebar-toggle-with-breadcrumbs";
 
-export default function Page(
-    {
-        params: { studyKey, taskID }
-    }: {
-        params: {
+export default async function Page(
+    props: {
+        params: Promise<{
             studyKey: string;
             taskID: string;
-        };
+        }>;
     }
 ) {
+    const params = await props.params;
+
+    const {
+        studyKey,
+        taskID
+    } = params;
 
     return (
         <div>

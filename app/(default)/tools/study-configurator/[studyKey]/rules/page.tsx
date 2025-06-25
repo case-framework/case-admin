@@ -12,15 +12,15 @@ export const dynamic = 'force-dynamic';
 
 const Page: React.FC<PageProps> = async (props) => {
     return (
-        <div className='flex'>
+        (<div className='flex'>
             <Suspense fallback={<StudyRulesOverviewSkeleton
-                studyKey={props.params.studyKey}
+                studyKey={(await props.params).studyKey}
             />}>
                 <StudyRulesOverview
-                    studyKey={props.params.studyKey}
+                    studyKey={(await props.params).studyKey}
                 />
             </Suspense>
-        </div>
+        </div>)
     );
 };
 

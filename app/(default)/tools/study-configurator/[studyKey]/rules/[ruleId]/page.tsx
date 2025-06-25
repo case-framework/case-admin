@@ -1,10 +1,11 @@
 export default function Page(props: {
-    params: {
+    params: Promise<{
         studyKey: string
         ruleId: string
-    }
+    }>
 }) {
-    console.log(props)
+    console.log(/* @next-codemod-error 'props' is passed as an argument. Any asynchronous properties of 'props' must be awaited when accessed. */
+    props)
 
     return (
         <div>

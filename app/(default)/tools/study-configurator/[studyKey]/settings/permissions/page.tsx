@@ -4,15 +4,13 @@ import { StudyKeyPageParams } from "../../page";
 
 export const dynamic = 'force-dynamic';
 
-export default function Page(
-    props: StudyKeyPageParams
-) {
+export default async function Page(props: StudyKeyPageParams) {
 
     return (
-        <Suspense fallback={<PermissionsCardSkeleton />}>
+        (<Suspense fallback={<PermissionsCardSkeleton />}>
             <PermissionsCard
-                studyKey={props.params.studyKey}
+                studyKey={(await props.params).studyKey}
             />
-        </Suspense>
+        </Suspense>)
     );
 }

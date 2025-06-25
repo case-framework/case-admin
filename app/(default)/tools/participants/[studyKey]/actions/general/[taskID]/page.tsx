@@ -3,16 +3,20 @@ import TaskTracker from "@/components/ExportTaskTracker";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 
-export default function Page(
-    {
-        params: { studyKey, taskID }
-    }: {
-        params: {
+export default async function Page(
+    props: {
+        params: Promise<{
             studyKey: string;
             taskID: string;
-        };
+        }>;
     }
 ) {
+    const params = await props.params;
+
+    const {
+        studyKey,
+        taskID
+    } = params;
 
     return (
         <div

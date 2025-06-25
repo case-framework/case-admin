@@ -5,15 +5,15 @@ import StudyConfigImporter from "./_components/study-config-importer";
 
 
 interface PageProps {
-    params: {
+    params: Promise<{
         studyKey: string;
-    }
+    }>
 }
 
 export default async function Page(props: PageProps) {
 
     return (
-        <Card
+        (<Card
             variant='opaque'
             className='w-full'
         >
@@ -35,16 +35,16 @@ export default async function Page(props: PageProps) {
                 <Separator />
 
                 <StudyConfigExporter
-                    studyKey={props.params.studyKey}
+                    studyKey={(await props.params).studyKey}
                 />
 
                 <Separator />
 
                 <StudyConfigImporter
-                    studyKey={props.params.studyKey}
+                    studyKey={(await props.params).studyKey}
                 />
 
             </CardContent>
-        </Card>
+        </Card>)
     );
 }

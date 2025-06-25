@@ -20,25 +20,25 @@ export const metadata = {
 
 
 interface PageProps {
-    params: {
+    params: Promise<{
         studyKey: string;
-    }
-    searchParams?: {
+    }>
+    searchParams?: Promise<{
         filter?: string;
-    }
+    }>
 }
 
 export default async function Page(props: PageProps) {
-    const reportsCompKey = props.params.studyKey + JSON.stringify(props.searchParams);
+    const reportsCompKey = (await props.params).studyKey + JSON.stringify((await props.searchParams));
 
     return (
-        <div
+        (<div
             className="h-full w-full flex flex-col" >
             <SidebarToggleWithBreadcrumbs
                 breadcrumbs={[
                     {
                         href: "/tools/participants",
-                        content: props.params.studyKey
+                        content: (await props.params).studyKey
                     },
                     {
                         // href: `/tools/participants/${props.params.studyKey}/reports`,
@@ -64,7 +64,7 @@ export default async function Page(props: PageProps) {
                                 className="font-bold"
                             >
                                 <Link
-                                    href={`/tools/participants/${props.params.studyKey}/reports/exporter`}
+                                    href={`/tools/participants/${(await props.params).studyKey}/reports/exporter`}
                                 >
                                     <HardDriveDownload className="size-4 me-2" />
                                     Open Exporter
@@ -88,13 +88,13 @@ export default async function Page(props: PageProps) {
                             key={reportsCompKey}
                             fallback={<ReportViewerSkeleton />}>
                             <ReportViewer
-                                studyKey={props.params.studyKey}
-                                filter={props.searchParams?.filter}
+                                studyKey={(await props.params).studyKey}
+                                filter={(await props.searchParams)?.filter}
                             />
                         </Suspense>
                     </div>
                 </Card>
             </main>
-        </div>
+        </div>)
     );
 }

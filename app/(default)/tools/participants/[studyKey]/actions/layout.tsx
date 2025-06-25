@@ -3,15 +3,19 @@ import ActionsSidebar from "./_components/actions-sidebar";
 import SidebarToggleWithBreadcrumbs from "@/components/sidebar-toggle-with-breadcrumbs";
 import { ActionsPageLinkContent } from "../../_components/breacrumbs-contents";
 
-export default function Layout({
-    children,
-    params,
-}: {
-    children: React.ReactNode;
-    params: {
-        studyKey: string;
-    };
-}) {
+export default async function Layout(
+    props: {
+        children: React.ReactNode;
+        params: Promise<{
+            studyKey: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+
+    const {
+        children
+    } = props;
 
     return (
         <div className="overflow-y-scroll h-full pb-1 flex flex-col">

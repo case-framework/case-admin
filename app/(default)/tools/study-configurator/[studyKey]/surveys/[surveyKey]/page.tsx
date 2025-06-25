@@ -4,10 +4,10 @@ import { Suspense } from "react";
 
 
 interface PageProps {
-    params: {
+    params: Promise<{
         studyKey: string;
         surveyKey: string;
-    }
+    }>
 }
 
 export const dynamic = 'force-dynamic';
@@ -16,22 +16,21 @@ export const dynamic = 'force-dynamic';
 export default async function Page(props: PageProps) {
 
     return (
-        <div className="space-y-4">
+        (<div className="space-y-4">
             <div>
                 <BackButton
                     label="Back to surveys"
-                    href={`/tools/study-configurator/${props.params.studyKey}/surveys`}
+                    href={`/tools/study-configurator/${(await props.params).studyKey}/surveys`}
                 />
             </div>
-
             <div className="flex">
-                <Suspense fallback={<SurveyOverviewSkeleton studyKey={props.params.studyKey} surveyKey={props.params.surveyKey} />}>
+                <Suspense fallback={<SurveyOverviewSkeleton studyKey={(await props.params).studyKey} surveyKey={(await props.params).surveyKey} />}>
                     <SurveyOverview
-                        studyKey={props.params.studyKey}
-                        surveyKey={props.params.surveyKey}
+                        studyKey={(await props.params).studyKey}
+                        surveyKey={(await props.params).surveyKey}
                     />
                 </Suspense>
             </div>
-        </div>
-    )
+        </div>)
+    );
 }

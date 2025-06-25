@@ -9,12 +9,13 @@ import DeleteServiceAccount from "./_components/delete-service-account";
 import ServiceAccountPermissions from "./_components/service-account-permissions";
 
 export default async function Page(
-    { params }: {
-        params: {
+    props: {
+        params: Promise<{
             serviceAccountID: string;
-        };
+        }>;
     }
 ) {
+    const params = await props.params;
     const serviceAccountID = params.serviceAccountID;
 
     const [

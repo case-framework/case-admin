@@ -1,17 +1,19 @@
 import StartActionForm from "./_components/start-action-form";
 
-export default function Page(props: {
-    params: {
-        studyKey: string;
+export default async function Page(
+    props: {
+        params: Promise<{
+            studyKey: string;
+        }>
     }
-}) {
+) {
 
 
     return (
-        <div>
+        (<div>
             <StartActionForm
-                studyKey={props.params.studyKey}
+                studyKey={(await props.params).studyKey}
             />
-        </div>
+        </div>)
     );
 }

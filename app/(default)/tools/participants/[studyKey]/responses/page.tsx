@@ -20,28 +20,28 @@ export const metadata = {
 
 
 interface PageProps {
-    params: {
+    params: Promise<{
         studyKey: string;
-    }
-    searchParams?: {
+    }>
+    searchParams?: Promise<{
         surveyKey?: string;
         laterThan?: number;
         earlierThan?: number;
         page?: string;
-    }
+    }>
 }
 
 export default async function Page(props: PageProps) {
 
-    const responseTableKey = props.params.studyKey + JSON.stringify(props.searchParams);
+    const responseTableKey = (await props.params).studyKey + JSON.stringify((await props.searchParams));
 
     return (
-        <div className="flex flex-col h-screen">
+        (<div className="flex flex-col h-screen">
             <SidebarToggleWithBreadcrumbs
                 breadcrumbs={[
                     {
                         href: "/tools/participants",
-                        content: props.params.studyKey
+                        content: (await props.params).studyKey
                     },
                     {
                         content: <ResponsesPageLinkContent />
@@ -66,7 +66,7 @@ export default async function Page(props: PageProps) {
                                 className="font-bold"
                             >
                                 <Link
-                                    href={`/tools/participants/${props.params.studyKey}/responses/exporter`}
+                                    href={`/tools/participants/${(await props.params).studyKey}/responses/exporter`}
                                 >
                                     <HardDriveDownload className="size-4 me-2" />
                                     Open Exporter
@@ -77,7 +77,7 @@ export default async function Page(props: PageProps) {
 
                         <Suspense fallback={<ResponseFilterSkeleton />}>
                             <ResponseFilter
-                                studyKey={props.params.studyKey}
+                                studyKey={(await props.params).studyKey}
                             />
                         </Suspense>
                     </CardHeader>
@@ -87,15 +87,14 @@ export default async function Page(props: PageProps) {
                             key={responseTableKey}
                             fallback={<ResponseTableSkeleton />}>
                             <ResponseTable
-                                studyKey={props.params.studyKey}
-                                searchParams={props.searchParams}
+                                studyKey={(await props.params).studyKey}
+                                searchParams={(await props.searchParams)}
                             />
                         </Suspense>
                     </div>
                 </Card>
 
             </main>
-        </div>
-
-    )
+        </div>)
+    );
 }

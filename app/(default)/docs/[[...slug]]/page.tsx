@@ -8,14 +8,13 @@ import { MDXContent } from "../_components/mdx-components";
 
 
 interface DocPageProps {
-    params: {
+    params: Promise<{
         slug: string[]
-    }
+    }>
 }
 
-export async function generateMetadata({
-    params,
-}: DocPageProps): Promise<Metadata> {
+export async function generateMetadata(props: DocPageProps): Promise<Metadata> {
+    const params = await props.params;
     const doc = docs.find(doc => doc.slugAsParams === params.slug?.join("/"));
     if (!doc) {
         return {
@@ -39,7 +38,8 @@ export async function generateStaticParams(): Promise<
 }
 
 
-export default function Page({ params }: DocPageProps) {
+export default async function Page(props: DocPageProps) {
+    const params = await props.params;
     const doc = docs.find(doc => doc.slugAsParams === params.slug?.join("/"));
     if (!doc) {
         redirect("/docs/overview");

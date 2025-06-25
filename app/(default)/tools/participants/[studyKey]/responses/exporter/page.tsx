@@ -7,16 +7,25 @@ import SidebarToggleWithBreadcrumbs from "@/components/sidebar-toggle-with-bread
 import { ResponsesPageLinkContent } from "../../../_components/breacrumbs-contents";
 
 export default async function Page(
-    {
-        params: { studyKey },
-        searchParams: { tab }
-    }: {
-        params: {
+    props: {
+        params: Promise<{
             studyKey: string;
-        };
-        searchParams: { tab: string };
+        }>;
+        searchParams: Promise<{ tab: string }>;
     }
 ) {
+    const searchParams = await props.searchParams;
+
+    const {
+        tab
+    } = searchParams;
+
+    const params = await props.params;
+
+    const {
+        studyKey
+    } = params;
+
     let surveyKeys: string[] = [];
     try {
         const resp = await getSurveyInfos(studyKey)

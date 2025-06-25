@@ -9,8 +9,8 @@ import DisplayTextsCard, { DisplayTextsCardSkeleton } from "./_components/Displa
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function Page(props: StudyKeyPageParams) {
-    const studyKey = props.params.studyKey;
+export default async function Page(props: StudyKeyPageParams) {
+    const studyKey = (await props.params).studyKey;
 
     return (
         <div className="space-y-4">

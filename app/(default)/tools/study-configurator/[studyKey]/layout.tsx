@@ -1,15 +1,19 @@
 import SimpleBreadcrumbsPageLayout from "@/components/SimpleBreadcrumbsPageLayout";
 import TabLinksNav from "@/components/TabLinksNav";
 
-export default function Layout({
-    children,
-    params,
-}: {
-    children: React.ReactNode;
-    params: {
-        studyKey: string;
-    };
-}) {
+export default async function Layout(
+    props: {
+        children: React.ReactNode;
+        params: Promise<{
+            studyKey: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+
+    const {
+        children
+    } = props;
 
     return (
         <SimpleBreadcrumbsPageLayout

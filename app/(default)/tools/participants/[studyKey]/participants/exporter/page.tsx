@@ -6,13 +6,18 @@ import { ParticipantsPageLinkContent } from "../../../_components/breacrumbs-con
 
 
 
-export default function Page({
-    params: { studyKey }
-}: {
-    params: {
-        studyKey: string;
-    };
-}) {
+export default async function Page(
+    props: {
+        params: Promise<{
+            studyKey: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+
+    const {
+        studyKey
+    } = params;
 
 
     return (

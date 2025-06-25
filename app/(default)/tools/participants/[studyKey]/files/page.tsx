@@ -15,25 +15,25 @@ export const metadata = {
 
 
 interface PageProps {
-    params: {
+    params: Promise<{
         studyKey: string;
-    }
-    searchParams?: {
+    }>
+    searchParams?: Promise<{
         filter?: string;
-    }
+    }>
 }
 
 export default async function Page(props: PageProps) {
-    const filesCompKey = props.params.studyKey + JSON.stringify(props.searchParams);
+    const filesCompKey = (await props.params).studyKey + JSON.stringify((await props.searchParams));
 
     return (
-        <div
+        (<div
             className="h-full w-full flex flex-col" >
             <SidebarToggleWithBreadcrumbs
                 breadcrumbs={[
                     {
                         href: "/tools/participants",
-                        content: props.params.studyKey
+                        content: (await props.params).studyKey
                     },
                     {
                         content: <FilesPageLinkContent />
@@ -70,13 +70,13 @@ export default async function Page(props: PageProps) {
                             key={filesCompKey}
                             fallback={<ParticipantFilesSkeleton />}>
                             <ParticipantFiles
-                                studyKey={props.params.studyKey}
-                                filter={props.searchParams?.filter}
+                                studyKey={(await props.params).studyKey}
+                                filter={(await props.searchParams)?.filter}
                             />
                         </Suspense>
                     </div>
                 </Card>
             </main>
-        </div>
+        </div>)
     );
 }

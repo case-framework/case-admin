@@ -5,25 +5,25 @@ import SmsTemplateConfig, { SmsTemplateConfigSkeleton } from "./_components/sms-
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
-    params: {
+    params: Promise<{
         messageType: string;
-    }
+    }>
 }
 
-export default function Page(props: PageProps) {
+export default async function Page(props: PageProps) {
 
     return (
-        <main className="p-6 h-full">
+        (<main className="p-6 h-full">
             <div
                 className="h-full w-full flex flex-col gap-4" >
                 <div className="grow flex overflow-hidden">
                     <Suspense fallback={<SmsTemplateConfigSkeleton />}>
                         <SmsTemplateConfig
-                            messageType={props.params.messageType}
+                            messageType={(await props.params).messageType}
                         />
                     </Suspense>
                 </div>
             </div>
-        </main>
+        </main>)
     );
 }

@@ -4,15 +4,18 @@ import SimpleBreadcrumbsPageLayout from "@/components/SimpleBreadcrumbsPageLayou
 
 export const dynamic = 'force-dynamic';
 
-export default function Page({
-    params: {
-        messageType,
-    },
-}: {
-    params: {
-        messageType: string;
-    };
-}) {
+export default async function Page(
+    props: {
+        params: Promise<{
+            messageType: string;
+        }>;
+    }
+) {
+    const params = await props.params;
+
+    const {
+        messageType
+    } = params;
 
     return (
         <SimpleBreadcrumbsPageLayout
