@@ -137,7 +137,7 @@ const advancedExpressions: ExpressionDef[] = [
         categories: ['advanced'],
         label: 'Is value defined',
         returnType: 'boolean',
-        icon: 'blocks',
+        icon: 'package-check',
         color: 'teal',
         slots: [
             {
@@ -225,7 +225,7 @@ const advancedExpressions: ExpressionDef[] = [
         categories: ['advanced'],
         label: 'Is user logged in',
         returnType: 'boolean',
-        icon: 'blocks',
+        icon: 'user-check',
         slots: [],
         defaultValue: {
             dtype: 'exp',
@@ -290,6 +290,7 @@ const responseDependencies: ExpressionDef[] = [
         label: 'A specific response is present',
         returnType: 'boolean',
         color: 'yellow',
+        icon: 'list-check',
         slots: [
             {
                 label: 'Item key',
@@ -333,7 +334,7 @@ const responseDependencies: ExpressionDef[] = [
         label: 'Response contains any of these keys',
         returnType: 'boolean',
         color: 'yellow',
-        icon: 'layout-list',
+        icon: 'list-todo',
         slots: [
             {
                 label: 'Item and option references:',
@@ -368,7 +369,7 @@ const responseDependencies: ExpressionDef[] = [
         id: 'responseHasKeysAll',
         label: 'Response contains all of these keys',
         returnType: 'boolean',
-        icon: 'layout-list',
+        icon: 'list-checks',
         slots: [
             {
                 label: 'Item and option references:',
@@ -400,7 +401,7 @@ const responseDependencies: ExpressionDef[] = [
         label: 'Has response but none of these keys:',
         returnType: 'boolean',
         color: 'yellow',
-        icon: 'layout-list',
+        icon: 'list-x',
         slots: [
             {
                 label: 'Item and option references:',
@@ -520,7 +521,7 @@ const responseDependencies: ExpressionDef[] = [
         label: 'Count response items',
         returnType: 'num',
         color: 'lime',
-        icon: 'function',
+        icon: 'tally-5',
         slots: [
             {
                 label: 'Item key',
@@ -613,7 +614,7 @@ const responseDependencies: ExpressionDef[] = [
         categories: ['response-dependencies'],
         label: 'Get date response diff from now',
         returnType: 'num',
-        icon: 'function',
+        icon: 'calendar-range',
         slots: [
             {
                 label: 'Item key',
@@ -664,7 +665,7 @@ const templates: ExpressionDef[] = [
         id: 'consent-given',
         label: 'Consent question accepted',
         returnType: 'boolean',
-        icon: 'signpost',
+        icon: 'clipboard-check',
         slots: [],
         defaultValue: {
             dtype: 'exp',
@@ -742,7 +743,7 @@ const templates: ExpressionDef[] = [
         id: 'multipleChoiceSelectionCount',
         label: 'Count number of selected options in multiple choice',
         returnType: 'num',
-        icon: 'function',
+        icon: 'tally-5',
         slots: [],
         defaultValue: {
             dtype: 'exp',
@@ -768,7 +769,7 @@ const templates: ExpressionDef[] = [
         id: 'datePickerResponseValue',
         label: 'Get date picker response value',
         returnType: 'num',
-        icon: 'function',
+        icon: 'calendar-days',
         slots: [],
         defaultValue: {
             dtype: 'exp',
@@ -830,7 +831,7 @@ const participantFlags: ExpressionDef[] = [
         id: 'hasParticipantFlagKeyAndValue',
         label: 'Participant flag with key and value exists',
         returnType: 'boolean',
-        icon: 'tag',
+        icon: 'tags',
         color: 'dark',
         slots: [
             {
@@ -950,7 +951,7 @@ export const surveyEngineRegistry: ExpressionDef[] = [
         id: 'getSurveyItemValidation',
         label: 'Is survey item validation true',
         returnType: 'boolean',
-        icon: 'terminal',
+        icon: 'badge-check',
         color: 'cyan',
         slots: [
             {
