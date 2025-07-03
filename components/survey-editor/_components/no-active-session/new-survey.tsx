@@ -135,7 +135,7 @@ const NewSurvey: React.FC<NewSurveyProps> = ({ open, onClose }) => {
                                         <RadioGroup
                                             onValueChange={field.onChange}
                                             value={field.value}
-                                            className="grid grid-cols-3 gap-4 mt-2 p-2 bg-muted border border-border focus-within:ring-2 focus-within:ring-primary/20 rounded-lg"
+                                            className="grid grid-cols-3 gap-4 mt-2 p-2 bg-muted border border-border focus-within:ring-2 focus-within:ring-primary/20 rounded-2xl"
                                         >
                                             {templates.map((template) => (
                                                 <div key={template.id} className="flex flex-col items-center h-full">
