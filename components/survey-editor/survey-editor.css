@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+
+
+.survey-editor {
+    --header-height: calc(--spacing(10));
+
+
+    --main-bg-color: oklch(98.5% 0 0);
+    --main-bg-dot-color: oklch(85% 0 0);
+    --main-bg-dot-grid-size: calc(--spacing(5));
+
+    --footer-bg-color: oklch(37.3% 0.034 259.733);
+    --footer-text-color: oklch(98.5% 0 0);
+    --footer-height: calc(--spacing(6));
+}
