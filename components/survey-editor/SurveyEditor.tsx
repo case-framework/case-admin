@@ -3,10 +3,9 @@
 import React, { useEffect } from 'react';
 
 import TestPreview from './test-preview';
-import SurveyEditor from '.';
 
 const SurveyEditorWrapper: React.FC = () => {
-    return <SurveyEditor />
+    return <p>use index.tsx</p>
     return <TestPreview />;
 }
 
