@@ -30,7 +30,7 @@ const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
     return <div className="survey-editor">
         <TooltipProvider>
             <HashRouter>
-                <nav className="absolute top-0 left-0">
+                <nav className="absolute top-10 right-0">
                     <Link to="/">Welcome</Link>
                     <Link to="/editor">Editor</Link>
                 </nav>

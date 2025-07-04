@@ -1,4 +1,3 @@
-import EditorHeader from "./_components/header"
 import EditorFooter from "./_components/footer"
 import EditorSidebar from "./_components/sidebar"
 import EditorMain from "./_components/main"
@@ -12,7 +11,6 @@ const Editor = () => {
     }
 
     return <div className="flex flex-col h-screen w-screen overflow-hidden">
-        <EditorHeader />
         <div className="flex flex-1 overflow-hidden">
             <EditorSidebar />
             <EditorMain />
