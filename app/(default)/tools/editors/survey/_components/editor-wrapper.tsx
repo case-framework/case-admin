@@ -1,5 +1,5 @@
 'use client';
-import SurveyEditor from "@/components/survey-editor/SurveyEditor";
+import SurveyEditor from "@/components/survey-editor";
 import { useRouter } from "next/navigation";
 import React from 'react';
 
@@ -10,6 +10,7 @@ const EditorWrapper: React.FC = () => {
         <SurveyEditor
             simulatorUrl="/tools/survey-simulator"
             onExit={() => {
+                console.log("exit");
                 router.push('/tools/editors')
             }}
         />

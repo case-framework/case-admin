@@ -58,12 +58,12 @@ const Filepicker: React.FC<FilepickerProps> = (props) => {
                     id={props.id}
                     className=""
                     {...getInputProps()} />
-                <div className='flex justify-center items-center gap-1'>
+                <div className='flex justify-center items-center gap-4'>
                     {acceptedFiles.length > 0 ? <p>{
                         acceptedFiles[0].name
                     }</p> : <>
                         <BsFileEarmarkArrowUp className='text-2xl text-neutral-400' />
-                        <p>
+                        <p className='text-sm'>
                             <span className='text-cyan-800 me-1'>
                                 {placeholders.upload}
                             </span>
