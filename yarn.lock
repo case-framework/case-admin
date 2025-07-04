@@ -2971,6 +2971,11 @@ cookie@0.6.0:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.6.0.tgz#2798b04b071b0ecbff0dbb62a505a8efa4e19051"
   integrity sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==
 
+cookie@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-1.0.2.tgz#27360701532116bd3f1f9416929d176afe1e4610"
+  integrity sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==
+
 crelt@^1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/crelt/-/crelt-1.0.6.tgz#7cc898ea74e190fb6ef9dae57f8f81cf7302df72"
@@ -6130,6 +6135,14 @@ react-resizable-panels@^3.0.3:
   resolved "https://registry.yarnpkg.com/react-resizable-panels/-/react-resizable-panels-3.0.3.tgz#4da138dd8641b5caf9c746bf94c2152b7fe9bf0a"
   integrity sha512-7HA8THVBHTzhDK4ON0tvlGXyMAJN1zBeRpuyyremSikgYh2ku6ltD7tsGQOcXx4NKPrZtYCm/5CBr+dkruTGQw==
 
+react-router@^7.6.3:
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.6.3.tgz#7a4ea5b479b66d2c49a8f000812b2319b4d0a6da"
+  integrity sha512-zf45LZp5skDC6I3jDLXQUu0u26jtuP4lEGbc7BbdyxenBN1vJSTA18czM2D+h5qyMBuMrD+9uB+mU37HIoKGRA==
+  dependencies:
+    cookie "^1.0.1"
+    set-cookie-parser "^2.6.0"
+
 react-spinners@^0.17.0:
   version "0.17.0"
   resolved "https://registry.yarnpkg.com/react-spinners/-/react-spinners-0.17.0.tgz#d518913e2192afaae76c5b781929ea3bd7b1910e"
@@ -6434,6 +6447,11 @@ semver@^7.7.2:
   version "7.7.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.2.tgz#67d99fdcd35cec21e6f8b87a7fd515a33f982b58"
   integrity sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==
+
+set-cookie-parser@^2.6.0:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.7.1.tgz#3016f150072202dfbe90fadee053573cc89d2943"
+  integrity sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ==
 
 set-function-length@^1.2.1, set-function-length@^1.2.2:
   version "1.2.2"

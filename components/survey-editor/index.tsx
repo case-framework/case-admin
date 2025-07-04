@@ -1,10 +1,15 @@
+import { useEffect, useState } from "react";
 import { TooltipProvider } from "../ui/tooltip";
-import EditorFooter from "./_components/footer";
-import EditorHeader from "./_components/header";
-import EditorMain from "./_components/main";
-import EditorSidebar from "./_components/sidebar";
-import WelcomeScreen from "./_components/no-active-session/welcome-screen";
+import EditorLayout from "./routes/editor";
+import ItemEditor from "./routes/editor/item-editor";
+import Simulator from "./routes/editor/simulator";
+import SurveyProps from "./routes/editor/survey-props";
+import TranslationMode from "./routes/editor/translation-mode";
+
+import WelcomeScreen from "./routes/welcome/welcome-screen";
 import "./survey-editor.css";
+import { HashRouter, Link, Route, Routes } from "react-router";
+
 
 interface SurveyEditorProps {
     onExit: () => void;
@@ -12,25 +17,34 @@ interface SurveyEditorProps {
 
 
 const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
+    const [mounted, setMounted] = useState(false);
 
-    const noActiveSession = false;
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
-    if (noActiveSession) {
-        return <div className="survey-editor">
-            <WelcomeScreen onExit={props.onExit} />
-        </div>
+    if (!mounted) {
+        return null;
     }
 
     return <div className="survey-editor">
         <TooltipProvider>
-            <div className="flex flex-col h-screen w-screen overflow-hidden">
-                <EditorHeader />
-                <div className="flex flex-1 overflow-hidden">
-                    <EditorSidebar />
-                    <EditorMain />
-                </div>
-                <EditorFooter />
-            </div>
+            <HashRouter>
+                <nav className="absolute top-0 left-0">
+                    <Link to="/">Welcome</Link>
+                    <Link to="/editor">Editor</Link>
+                </nav>
+                <Routes>
+                    <Route path="/editor" element={<EditorLayout />}>
+                        <Route index element={<SurveyProps />} />
+                        <Route path="item-editor" element={<ItemEditor />} />
+                        <Route path="translation-mode" element={<TranslationMode />} />
+                        <Route path="simulator" element={<Simulator />} />
+                    </Route>
+                    <Route path="/" element={<WelcomeScreen onExit={props.onExit} />} />
+                </Routes>
+
+            </HashRouter>
         </TooltipProvider>
     </div>
 }
