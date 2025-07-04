@@ -45,11 +45,11 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExit }) => {
             </div>
 
             <div className="flex gap-4">
-                <Button variant="outline" className="grow flex-col h-auto items-start" onClick={() => setDialogOpen("new-survey")}>
+                <Button variant="outline" className="grow flex-col h-auto items-start py-3" onClick={() => setDialogOpen("new-survey")}>
                     <FilePlus className="size-4 text-muted-foreground" />
                     New survey
                 </Button>
-                <Button variant="outline" className="grow flex-col h-auto items-start" onClick={() => setDialogOpen("open-survey")}>
+                <Button variant="outline" className="grow flex-col h-auto items-start py-3" onClick={() => setDialogOpen("open-survey")}>
                     <Upload className="size-4 text-muted-foreground" />
                     Open survey
                 </Button>
