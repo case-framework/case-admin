@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Airplay, FileCog, ListTree } from "lucide-react";
+import { Airplay, FileCog, Languages, ListTree } from "lucide-react";
 
 const SidebarItem: React.FC<{
     icon: React.ReactNode
@@ -47,6 +47,12 @@ const EditorSidebar: React.FC = () => {
                 label="Item Editor"
                 onClick={() => { }}
                 isActive={true}
+            />
+            <SidebarItem
+                icon={<Languages className="size-6" />}
+                label="Translation mode"
+                onClick={() => { }}
+                isActive={false}
             />
             <SidebarItem
                 icon={<Airplay className="size-6" />}

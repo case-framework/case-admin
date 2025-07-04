@@ -13,7 +13,7 @@ interface SurveyEditorProps {
 
 const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
 
-    const noActiveSession = true;
+    const noActiveSession = false;
 
     if (noActiveSession) {
         return <div className="survey-editor">
