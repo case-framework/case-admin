@@ -6,6 +6,12 @@ import { cn } from "@/lib/utils";
 import { Airplay, FileCog, Languages, ListTree, Menu, Redo, Undo } from "lucide-react";
 import { NavLink } from "react-router";
 
+interface SidebarMenuProps {
+    onSave?: () => void;
+    onUndo?: () => void;
+    onRedo?: () => void;
+}
+
 const SidebarNavItem: React.FC<{
     icon: React.ReactNode
     to: string
@@ -43,10 +49,8 @@ const SidebarNavItem: React.FC<{
     </li>
 }
 
-const SidebarMenu: React.FC = () => {
+const SidebarMenu: React.FC<SidebarMenuProps> = ({ onSave, onUndo, onRedo }) => {
     return <li className="space-y-1.5">
-
-
         <DropdownMenu>
             <Tooltip
                 delayDuration={0}
@@ -86,7 +90,7 @@ const SidebarMenu: React.FC = () => {
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                     </DropdownMenuSub>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={onSave}>
                         Save to disk
                         <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                     </DropdownMenuItem>
@@ -96,12 +100,12 @@ const SidebarMenu: React.FC = () => {
 
                 <DropdownMenuGroup>
                     <DropdownMenuLabel className="text-xs font-bold">Edit</DropdownMenuLabel>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={onUndo}>
                         <Undo className="size-4" />
                         Undo
                         <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={onRedo}>
                         <Redo className="size-4" />
                         Redo
                         <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
@@ -114,10 +118,16 @@ const SidebarMenu: React.FC = () => {
     </li>
 }
 
-const EditorSidebar: React.FC = () => {
+interface EditorSidebarProps {
+    onSave?: () => void;
+    onUndo?: () => void;
+    onRedo?: () => void;
+}
+
+const EditorSidebar: React.FC<EditorSidebarProps> = ({ onSave, onUndo, onRedo }) => {
     return <div className="flex flex-col border-r border-border bg-white p-1">
         <ul className="space-y-1.5">
-            <SidebarMenu />
+            <SidebarMenu onSave={onSave} onUndo={onUndo} onRedo={onRedo} />
 
             <Separator className="my-1" />
 

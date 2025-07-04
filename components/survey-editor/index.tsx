@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { TooltipProvider } from "../ui/tooltip";
+import { Toaster } from "sonner";
 import EditorLayout from "./routes/editor";
 import ItemEditor from "./routes/editor/item-editor";
 import Simulator from "./routes/editor/simulator";
@@ -43,7 +44,7 @@ const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
                     </Route>
                     <Route path="/" element={<WelcomeScreen onExit={props.onExit} />} />
                 </Routes>
-
+                <Toaster />
             </HashRouter>
         </TooltipProvider>
     </div>
