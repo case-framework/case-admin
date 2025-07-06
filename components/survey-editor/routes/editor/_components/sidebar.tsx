@@ -3,7 +3,7 @@ import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSho
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Airplay, FileCog, Languages, ListTree, Menu, Redo, Undo } from "lucide-react";
+import { Languages, Menu, Pencil, PlaySquare, Redo, Undo } from "lucide-react";
 import { NavLink } from "react-router";
 
 interface SidebarMenuProps {
@@ -59,7 +59,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ onSave, onUndo, onRedo }) => 
 
                     <TooltipTrigger asChild>
                         <Button variant="ghost" size="icon">
-                            <Menu className="size-6" />
+                            <Menu className="size-6 text-gray-600" />
                         </Button>
                     </TooltipTrigger>
                 </DropdownMenuTrigger>
@@ -132,24 +132,18 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ onSave, onUndo, onRedo })
             <Separator className="my-1" />
 
             <SidebarNavItem
-                to="/editor"
-                icon={<FileCog className="size-6" />}
-                label="Survey properties"
-                exact
-            />
-            <SidebarNavItem
                 to="/editor/item-editor"
-                icon={<ListTree className="size-6" />}
-                label="Item Editor"
+                icon={<Pencil className="size-6 text-gray-600" />}
+                label="Edit survey"
             />
             <SidebarNavItem
                 to="/editor/translation-mode"
-                icon={<Languages className="size-6" />}
+                icon={<Languages className="size-6 text-gray-600" />}
                 label="Translation mode"
             />
             <SidebarNavItem
                 to="/editor/simulator"
-                icon={<Airplay className="size-6" />}
+                icon={<PlaySquare className="size-6 text-gray-600" />}
                 label="Simulator"
             />
         </ul>

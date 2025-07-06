@@ -4,7 +4,6 @@ import { Toaster } from "sonner";
 import EditorLayout from "./routes/editor";
 import ItemEditor from "./routes/editor/item-editor";
 import Simulator from "./routes/editor/simulator";
-import SurveyProps from "./routes/editor/survey-props";
 import TranslationMode from "./routes/editor/translation-mode";
 
 import WelcomeScreen from "./routes/welcome/welcome-screen";
@@ -33,11 +32,10 @@ const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
             <HashRouter>
                 <nav className="absolute top-10 right-0">
                     <Link to="/">Welcome</Link>
-                    <Link to="/editor">Editor</Link>
+                    <Link to="/editor/item-editor">Editor</Link>
                 </nav>
                 <Routes>
                     <Route path="/editor" element={<EditorLayout />}>
-                        <Route index element={<SurveyProps />} />
                         <Route path="item-editor" element={<ItemEditor />} />
                         <Route path="translation-mode" element={<TranslationMode />} />
                         <Route path="simulator" element={<Simulator />} />
