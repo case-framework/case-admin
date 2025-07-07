@@ -3,7 +3,9 @@ import { ArrowUpRight, CircleQuestionMark, FilePlus, FolderOpen, Upload, X } fro
 import { useState } from "react";
 import NewSurvey from "./new-survey";
 import OpenSurvey from "./open-survey";
-import LocalSessions from "./local-sessions";
+import LocalSessions, { formatLastChange } from "./local-sessions";
+import { useSessionsList, useSessionActions } from "../../store/session-store";
+import { useNavigate } from "react-router";
 
 interface WelcomeScreenProps {
     onExit: () => void;
@@ -12,6 +14,9 @@ interface WelcomeScreenProps {
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExit }) => {
     const [dialogOpen, setDialogOpen] = useState<"new-survey" | "open-survey" | "local-sessions" | null>(null);
+    const sessions = useSessionsList().sort((a, b) => b.timestamps.lastUpdate - a.timestamps.lastUpdate);
+    const { selectSession } = useSessionActions();
+    const navigate = useNavigate();
 
 
     return <div className="flex flex-col gap-4 min-h-screen w-full items-center justify-center p-8 bg-(--main-bg-color)">
@@ -67,15 +72,32 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExit }) => {
                     </Button>
                 </div>
 
-                <div className="border border-border rounded-md p-2 flex items-center justify-center">
-                    <div className="flex items-center justify-center h-24">
+                <div className="border border-border rounded-md overflow-hidden flex items-center justify-center">
+
+                    {sessions.length < 1 && <div className="flex items-center justify-center h-24 p-2">
                         <p className="text-muted-foreground text-center text-sm">
                             No local sessions found
                         </p>
-                    </div>
+                    </div>}
+
+                    {sessions.length > 0 && <ul className="divide-y divide-border overflow-y-auto w-full h-24">
+                        {sessions.map((session) => (
+                            <li key={session.id} className="w-full">
+                                <Button variant="ghost" className="w-full justify-start rounded-none"
+                                    onClick={() => {
+                                        selectSession(session.id);
+                                        navigate(`/editor/item-editor`, { replace: true });
+                                    }}>
+                                    <p>{session.name}</p>
+                                    <span className="text-muted-foreground text-xs ml-auto">
+                                        {formatLastChange(new Date(session.timestamps.lastUpdate))}
+                                    </span>
+                                </Button>
+
+                            </li>
+                        ))}
+                    </ul>}
                 </div>
-
-
             </div>
 
             <a

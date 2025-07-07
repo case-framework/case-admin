@@ -8,7 +8,7 @@ import TranslationMode from "./routes/editor/translation-mode";
 
 import WelcomeScreen from "./routes/welcome/welcome-screen";
 import "./survey-editor.css";
-import { HashRouter, Link, Route, Routes } from "react-router";
+import { HashRouter, Route, Routes } from "react-router";
 
 
 interface SurveyEditorProps {
@@ -30,10 +30,6 @@ const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
     return <div className="survey-editor">
         <TooltipProvider>
             <HashRouter>
-                <nav className="absolute top-10 right-0">
-                    <Link to="/">Welcome</Link>
-                    <Link to="/editor/item-editor">Editor</Link>
-                </nav>
                 <Routes>
                     <Route path="/editor" element={<EditorLayout />}>
                         <Route path="item-editor" element={<ItemEditor />} />

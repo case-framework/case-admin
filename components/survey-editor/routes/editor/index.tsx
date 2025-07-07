@@ -5,9 +5,10 @@ import { Navigate } from "react-router";
 import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
 import { useCallback } from "react";
 import { toast } from "sonner";
+import { useCurrentSessionId } from "../../store/session-store";
 
 const Editor = () => {
-    const hasSession = true;
+    const sessionId = useCurrentSessionId();
 
     const handleSave = useCallback(() => {
         // TODO: Implement save functionality
@@ -38,7 +39,7 @@ const Editor = () => {
         onRedo: handleRedo,
     });
 
-    if (!hasSession) {
+    if (!sessionId) {
         return <Navigate to="/" replace />
     }
 

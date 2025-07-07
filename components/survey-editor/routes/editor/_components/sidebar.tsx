@@ -1,3 +1,4 @@
+import { useSessionActions } from "@/components/survey-editor/store/session-store";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuShortcut, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuPortal, DropdownMenuSubContent } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
@@ -50,6 +51,9 @@ const SidebarNavItem: React.FC<{
 }
 
 const SidebarMenu: React.FC<SidebarMenuProps> = ({ onSave, onUndo, onRedo }) => {
+
+    const { deselectSession } = useSessionActions();
+
     return <li className="space-y-1.5">
         <DropdownMenu>
             <Tooltip
@@ -78,7 +82,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ onSave, onUndo, onRedo }) => 
             >
                 <DropdownMenuLabel className="text-xs font-bold">File</DropdownMenuLabel>
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => deselectSession()}>
                         Start new survey...
                     </DropdownMenuItem>
                     <DropdownMenuSub>

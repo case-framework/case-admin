@@ -5,54 +5,35 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { AlertTriangle, Trash2, Clock } from "lucide-react";
 import { useState } from "react";
+import { SessionData, useSessionActions, useSessionsList } from "../../store/session-store";
+import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router";
+
 
 interface LocalSessionsProps {
     open: boolean;
     onClose: () => void;
 }
 
-interface LocalSession {
-    id: string;
-    surveyKey: string;
-    lastChange: Date;
-}
+export const formatLastChange = (date: Date) => {
+    return formatDistanceToNow(date, { addSuffix: true });
+
+};
 
 const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
-    // Mock session data
-    const [sessions, setSessions] = useState<LocalSession[]>([
-        {
-            id: "session-1",
-            surveyKey: "weekly-health-survey",
-            lastChange: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-        },
-        {
-            id: "session-2",
-            surveyKey: "patient-feedback-form",
-            lastChange: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) // 1 day ago
-        },
-        {
-            id: "session-3",
-            surveyKey: "medication-adherence-questionnaire",
-            lastChange: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) // 3 days ago
-        },
-        {
-            id: "session-4",
-            surveyKey: "medication-adherence-questionnaire",
-            lastChange: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) // 3 days ago
-        },
-        {
-            id: "session-5",
-            surveyKey: "medication-adherence-questionnaire",
-            lastChange: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) // 3 days ago
-        }
-    ]);
+    const { deleteSession, selectSession } = useSessionActions();
+    const sessionsSessions = useSessionsList();
+    const navigate = useNavigate();
+    const sessions = Object.values(sessionsSessions).sort((a, b) => b.timestamps.lastUpdate - a.timestamps.lastUpdate);
+
 
     const [selectedSessionId, setSelectedSessionId] = useState<string>("");
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-    const [sessionToDelete, setSessionToDelete] = useState<LocalSession | null>(null);
+    const [sessionToDelete, setSessionToDelete] = useState<SessionData | null>(null);
 
     const handleDeleteSession = (sessionId: string) => {
-        setSessions(sessions.filter(session => session.id !== sessionId));
+        deleteSession(sessionId);
+
         // Clear selection if the selected session was deleted
         if (selectedSessionId === sessionId) {
             setSelectedSessionId("");
@@ -61,33 +42,19 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
         setSessionToDelete(null);
     };
 
-    const handleDeleteClick = (session: LocalSession) => {
-        setSessionToDelete(session);
+    const handleDeleteClick = (sessionId: string, sessionName: string) => {
+        setSessionToDelete({ id: sessionId, name: sessionName, timestamps: { lastUpdate: 0, lastSavedToDisk: 0, created: 0 }, surveyEditor: null });
         setDeleteConfirmOpen(true);
     };
 
     const handleLoadSession = (sessionId: string) => {
-        // TODO: Implement session loading
-        console.log('Load session:', sessionId);
         onClose();
+        selectSession(sessionId);
+        navigate(`/editor/item-editor`, { replace: true });
     };
 
     const handleDoubleClick = (sessionId: string) => {
         handleLoadSession(sessionId);
-    };
-
-    const formatLastChange = (date: Date) => {
-        const now = new Date();
-        const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-
-        if (diffInHours < 1) {
-            return "Just now";
-        } else if (diffInHours < 24) {
-            return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
-        } else {
-            const diffInDays = Math.floor(diffInHours / 24);
-            return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
-        }
     };
 
     return (
@@ -140,13 +107,13 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                                             className="flex-1 cursor-pointer"
                                         >
                                             <div className="space-y-1">
-                                                <h3 className="font-medium text-sm leading-tight">{session.surveyKey}</h3>
+                                                <h3 className="font-medium text-sm leading-tight">{session.name}</h3>
                                                 <div className="text-xs text-muted-foreground">
                                                     ID: {session.id}
                                                 </div>
                                                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                                                     <Clock className="h-3 w-3" />
-                                                    <span>Last modified: {formatLastChange(session.lastChange)}</span>
+                                                    <span>Last modified: {formatLastChange(new Date(session.timestamps.lastUpdate))}</span>
                                                 </div>
                                             </div>
                                         </Label>
@@ -155,7 +122,7 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                                             size="sm"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleDeleteClick(session);
+                                                handleDeleteClick(session.id, session.name);
                                             }}
                                             className="opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-700 hover:bg-red-50"
                                         >
@@ -194,7 +161,7 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                         <AlertDialogTitle>Delete Local Session</AlertDialogTitle>
                         <AlertDialogDescription>
                             <span className='block mb-2'>
-                                Are you sure you want to delete the session for <span className="font-bold">{sessionToDelete?.surveyKey}</span>?
+                                Are you sure you want to delete the session for <span className="font-bold">{sessionToDelete?.name}</span>?
                             </span>
 
                             <span className="text-xs">
