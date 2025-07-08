@@ -3,11 +3,12 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { AlertTriangle, Trash2, Clock } from "lucide-react";
+import { AlertTriangle, Trash2, Clock, Lock } from "lucide-react";
 import { useState } from "react";
-import { SessionData, useSessionActions, useSessionsList } from "../../store/session-store";
+import { useSessionStore } from "../../store/session-store";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router";
+import { cn } from "@/lib/utils";
 
 
 interface LocalSessionsProps {
@@ -21,15 +22,17 @@ export const formatLastChange = (date: Date) => {
 };
 
 const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
-    const { deleteSession, selectSession } = useSessionActions();
-    const sessionsSessions = useSessionsList();
+
+    const { sessions, openSession, deleteSession, isSessionLocked } = useSessionStore();
+
     const navigate = useNavigate();
-    const sessions = Object.values(sessionsSessions).sort((a, b) => b.timestamps.lastUpdate - a.timestamps.lastUpdate);
+
+    const sortedSessions = Object.values(sessions).sort((a, b) => b.updatedAt - a.updatedAt);
 
 
     const [selectedSessionId, setSelectedSessionId] = useState<string>("");
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-    const [sessionToDelete, setSessionToDelete] = useState<SessionData | null>(null);
+    const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
 
     const handleDeleteSession = (sessionId: string) => {
         deleteSession(sessionId);
@@ -42,14 +45,14 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
         setSessionToDelete(null);
     };
 
-    const handleDeleteClick = (sessionId: string, sessionName: string) => {
-        setSessionToDelete({ id: sessionId, name: sessionName, timestamps: { lastUpdate: 0, lastSavedToDisk: 0, created: 0 }, surveyEditor: null });
+    const handleDeleteClick = (sessionId: string) => {
+        setSessionToDelete(sessionId);
         setDeleteConfirmOpen(true);
     };
 
     const handleLoadSession = (sessionId: string) => {
         onClose();
-        selectSession(sessionId);
+        openSession(sessionId);
         navigate(`/editor/item-editor`, { replace: true });
     };
 
@@ -77,7 +80,7 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                                 <p className="text-yellow-700 text-xs">
                                     Local sessions are stored in your browser&apos;s local storage and are not saved to the cloud.
                                     They can be lost if browser cache is cleared, browser data is deleted, or you switch devices.
-                                    This is only a small helper to pick up sessions again or share state between browser tabs.
+                                    This is only a small helper to pick up sessions again if you accidentally close the tab.
                                 </p>
                             </div>
                         </div>
@@ -85,7 +88,7 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
 
                     {/* Sessions List */}
                     <div className="flex flex-col gap-2">
-                        {sessions.length === 0 ? (
+                        {sortedSessions.length === 0 ? (
                             <div className="text-center py-8 text-muted-foreground">
                                 <p>No local sessions found</p>
                             </div>
@@ -95,39 +98,52 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                                 onValueChange={setSelectedSessionId}
                                 className="divide-y gap-0 divide-border border border-border focus-within:ring-2 focus-within:ring-primary/20 rounded-2xl overflow-y-auto max-h-[300px]"
                             >
-                                {sessions.map((session) => (
+                                {sortedSessions.map((session) => (
                                     <div
                                         key={session.id}
-                                        className="group flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors cursor-pointer"
-                                        onDoubleClick={() => handleDoubleClick(session.id)}
+                                        className={cn(
+                                            "group flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors cursor-pointer",
+                                            isSessionLocked(session.id) && "opacity-50"
+                                        )}
+                                        onDoubleClick={() => !isSessionLocked(session.id) && handleDoubleClick(session.id)}
                                     >
-                                        <RadioGroupItem value={session.id} id={session.id} />
+                                        <RadioGroupItem
+                                            value={session.id}
+                                            id={session.id}
+                                            disabled={isSessionLocked(session.id)}
+                                            className="disabled:opacity-50"
+                                        />
                                         <Label
                                             htmlFor={session.id}
                                             className="flex-1 cursor-pointer"
                                         >
                                             <div className="space-y-1">
-                                                <h3 className="font-medium text-sm leading-tight">{session.name}</h3>
+                                                <h3 className="font-medium text-sm leading-tight flex items-center gap-2">
+                                                    {session.name}
+                                                    {isSessionLocked(session.id) && <Lock className="size-3 text-muted-foreground" />}
+                                                </h3>
                                                 <div className="text-xs text-muted-foreground">
                                                     ID: {session.id}
                                                 </div>
                                                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                                                     <Clock className="h-3 w-3" />
-                                                    <span>Last modified: {formatLastChange(new Date(session.timestamps.lastUpdate))}</span>
+                                                    <span>Last modified: {formatLastChange(new Date(session.updatedAt))}</span>
                                                 </div>
                                             </div>
                                         </Label>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleDeleteClick(session.id, session.name);
-                                            }}
-                                            className="opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-700 hover:bg-red-50"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
+                                        {!isSessionLocked(session.id) && (
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDeleteClick(session.id);
+                                                }}
+                                                className="opacity-0 group-hover:opacity-100 transition-opacity text-red-600 hover:text-red-700 hover:bg-red-50"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        )}
                                     </div>
                                 ))}
                             </RadioGroup>
@@ -137,7 +153,7 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                     {/* Footer */}
                     <div className="flex justify-between items-center mt-4 pt-4 border-t">
                         <div className="text-xs text-muted-foreground w-44 text-balance">
-                            {sessions.length > 0 && "Tip: Double-click an item to load it quickly"}
+                            {sortedSessions.length > 0 && "Tip: Double-click an item to load it quickly"}
                         </div>
                         <div className="flex gap-2">
                             <Button variant="outline" onClick={onClose}>
@@ -161,7 +177,7 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                         <AlertDialogTitle>Delete Local Session</AlertDialogTitle>
                         <AlertDialogDescription>
                             <span className='block mb-2'>
-                                Are you sure you want to delete the session for <span className="font-bold">{sessionToDelete?.name}</span>?
+                                Are you sure you want to delete the session for <span className="font-bold">{sessionToDelete && sessions[sessionToDelete]?.name}</span>?
                             </span>
 
                             <span className="text-xs">
@@ -172,7 +188,7 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                            onClick={() => sessionToDelete && handleDeleteSession(sessionToDelete.id)}
+                            onClick={() => sessionToDelete && handleDeleteSession(sessionToDelete)}
                             className="bg-red-600 hover:bg-red-700"
                         >
                             Delete

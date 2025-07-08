@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, CircleQuestionMark, FilePlus, FolderOpen, Upload, X } from "lucide-react";
+import { ArrowUpRight, CircleQuestionMark, FilePlus, FolderOpen, Lock, Upload, X } from "lucide-react";
 import { useState } from "react";
 import NewSurvey from "./new-survey";
 import OpenSurvey from "./open-survey";
 import LocalSessions, { formatLastChange } from "./local-sessions";
-import { useSessionsList, useSessionActions } from "../../store/session-store";
+import { useSessionStore } from "../../store/session-store";
 import { useNavigate } from "react-router";
+import { useSessionPolling } from "../../store/useSessionPolling";
 
 interface WelcomeScreenProps {
     onExit: () => void;
@@ -14,9 +15,16 @@ interface WelcomeScreenProps {
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExit }) => {
     const [dialogOpen, setDialogOpen] = useState<"new-survey" | "open-survey" | "local-sessions" | null>(null);
-    const sessions = useSessionsList().sort((a, b) => b.timestamps.lastUpdate - a.timestamps.lastUpdate);
-    const { selectSession } = useSessionActions();
+    const { sessions, openSession, isSessionLocked } = useSessionStore();
     const navigate = useNavigate();
+
+    const sortedSessions = Object.values(sessions).sort((a, b) => b.updatedAt - a.updatedAt);
+
+    useSessionPolling({
+        interval: 1000,
+        enabled: true,
+        pauseOnHidden: true
+    })
 
 
     return <div className="flex flex-col gap-4 min-h-screen w-full items-center justify-center p-8 bg-(--main-bg-color)">
@@ -74,23 +82,27 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExit }) => {
 
                 <div className="border border-border rounded-md overflow-hidden flex items-center justify-center">
 
-                    {sessions.length < 1 && <div className="flex items-center justify-center h-24 p-2">
+                    {sortedSessions.length < 1 && <div className="flex items-center justify-center h-24 p-2">
                         <p className="text-muted-foreground text-center text-sm">
                             No local sessions found
                         </p>
                     </div>}
 
-                    {sessions.length > 0 && <ul className="divide-y divide-border overflow-y-auto w-full h-24">
-                        {sessions.map((session) => (
+                    {sortedSessions.length > 0 && <ul className="divide-y divide-border overflow-y-auto w-full h-24">
+                        {sortedSessions.map((session) => (
                             <li key={session.id} className="w-full">
                                 <Button variant="ghost" className="w-full justify-start rounded-none"
+                                    disabled={isSessionLocked(session.id)}
                                     onClick={() => {
-                                        selectSession(session.id);
+                                        openSession(session.id);
                                         navigate(`/editor/item-editor`, { replace: true });
                                     }}>
-                                    <p>{session.name}</p>
+                                    <p className="flex items-center gap-2">
+                                        {session.name}
+                                        {isSessionLocked(session.id) && <Lock className="size-3 text-muted-foreground" />}
+                                    </p>
                                     <span className="text-muted-foreground text-xs ml-auto">
-                                        {formatLastChange(new Date(session.timestamps.lastUpdate))}
+                                        {formatLastChange(new Date(session.updatedAt))}
                                     </span>
                                 </Button>
 
