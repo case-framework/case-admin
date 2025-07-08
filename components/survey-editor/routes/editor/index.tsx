@@ -9,7 +9,7 @@ import { useSessionStore } from "../../store/session-store";
 import { useSurveyEditor } from "../../store/useSurveyEditor";
 
 const Editor = () => {
-    const { currentSessionId } = useSessionStore();
+    const { currentSession } = useSessionStore();
     const { editor } = useSurveyEditor();
 
     const handleSave = useCallback(() => {
@@ -22,18 +22,28 @@ const Editor = () => {
     }, [editor]);
 
     const handleUndo = useCallback(() => {
-        // TODO: Implement undo functionality
-        console.log("Undo triggered via keyboard shortcut");
-        toast.success("Undo functionality triggered (Ctrl/Cmd + Z)");
-        // This would typically revert to the previous state in a history stack
-    }, []);
+        if (editor?.canUndo()) {
+            if (editor?.undo()) {
+                toast.success("Undo functionality triggered (Ctrl/Cmd + Z)");
+            } else {
+                toast.error("No more actions to undo");
+            }
+        } else {
+            toast.error("No more actions to undo");
+        }
+    }, [editor]);
 
     const handleRedo = useCallback(() => {
-        // TODO: Implement redo functionality
-        console.log("Redo triggered via keyboard shortcut");
-        toast.success("Redo functionality triggered (Ctrl/Cmd + Shift + Z)");
-        // This would typically move forward in the history stack
-    }, []);
+        if (editor?.canRedo()) {
+            if (editor?.redo()) {
+                toast.success("Redo functionality triggered (Ctrl/Cmd + Shift + Z)");
+            } else {
+                toast.error("No more actions to redo");
+            }
+        } else {
+            toast.error("No more actions to redo");
+        }
+    }, [editor]);
 
     // Setup keyboard shortcuts
     useKeyboardShortcuts({
@@ -42,7 +52,7 @@ const Editor = () => {
         onRedo: handleRedo,
     });
 
-    if (!currentSessionId) {
+    if (!currentSession) {
         return <Navigate to="/" replace />
     }
 

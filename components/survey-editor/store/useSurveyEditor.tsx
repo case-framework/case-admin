@@ -14,28 +14,27 @@ export const useSurveyEditor = () => {
     const [isEditorReady, setIsEditorReady] = useState(false)
 
     const {
-        currentSessionId,
+        currentSession,
         sessions,
-        updateSession,
-        updateLastSeen,
+        updateCurrentSession,
+        updateCurrentSessionLastSeen,
         closeCurrentSession,
     } = useSessionStore();
 
-    const currentSession = currentSessionId ? sessions[currentSessionId] : null
 
     // Update session data when editor changes
     const updateSessionData = useCallback(() => {
-        if (!globalEditorInstance || !currentSession || !currentSessionId) {
+        if (!globalEditorInstance || !currentSession) {
             return
         }
 
         try {
-            updateSession(currentSessionId, globalEditorInstance)
+            updateCurrentSession(globalEditorInstance)
             lastUpdateRef.current = Date.now()
         } catch (error) {
             console.error('Failed to update session:', error)
         }
-    }, [currentSessionId, currentSession, updateSession])
+    }, [currentSession, updateCurrentSession])
 
 
     // Initialize or switch editor when currentSessionId changes
@@ -43,7 +42,7 @@ export const useSurveyEditor = () => {
         if (initializingRef.current) return
 
         // If no current session, cleanup and return
-        if (!currentSessionId || !currentSession) {
+        if (!currentSession) {
             if (globalEditorInstance) {
                 try {
                     // Clean up current editor
@@ -59,7 +58,7 @@ export const useSurveyEditor = () => {
         }
 
         // If editor is already loaded for this session, nothing to do
-        if (currentLoadedSessionId === currentSessionId && globalEditorInstance) {
+        if (currentLoadedSessionId === currentSession.id && globalEditorInstance) {
             setIsEditorReady(true)
             return
         }
@@ -92,10 +91,10 @@ export const useSurveyEditor = () => {
             })
 
 
-            currentLoadedSessionId = currentSessionId
+            currentLoadedSessionId = currentSession.id
             setIsEditorReady(true)
 
-            console.log(`Editor initialized for session: ${currentSessionId}`)
+            console.log(`Editor initialized for session: ${currentSession.id}`)
         } catch (error) {
             console.error('Failed to initialize editor:', error)
             globalEditorInstance = null
@@ -104,7 +103,7 @@ export const useSurveyEditor = () => {
         } finally {
             initializingRef.current = false
         }
-    }, [currentSessionId, currentSession, updateSessionData, sessions])
+    }, [currentSession, updateSessionData, sessions])
 
     // Auto-initialize when currentSessionId changes
     useEffect(() => {
@@ -113,17 +112,17 @@ export const useSurveyEditor = () => {
 
     // Update lastSeen every UPDATE_INTERVAL for active sessions
     useEffect(() => {
-        if (!currentSessionId || !currentSession) {
+        if (!currentSession) {
             return
         }
 
         const interval = setInterval(() => {
-            console.log('updateLastSeen', currentSessionId)
-            updateLastSeen(currentSessionId)
+            console.log('updateLastSeen', currentSession.id)
+            updateCurrentSessionLastSeen()
         }, UPDATE_INTERVAL)
 
         return () => clearInterval(interval)
-    }, [currentSessionId, currentSession, updateLastSeen])
+    }, [currentSession, updateCurrentSessionLastSeen])
 
 
     // Handle page unload - save current state

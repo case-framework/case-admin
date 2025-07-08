@@ -23,11 +23,11 @@ export const formatLastChange = (date: Date) => {
 
 const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
 
-    const { sessions, openSession, deleteSession, isSessionLocked } = useSessionStore();
+    const { getSessionsData, openSession, deleteSession, isSessionLocked } = useSessionStore();
 
     const navigate = useNavigate();
 
-    const sortedSessions = Object.values(sessions).sort((a, b) => b.updatedAt - a.updatedAt);
+    const sortedSessions = getSessionsData().sort((a, b) => b.updatedAt - a.updatedAt);
 
 
     const [selectedSessionId, setSelectedSessionId] = useState<string>("");
@@ -177,7 +177,7 @@ const LocalSessions: React.FC<LocalSessionsProps> = ({ open, onClose }) => {
                         <AlertDialogTitle>Delete Local Session</AlertDialogTitle>
                         <AlertDialogDescription>
                             <span className='block mb-2'>
-                                Are you sure you want to delete the session for <span className="font-bold">{sessionToDelete && sessions[sessionToDelete]?.name}</span>?
+                                Are you sure you want to delete the session for <span className="font-bold">{sessionToDelete && sortedSessions.find((session) => session.id === sessionToDelete)?.name}</span>?
                             </span>
 
                             <span className="text-xs">

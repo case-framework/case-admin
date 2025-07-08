@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, CircleQuestionMark, FilePlus, FolderOpen, Lock, Upload, X } from "lucide-react";
+import { ArrowUpRight, CircleQuestionMark, FilePlus, FolderOpen, Loader2, Lock, Upload, X } from "lucide-react";
 import { useState } from "react";
 import NewSurvey from "./new-survey";
 import OpenSurvey from "./open-survey";
@@ -15,10 +15,10 @@ interface WelcomeScreenProps {
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExit }) => {
     const [dialogOpen, setDialogOpen] = useState<"new-survey" | "open-survey" | "local-sessions" | null>(null);
-    const { sessions, openSession, isSessionLocked } = useSessionStore();
+    const { getSessionsData, sessionsLoaded, openSession, isSessionLocked } = useSessionStore();
     const navigate = useNavigate();
 
-    const sortedSessions = Object.values(sessions).sort((a, b) => b.updatedAt - a.updatedAt);
+    const sortedSessions = getSessionsData().sort((a, b) => b.updatedAt - a.updatedAt);
 
     useSessionPolling({
         interval: 1000,
@@ -82,13 +82,19 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExit }) => {
 
                 <div className="border border-border rounded-md overflow-hidden flex items-center justify-center">
 
-                    {sortedSessions.length < 1 && <div className="flex items-center justify-center h-24 p-2">
+                    {!sessionsLoaded && <div className="flex items-center justify-center h-24 p-2">
+                        <p className="text-muted-foreground text-center text-sm">
+                            <Loader2 className="size-4 animate-spin" />
+                        </p>
+                    </div>}
+
+                    {sessionsLoaded && sortedSessions.length < 1 && <div className="flex items-center justify-center h-24 p-2">
                         <p className="text-muted-foreground text-center text-sm">
                             No local sessions found
                         </p>
                     </div>}
 
-                    {sortedSessions.length > 0 && <ul className="divide-y divide-border overflow-y-auto w-full h-24">
+                    {sessionsLoaded && sortedSessions.length > 0 && <ul className="divide-y divide-border overflow-y-auto w-full h-24">
                         {sortedSessions.map((session) => (
                             <li key={session.id} className="w-full">
                                 <Button variant="ghost" className="w-full justify-start rounded-none"

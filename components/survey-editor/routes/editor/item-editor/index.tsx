@@ -4,11 +4,7 @@ import { ItemComponentType, SingleChoiceQuestionItem, SurveyItemTranslations, Su
 import { useSurveyEditor } from "../../../store/useSurveyEditor";
 
 const ItemEditor = () => {
-    const { editor, syncEditorWithSession, isEditorReady, isInitializing } = useSurveyEditor();
-
-    console.log(editor?.survey);
-
-    console.log(editor?.survey.surveyItems)
+    const { editor, isEditorReady, isInitializing } = useSurveyEditor();
 
     return <div className="space-y-4">
         <div>
@@ -22,6 +18,8 @@ const ItemEditor = () => {
         <div>
             {isInitializing ? 'Initializing' : 'Not initializing'}
         </div>
+
+        <input type="text" defaultValue={editor?.survey.surveyKey} />
 
         <div>
             {editor?.survey.rootItem.items?.map((item) => (

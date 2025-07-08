@@ -1,4 +1,5 @@
 import { useSessionStore } from "@/components/survey-editor/store/session-store";
+import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEditor";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuShortcut, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuPortal, DropdownMenuSubContent } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
@@ -51,7 +52,7 @@ const SidebarNavItem: React.FC<{
 }
 
 const SidebarMenu: React.FC<SidebarMenuProps> = ({ onSave, onUndo, onRedo }) => {
-
+    const { editor } = useSurveyEditor();
     const { closeCurrentSession } = useSessionStore();
 
     return <li className="space-y-1.5">
@@ -104,12 +105,16 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ onSave, onUndo, onRedo }) => 
 
                 <DropdownMenuGroup>
                     <DropdownMenuLabel className="text-xs font-bold">Edit</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={onUndo}>
+                    <DropdownMenuItem onClick={onUndo}
+                        disabled={!editor?.canUndo()}
+                    >
                         <Undo className="size-4" />
                         Undo
                         <DropdownMenuShortcut>⌘Z</DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={onRedo}>
+                    <DropdownMenuItem onClick={onRedo}
+                        disabled={!editor?.canRedo()}
+                    >
                         <Redo className="size-4" />
                         Redo
                         <DropdownMenuShortcut>⇧⌘Z</DropdownMenuShortcut>
