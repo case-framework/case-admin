@@ -1,42 +1,29 @@
-import { useSessionStore } from "@/components/survey-editor/store/session-store";
+
 import { Button } from "@/components/ui/button";
 import { ItemComponentType, SingleChoiceQuestionItem, SurveyItemTranslations, SurveyItemType } from "survey-engine";
+import { useSurveyEditor } from "../../../store/useSurveyEditor";
 
 const ItemEditor = () => {
+    const { editor, syncEditorWithSession, isEditorReady, isInitializing } = useSurveyEditor();
 
-    /* const { sessions, currentSessionId, updateSession } = useSessionStore();
+    console.log(editor?.survey);
 
-    const editor = currentSessionId ? sessions[currentSessionId]?.surveyEditorState : null;
-
-    console.log(editor?.survey.surveyItems); */
+    console.log(editor?.survey.surveyItems)
 
     return <div className="space-y-4">
         <div>
             breadrcumbs
         </div>
 
-
-
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
+        <div>
+            {isEditorReady ? 'Editor ready' : 'Editor not ready'}
         </div>
-        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
-        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
-        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
-        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
-        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
-        <div className=" flex-1 rounded-xl h-96 bg-red-50/50 border border-red-400" />
-    </div>
-}
 
-export default ItemEditor;
+        <div>
+            {isInitializing ? 'Initializing' : 'Not initializing'}
+        </div>
 
-
-/**
- *
- *  <div>
+        <div>
             {editor?.survey.rootItem.items?.map((item) => (
                 <div key={item}>
                     {item}
@@ -78,14 +65,26 @@ export default ItemEditor;
                             ]
                         }
                     }), new SurveyItemTranslations())
-
-updateCurrentSession((session) => {
-    session.surveyEditor = editor || null;
-    return session;
-});
                 }}
             >
-    Add item
+                Add item
             </Button >
         </div >
- */
+
+
+
+        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+            <div className="bg-muted/50 aspect-video rounded-xl" />
+            <div className="bg-muted/50 aspect-video rounded-xl" />
+            <div className="bg-muted/50 aspect-video rounded-xl" />
+        </div>
+        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
+        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
+        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
+        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
+        <div className="bg-muted/50 flex-1 rounded-xl h-96" />
+        <div className=" flex-1 rounded-xl h-96 bg-red-50/50 border border-red-400" />
+    </div>
+}
+
+export default ItemEditor;

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { debounce } from 'lodash';
 import { SurveyEditor, SurveyEditorJson } from 'survey-engine/editor';
 
 
@@ -27,6 +26,7 @@ interface SessionStore {
     openSession: (sessionId: string) => boolean
     closeSession: (sessionId: string) => void
     updateSession: (sessionId: string, editor: SurveyEditor) => void
+    updateLastSeen: (sessionId: string) => void
     deleteSession: (sessionId: string) => void
     isSessionLocked: (sessionId: string) => boolean
     closeCurrentSession: () => void
@@ -37,7 +37,7 @@ interface SessionStore {
     _generateTabId: () => string
 }
 
-const SESSION_LOCK_TIMEOUT = 2 * 60 * 1000
+const SESSION_LOCK_TIMEOUT = 1 * 60 * 1000
 
 // Generate a unique tab ID
 const generateTabId = (): string => {
@@ -48,32 +48,6 @@ export const useSessionStore = create<SessionStore>()(
 
     persist(
         (set, get) => {
-            // Create debounced update function
-            const debouncedUpdateSession = debounce(
-                (sessionId: string, editor: SurveyEditor) => {
-                    const state = get()
-                    const session = state.sessions[sessionId]
-
-                    if (!session || session.lockedBy !== state.currentTabId) {
-                        return
-                    }
-
-                    set((state) => ({
-                        sessions: {
-                            ...state.sessions,
-                            [sessionId]: {
-                                ...session,
-                                surveyEditor: editor.toJson(),
-                                updatedAt: Date.now(),
-                                lastSeen: Date.now(),
-                                name: editor.survey.surveyKey,
-                            },
-                        },
-                    }))
-                },
-                500 // 500ms debounce
-            )
-
             return {
                 sessions: {},
 
@@ -164,7 +138,27 @@ export const useSessionStore = create<SessionStore>()(
                     }))
                 },
 
-                updateSession: debouncedUpdateSession,
+                updateSession: (sessionId: string, editor: SurveyEditor) => {
+                    const state = get()
+                    const session = state.sessions[sessionId]
+
+                    if (!session || session.lockedBy !== state.currentTabId) {
+                        return
+                    }
+
+                    set((state) => ({
+                        sessions: {
+                            ...state.sessions,
+                            [sessionId]: {
+                                ...session,
+                                surveyEditorState: editor.toJson(),
+                                updatedAt: Date.now(),
+                                lastSeen: Date.now(),
+                                name: editor.survey.surveyKey,
+                            },
+                        },
+                    }))
+                },
 
                 deleteSession: (sessionId: string) => {
                     const state = get()
@@ -201,6 +195,25 @@ export const useSessionStore = create<SessionStore>()(
                     }
 
                     return session.lockedBy !== state.currentTabId
+                },
+
+                updateLastSeen: (sessionId: string) => {
+                    const state = get()
+                    const session = state.sessions[sessionId]
+
+                    if (!session || session.lockedBy !== state.currentTabId) {
+                        return
+                    }
+
+                    set((state) => ({
+                        sessions: {
+                            ...state.sessions,
+                            [sessionId]: {
+                                ...session,
+                                lastSeenAt: Date.now(),
+                            },
+                        },
+                    }))
                 },
 
                 closeCurrentSession: () => {

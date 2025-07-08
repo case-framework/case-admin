@@ -6,17 +6,20 @@ import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
 import { useCallback } from "react";
 import { toast } from "sonner";
 import { useSessionStore } from "../../store/session-store";
+import { useSurveyEditor } from "../../store/useSurveyEditor";
 
 const Editor = () => {
     const { currentSessionId } = useSessionStore();
+    const { editor } = useSurveyEditor();
 
     const handleSave = useCallback(() => {
         // TODO: Implement save functionality
         console.log("Save triggered via keyboard shortcut");
+        console.log(editor?.survey.toJson());
         toast.success("Save functionality triggered (Ctrl/Cmd + S)");
         // For now, just show a notification or trigger a save dialog
         // This could be expanded to save to localStorage, trigger a download, etc.
-    }, []);
+    }, [editor]);
 
     const handleUndo = useCallback(() => {
         // TODO: Implement undo functionality
