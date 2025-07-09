@@ -168,15 +168,7 @@ export const useSessionStore = create<SessionStore>()(
                     };
 
                     // Update the session data
-                    const sessionData = state._loadSessionData(sessionId);
-                    if (sessionData) {
-                        const updatedSessionData: SerializedSessionData = {
-                            ...sessionData,
-                            lockedBy: state.currentTabId,
-                            lastSeenAt: Date.now(),
-                        };
-                        state._saveSessionData(sessionId, updatedSessionData);
-                    }
+                    state._saveSessionData(sessionId, updatedSessionData);
 
                     set(() => ({
                         currentSession: updatedSessionData,
