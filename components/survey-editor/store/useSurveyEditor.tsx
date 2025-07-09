@@ -117,7 +117,6 @@ export const useSurveyEditor = () => {
         }
 
         const interval = setInterval(() => {
-            console.log('updateLastSeen', currentSession.id)
             updateCurrentSessionLastSeen()
         }, UPDATE_INTERVAL)
 

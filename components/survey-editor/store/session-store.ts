@@ -356,7 +356,6 @@ export const useSessionStore = create<SessionStore>()(
                 _cleanupOldSessions: () => {
                     const state = get()
                     const sessionIndex = Object.values(state.sessions)
-                    console.log('sessionIndex', sessionIndex)
 
                     if (sessionIndex.length <= MAX_SESSIONS - 1) {
                         return
