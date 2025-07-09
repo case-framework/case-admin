@@ -129,7 +129,7 @@ export const useSurveyEditor = () => {
         const handleBeforeUnload = () => {
             if (globalEditorInstance && currentLoadedSessionId) {
                 updateSessionData()
-                globalEditorInstance.clearAllListeners()
+                globalEditorInstance.clearAllListeners?.()
                 closeCurrentSession()
             }
         }

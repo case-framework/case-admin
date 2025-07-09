@@ -315,7 +315,7 @@ export const useSessionStore = create<SessionStore>()(
                 getSessionsData: () => {
                     const state = get()
                     return Object.values(state.sessions).map((entry) => state._loadSessionData(entry.id))
-                        .filter((session) => session !== null)
+                        .filter((session) => session !== null) as SerializedSessionData[]
                 },
 
                 rebuildSessionIndex: () => {
@@ -354,7 +354,7 @@ export const useSessionStore = create<SessionStore>()(
                     }
 
                     const sessions = sessionIndex.map((entry) => state._loadSessionData(entry.id))
-                        .filter((session) => session !== null)
+                        .filter((session) => session !== null) as SerializedSessionData[]
 
 
                     // Sort by last seen (oldest first)
