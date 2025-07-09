@@ -13,7 +13,7 @@ const HistoryStack: React.FC = () => {
 
     const historyInstance = editor?.undoRedo;
 
-    const lastHistoryEntry = historyInstance?.getHistory().at(historyInstance.getCurrentIndex());
+    const lastHistoryEntry = historyInstance?.getHistory()?.at(historyInstance?.getCurrentIndex() ?? 0);
 
 
     return <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -40,14 +40,14 @@ const HistoryStack: React.FC = () => {
             </div>
             <ScrollArea className="h-64">
                 <ol className="divide-y divide-border">
-                    {historyInstance?.getHistory().sort((a, b) => b.timestamp - a.timestamp).map((entry) => (
+                    {historyInstance?.getHistory()?.toSorted((a, b) => b.timestamp - a.timestamp).map((entry) => (
                         <li key={entry.index}>
                             <button
-                                disabled={entry.index === historyInstance.getCurrentIndex()}
+                                disabled={entry.index === historyInstance?.getCurrentIndex()}
                                 className={cn(
                                     "text-sm px-3 py-1 flex items-center justify-between w-full",
                                     "hover:bg-accent transition-colors focus:bg-accent focus:outline-none",
-                                    entry.index === historyInstance.getCurrentIndex() && "bg-primary text-primary-foreground hover:bg-primary focus:bg-primary"
+                                    entry.index === historyInstance?.getCurrentIndex() && "bg-primary text-primary-foreground hover:bg-primary focus:bg-primary"
                                 )}
                                 onClick={() => editor?.jumpToIndex(entry.index)}
                             >
@@ -56,7 +56,7 @@ const HistoryStack: React.FC = () => {
                                 </p>
                                 <p className={cn(
                                     "text-xs text-muted-foreground",
-                                    entry.index === historyInstance.getCurrentIndex() && "text-primary-foreground/80"
+                                    entry.index === historyInstance?.getCurrentIndex() && "text-primary-foreground/80"
                                 )}>{formatDistanceToNow(new Date(entry.timestamp), { addSuffix: true })}</p>
                             </button>
                         </li>
