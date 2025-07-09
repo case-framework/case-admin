@@ -1,310 +1,432 @@
-import { useMemo } from 'react';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { useShallow } from 'zustand/react/shallow';
-import { subscribeWithSelector } from 'zustand/middleware';
-import { SurveyEditor, SurveyEditorJson } from "survey-engine/editor";
-import { Survey } from "survey-engine";
-
-export interface SessionData {
-    id: string;
-    name: string;
-    timestamps: {
-        created: number;
-        lastUpdate: number;
-        lastSavedToDisk: number;
-    };
-    surveyEditor: SurveyEditor | null;
-}
+import { SurveyEditor, SurveyEditorJson } from 'survey-engine/editor';
 
 interface SerializedSessionData {
     id: string;
     name: string;
-    timestamps: {
-        created: number;
-        lastUpdate: number;
-        lastSavedToDisk: number;
-    };
+    createdAt: number;
+    updatedAt: number;
+    lastSeenAt: number;
+    lockedBy: string | null
     surveyEditorState: SurveyEditorJson | null; // Serialized state of SurveyEditor
 }
 
+interface SessionIndexEntry {
+    id: string;
+    fileName: string;
+}
+
 interface SessionStore {
-    // Persisted state (shared across tabs)
-    sessions: Record<string, SerializedSessionData>;
+    // Persisted state (shared across tabs) - now just contains session index
+    sessions: Record<string, SessionIndexEntry>;
 
     // Local state (non-shared, non-persisted)
-    currentSessionId: string | null;
-    currentSession: SessionData | null;
+    currentSession: SerializedSessionData | null;
+    currentTabId: string | null;
+    sessionsLoaded: boolean;
 
     // Actions
-    createSession: (name: string) => string;
-    deleteSession: (sessionId: string) => void;
-    selectSession: (sessionId: string) => void;
-    deselectSession: () => void;
-    updateCurrentSession: (updater: (session: SessionData) => SessionData) => void;
-    getSessionsList: () => Array<{ id: string; name: string; timestamps: SessionData['timestamps'] }>;
+    createSession: (editor: SurveyEditor) => boolean
+    openSession: (sessionId: string) => boolean
+
+
+    updateCurrentSession: (editor: SurveyEditor) => void
+    updateCurrentSessionLastSeen: () => void
+    closeCurrentSession: () => void
+
+    deleteSession: (sessionId: string) => void
+    isSessionLocked: (sessionId: string) => boolean
+    refreshFromStorage: () => void
+    getSessionsData: () => SerializedSessionData[]
+    rebuildSessionIndex: () => void
 
     // Internal methods
-    _serializeSession: (session: SessionData) => SerializedSessionData;
-    _deserializeSession: (serialized: SerializedSessionData) => SessionData;
-    _syncFromStorage: () => void;
+    _cleanupOldSessions: () => void
+    _generateTabId: () => string
+    _saveSessionData: (sessionId: string, data: SerializedSessionData) => void
+    _loadSessionData: (sessionId: string) => SerializedSessionData | null
+    _deleteSessionData: (sessionId: string) => void
+    _updateSessionIndex: (sessionId: string, indexEntry: SessionIndexEntry) => void
+    _removeFromSessionIndex: (sessionId: string) => void
 }
 
-// Debounce utility
-function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(func: T, wait: number): T {
-    let timeout: NodeJS.Timeout;
-    return ((...args: Parameters<T>) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    }) as T;
+const SESSION_LOCK_TIMEOUT = 1 * 60 * 1000
+const MAX_SESSIONS = 15
+
+// Generate a unique tab ID
+const generateTabId = (): string => {
+    return `tab_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
 }
 
-// Cross-tab communication key
-const CROSS_TAB_EVENT_KEY = 'survey-editor-session-update';
+// Helper functions for individual session storage
+const getSessionStorageKey = (sessionId: string) => `survey-editor-session-${sessionId}`
+
+const saveSessionToStorage = (sessionId: string, data: SerializedSessionData) => {
+    try {
+        localStorage.setItem(getSessionStorageKey(sessionId), JSON.stringify(data))
+    } catch (error) {
+        console.error('Failed to save session data:', error)
+    }
+}
+
+const loadSessionFromStorage = (sessionId: string): SerializedSessionData | null => {
+    try {
+        const data = localStorage.getItem(getSessionStorageKey(sessionId))
+        return data ? JSON.parse(data) : null
+    } catch (error) {
+        console.error('Failed to load session data:', error)
+        return null
+    }
+}
+
+const deleteSessionFromStorage = (sessionId: string) => {
+    try {
+        localStorage.removeItem(getSessionStorageKey(sessionId))
+    } catch (error) {
+        console.error('Failed to delete session data:', error)
+    }
+}
 
 export const useSessionStore = create<SessionStore>()(
-    subscribeWithSelector(
-        persist(
-            (set, get) => ({
-                // Persisted state
+    persist(
+        (set, get) => {
+            return {
                 sessions: {},
 
-                // Local state
-                currentSessionId: null,
                 currentSession: null,
+                currentTabId: generateTabId(),
+                sessionsLoaded: false,
 
                 // Actions
-                createSession: (name: string) => {
-                    const id = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                createSession: (editor: SurveyEditor) => {
+                    const state = get()
+                    state.refreshFromStorage()
+                    state._cleanupOldSessions()
+
+                    const id = `session-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
                     const now = Date.now();
 
-                    const newSession: SessionData = {
+                    const newSession: SerializedSessionData = {
                         id,
-                        name,
-                        timestamps: {
-                            created: now,
-                            lastUpdate: now,
-                            lastSavedToDisk: 0,
-                        },
-                        surveyEditor: new SurveyEditor(new Survey()),
+                        name: editor.survey.surveyKey,
+                        createdAt: now,
+                        updatedAt: now,
+                        lastSeenAt: now,
+                        lockedBy: state.currentTabId,
+                        surveyEditorState: editor.toJson(),
                     };
 
-                    const serialized = get()._serializeSession(newSession);
+                    const indexEntry: SessionIndexEntry = {
+                        id,
+                        fileName: getSessionStorageKey(id),
+                    };
 
-                    set((state) => ({
+                    // Save session data and update index immediately and synchronously
+                    state._saveSessionData(id, newSession);
+                    state._updateSessionIndex(id, indexEntry);
+
+                    // Force immediate persistence by triggering a state update
+                    set((currentState) => ({
+                        currentSession: newSession,
                         sessions: {
-                            ...state.sessions,
-                            [id]: serialized,
+                            ...currentState.sessions,
+                            [id]: indexEntry,
                         },
                     }));
 
-                    // Notify other tabs
-                    window.dispatchEvent(new CustomEvent(CROSS_TAB_EVENT_KEY, {
-                        detail: { type: 'session-created', sessionId: id }
-                    }));
+                    return true;
+                },
 
-                    return id;
+                openSession: (sessionId: string) => {
+                    const state = get()
+                    state.refreshFromStorage()
+                    const indexEntry = state.sessions[sessionId]
+
+                    if (!indexEntry) {
+                        return false
+                    }
+
+                    const session = state._loadSessionData(sessionId);
+                    if (!session) {
+                        return false
+                    }
+
+                    // Check if session is already locked by another tab
+                    if (session.lockedBy && session.lockedBy !== state.currentTabId) {
+                        // Check if the lock is stale (more than 5 minutes old)
+                        const lockAge = Date.now() - session.lastSeenAt
+                        if (lockAge < SESSION_LOCK_TIMEOUT) {
+                            return false
+                        }
+                    }
+
+                    const updatedSessionData: SerializedSessionData = {
+                        ...session,
+                        lockedBy: state.currentTabId,
+                        lastSeenAt: Date.now(),
+                    };
+
+                    // Update the session data
+                    state._saveSessionData(sessionId, updatedSessionData);
+
+                    set(() => ({
+                        currentSession: updatedSessionData,
+                    }))
+
+                    return true
+                },
+
+                closeCurrentSession: () => {
+                    const state = get()
+                    const session = state.currentSession
+
+                    if (!session) {
+                        return
+                    }
+
+                    if (session.lockedBy && session.lockedBy !== state.currentTabId) {
+                        return
+                    }
+
+                    const updatedSessionData: SerializedSessionData = {
+                        ...session,
+                        lockedBy: null,
+                        lastSeenAt: Date.now(),
+                    };
+
+                    // Update the session data
+                    state._saveSessionData(session.id, updatedSessionData);
+
+                    set(() => ({
+                        currentSession: null,
+                    }))
+                },
+
+                updateCurrentSession: (editor: SurveyEditor) => {
+                    const state = get()
+                    const session = state.currentSession
+
+                    if (!session) {
+                        return
+                    }
+                    const now = Date.now();
+                    const updatedSessionData: SerializedSessionData = {
+                        ...session,
+                        surveyEditorState: editor.toJson(),
+                        updatedAt: now,
+                        lastSeenAt: now,
+                        name: editor.survey.surveyKey,
+                    };
+
+                    state._saveSessionData(session.id, updatedSessionData);
+                    set(() => ({
+                        currentSession: updatedSessionData,
+                    }))
                 },
 
                 deleteSession: (sessionId: string) => {
-                    set((state) => {
-                        const newSessions = { ...state.sessions };
-                        delete newSessions[sessionId];
+                    const state = get()
+                    const indexEntry = state.sessions[sessionId]
+                    if (!indexEntry) {
+                        return
+                    }
 
+                    const session = state._loadSessionData(sessionId);
+                    if (!session) {
+                        return
+                    }
+
+                    // Only allow deletion if session is not locked by another tab
+                    if (session && session.lockedBy && session.lockedBy !== state.currentTabId) {
+                        return
+                    }
+
+                    state.refreshFromStorage()
+                    state._deleteSessionData(sessionId);
+                    state._removeFromSessionIndex(sessionId);
+
+                    set(() => ({
+                        currentSession: null,
+                    }))
+                },
+
+                isSessionLocked: (sessionId: string) => {
+                    const state = get()
+                    const session = state._loadSessionData(sessionId);
+
+                    if (!session || !session.lockedBy) {
+                        return false
+                    }
+
+                    // Check if lock is stale
+                    const lockAge = Date.now() - session.lastSeenAt
+                    if (lockAge > SESSION_LOCK_TIMEOUT) {
+                        return false
+                    }
+
+                    return session.lockedBy !== state.currentTabId
+                },
+
+                updateCurrentSessionLastSeen: () => {
+                    const state = get()
+                    const session = state.currentSession
+
+                    if (!session) {
+                        return
+                    }
+
+                    const updatedSessionData: SerializedSessionData = {
+                        ...session,
+                        lastSeenAt: Date.now(),
+                    };
+
+                    // Update the session data
+                    state._saveSessionData(session.id, updatedSessionData);
+                    set(() => ({
+                        currentSession: updatedSessionData,
+                    }))
+                },
+
+                // Method to refresh sessions from storage (for polling)
+                refreshFromStorage: () => {
+                    // First try to load from the persisted index
+                    const storageData = localStorage.getItem('survey-editor-sessions')
+                    if (storageData) {
+                        try {
+                            const parsed = JSON.parse(storageData)
+                            if (parsed.state && parsed.state.sessions) {
+                                set((currentState) => ({
+                                    ...currentState,
+                                    sessions: parsed.state.sessions,
+                                    sessionsLoaded: true,
+                                }))
+                            }
+                        } catch (error) {
+                            console.error('Failed to refresh from storage:', error)
+                        }
+                    }
+
+                    // Always rebuild the index to ensure it's correct and includes any orphaned sessions
+                    const state = get()
+                    state.rebuildSessionIndex()
+                },
+
+                getSessionsData: () => {
+                    const state = get()
+                    return Object.values(state.sessions).map((entry) => state._loadSessionData(entry.id))
+                        .filter((session) => session !== null) as SerializedSessionData[]
+                },
+
+                rebuildSessionIndex: () => {
+                    const allSessionIds = Object.keys(localStorage)
+                        .filter(key => key.startsWith('survey-editor-session-'))
+                        .map(key => key.replace('survey-editor-session-', ''))
+
+                    const newSessionIndex: Record<string, SessionIndexEntry> = {}
+
+                    // Build index from existing session data
+                    allSessionIds.forEach(sessionId => {
+                        const sessionData = loadSessionFromStorage(sessionId)
+                        if (sessionData) {
+                            newSessionIndex[sessionId] = {
+                                id: sessionId,
+                                fileName: getSessionStorageKey(sessionId),
+                            }
+                        } else {
+                            // Clean up orphaned localStorage entries
+                            deleteSessionFromStorage(sessionId)
+                        }
+                    })
+
+                    set(() => ({
+                        sessions: newSessionIndex,
+                        sessionsLoaded: true,
+                    }))
+                },
+
+                _cleanupOldSessions: () => {
+                    const state = get()
+                    const sessionIndex = Object.values(state.sessions)
+
+                    if (sessionIndex.length <= MAX_SESSIONS - 1) {
+                        return
+                    }
+
+                    const sessions = sessionIndex.map((entry) => state._loadSessionData(entry.id))
+                        .filter((session) => session !== null) as SerializedSessionData[]
+
+
+                    // Sort by last seen (oldest first)
+                    const sortedSessions = sessions.sort((a, b) => a.lastSeenAt - b.lastSeenAt)
+
+                    // Keep only the 20 most recent sessions
+                    const sessionsToKeep = sortedSessions.slice(-MAX_SESSIONS + 1)
+                    const newSessionIndex: Record<string, SessionIndexEntry> = {}
+
+                    // Delete old session data from storage
+                    const sessionsToDelete = sortedSessions.slice(0, -MAX_SESSIONS + 1)
+                    sessionsToDelete.forEach((session) => {
+                        state._deleteSessionData(session.id)
+                    })
+
+                    sessionsToKeep.forEach((session) => {
+                        newSessionIndex[session.id] = {
+                            id: session.id,
+                            fileName: getSessionStorageKey(session.id),
+                        }
+                    })
+
+                    set({ sessions: newSessionIndex })
+                },
+
+                _generateTabId: generateTabId,
+
+                _saveSessionData: (sessionId: string, data: SerializedSessionData) => {
+                    saveSessionToStorage(sessionId, data)
+                },
+
+                _loadSessionData: (sessionId: string) => {
+                    return loadSessionFromStorage(sessionId)
+                },
+
+                _deleteSessionData: (sessionId: string) => {
+                    deleteSessionFromStorage(sessionId)
+                },
+
+                _updateSessionIndex: (sessionId: string, indexEntry: SessionIndexEntry) => {
+                    set((state) => {
+                        const updatedSessions = {
+                            ...state.sessions,
+                            [sessionId]: indexEntry,
+                        };
+
+                        // Force immediate persistence by returning a new state
                         return {
-                            sessions: newSessions,
-                            // If deleting current session, deselect it
-                            currentSessionId: state.currentSessionId === sessionId ? null : state.currentSessionId,
-                            currentSession: state.currentSessionId === sessionId ? null : state.currentSession,
+                            sessions: updatedSessions,
                         };
                     });
-
-                    // Notify other tabs
-                    window.dispatchEvent(new CustomEvent(CROSS_TAB_EVENT_KEY, {
-                        detail: { type: 'session-deleted', sessionId }
-                    }));
                 },
 
-                selectSession: (sessionId: string) => {
-                    const state = get();
-                    const serializedSession = state.sessions[sessionId];
-
-                    if (!serializedSession) {
-                        console.warn(`Session with id ${sessionId} not found`);
-                        return;
-                    }
-
-                    const session = state._deserializeSession(serializedSession);
-
-                    set({
-                        currentSessionId: sessionId,
-                        currentSession: session,
-                    });
+                _removeFromSessionIndex: (sessionId: string) => {
+                    set((state) => {
+                        const newIndex = { ...state.sessions }
+                        delete newIndex[sessionId]
+                        return {
+                            sessions: newIndex,
+                        }
+                    })
                 },
-
-                deselectSession: () => {
-                    set({
-                        currentSessionId: null,
-                        currentSession: null,
-                    });
-                },
-
-                updateCurrentSession: (updater: (session: SessionData) => SessionData) => {
-                    const state = get();
-                    if (!state.currentSession || !state.currentSessionId) {
-                        console.warn('No current session to update');
-                        return;
-                    }
-
-                    const updatedSession = updater(state.currentSession);
-                    updatedSession.timestamps.lastUpdate = Date.now();
-
-                    const serialized = state._serializeSession(updatedSession);
-
-                    set((state) => ({
-                        currentSession: updatedSession,
-                        sessions: {
-                            ...state.sessions,
-                            [state.currentSessionId!]: serialized,
-                        },
-                    }));
-
-                    // Debounced notification to other tabs
-                    debouncedNotifyOtherTabs(state.currentSessionId!);
-                },
-
-                getSessionsList: () => {
-                    const state = get();
-                    return Object.values(state.sessions).map(session => ({
-                        id: session.id,
-                        name: session.name,
-                        timestamps: session.timestamps,
-                    }));
-                },
-
-                // Internal methods
-                _serializeSession: (session: SessionData) => {
-                    // For now, we'll store the Survey object directly
-                    // This assumes SurveyEditor has a getSurvey() method or similar
-
-                    return {
-                        id: session.id,
-                        name: session.name,
-                        timestamps: session.timestamps,
-                        surveyEditorState: session.surveyEditor?.toJson() || null,
-                    };
-                },
-
-                _deserializeSession: (serialized: SerializedSessionData) => {
-                    let surveyEditor: SurveyEditor | null = null;
-
-                    if (serialized.surveyEditorState) {
-                        surveyEditor = SurveyEditor.fromJson(serialized.surveyEditorState);
-                    }
-
-                    return {
-                        id: serialized.id,
-                        name: serialized.name,
-                        timestamps: serialized.timestamps,
-                        surveyEditor,
-                    };
-                },
-
-                _syncFromStorage: () => {
-                    // This method can be called to manually sync from storage
-                    // The persist middleware handles this automatically, but we can use it for manual sync
-                    const state = get();
-                    if (state.currentSessionId && state.sessions[state.currentSessionId]) {
-                        const serializedSession = state.sessions[state.currentSessionId];
-                        const session = state._deserializeSession(serializedSession);
-                        set({
-                            currentSession: session,
-                        });
-                    }
-                },
-            }),
-            {
-                name: 'survey-editor-sessions',
-                storage: createJSONStorage(() => localStorage),
-                // Only persist the sessions, not the local state
-                partialize: (state) => ({
-                    sessions: state.sessions,
-                }),
             }
-        )
+        },
+        {
+            name: 'survey-editor-sessions',
+            storage: createJSONStorage(() => localStorage),
+            // Only persist the session index, not the individual session data
+            partialize: (state) => ({
+                sessions: state.sessions,
+            }),
+        }
     )
 );
 
-// Debounced notification to other tabs
-const debouncedNotifyOtherTabs = debounce((sessionId: string) => {
-    window.dispatchEvent(new CustomEvent(CROSS_TAB_EVENT_KEY, {
-        detail: { type: 'session-updated', sessionId }
-    }));
-}, 500); // 500ms debounce
-
-// Cross-tab communication setup
-if (typeof window !== 'undefined') {
-    // Listen for storage changes (when other tabs update the persisted state)
-    window.addEventListener('storage', (e) => {
-        if (e.key === 'survey-editor-sessions') {
-            const store = useSessionStore.getState();
-            store._syncFromStorage();
-        }
-    });
-
-    // Listen for custom events from other tabs
-    window.addEventListener(CROSS_TAB_EVENT_KEY, (e: Event) => {
-        const customEvent = e as CustomEvent<{ type: string; sessionId: string }>;
-        const { type, sessionId } = customEvent.detail;
-        const store = useSessionStore.getState();
-
-        switch (type) {
-            case 'session-deleted':
-                // If the deleted session was our current session, deselect it
-                if (store.currentSessionId === sessionId) {
-                    store.deselectSession();
-                }
-                break;
-            case 'session-updated':
-                // If the updated session is our current session, refresh it
-                if (store.currentSessionId === sessionId) {
-                    store._syncFromStorage();
-                }
-                break;
-            case 'session-created':
-                // Nothing special needed, the storage event will handle the sync
-                break;
-        }
-    });
-}
-
-// Helper hooks for common use cases
-export const useCurrentSession = () => {
-    return useSessionStore(useShallow((state) => state.currentSession));
-};
-
-export const useCurrentSessionId = () => {
-    return useSessionStore(useShallow((state) => state.currentSessionId));
-};
-
-export const useSessionsList = () => {
-    const sessions = useSessionStore(useShallow((state) => state.sessions));
-    return useMemo(() =>
-        Object.values(sessions).map(session => ({
-            id: session.id,
-            name: session.name,
-            timestamps: session.timestamps,
-        })),
-        [sessions]
-    );
-};
-
-export const useSessionActions = () => {
-    return useSessionStore(useShallow((state) => ({
-        createSession: state.createSession,
-        deleteSession: state.deleteSession,
-        selectSession: state.selectSession,
-        deselectSession: state.deselectSession,
-        updateCurrentSession: state.updateCurrentSession,
-    })));
-};

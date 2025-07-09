@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
-import { useSessionActions } from "../../store/session-store";
+import { useSessionStore } from "../../store/session-store";
 import { SurveyEditor } from "survey-engine/editor";
 import { Survey } from "survey-engine";
 import { useNavigate } from "react-router";
@@ -92,19 +92,15 @@ const NewSurvey: React.FC<NewSurveyProps> = ({ open, onClose }) => {
     });
     const navigate = useNavigate();
 
-    const { createSession, selectSession, updateCurrentSession } = useSessionActions();
+    const { createSession } = useSessionStore();
 
     function onSubmit(values: FormData) {
-        const sessionId = createSession(values.surveyKey);
-        selectSession(sessionId);
-        updateCurrentSession((session) => ({
-            ...session,
-            surveyEditor: new SurveyEditor(
-                new Survey(values.surveyKey),
-            ),
-        }));
-        navigate(`/editor/item-editor`, { replace: true });
-        onClose();
+        if (createSession(new SurveyEditor(
+            new Survey(values.surveyKey),
+        ))) {
+            navigate(`/editor/item-editor`, { replace: true });
+            onClose();
+        }
     }
 
     return (

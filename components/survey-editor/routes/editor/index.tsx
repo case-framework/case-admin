@@ -5,32 +5,45 @@ import { Navigate } from "react-router";
 import { useKeyboardShortcuts } from "../../hooks/useKeyboardShortcuts";
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { useCurrentSessionId } from "../../store/session-store";
+import { useSessionStore } from "../../store/session-store";
+import { useSurveyEditor } from "../../store/useSurveyEditor";
 
 const Editor = () => {
-    const sessionId = useCurrentSessionId();
+    const { currentSession } = useSessionStore();
+    const { editor } = useSurveyEditor();
 
     const handleSave = useCallback(() => {
         // TODO: Implement save functionality
         console.log("Save triggered via keyboard shortcut");
+        console.log(editor?.survey.toJson());
         toast.success("Save functionality triggered (Ctrl/Cmd + S)");
         // For now, just show a notification or trigger a save dialog
         // This could be expanded to save to localStorage, trigger a download, etc.
-    }, []);
+    }, [editor]);
 
     const handleUndo = useCallback(() => {
-        // TODO: Implement undo functionality
-        console.log("Undo triggered via keyboard shortcut");
-        toast.success("Undo functionality triggered (Ctrl/Cmd + Z)");
-        // This would typically revert to the previous state in a history stack
-    }, []);
+        if (editor?.canUndo()) {
+            if (editor?.undo()) {
+                toast.success("Undo functionality triggered (Ctrl/Cmd + Z)");
+            } else {
+                toast.error("No more actions to undo");
+            }
+        } else {
+            toast.error("No more actions to undo");
+        }
+    }, [editor]);
 
     const handleRedo = useCallback(() => {
-        // TODO: Implement redo functionality
-        console.log("Redo triggered via keyboard shortcut");
-        toast.success("Redo functionality triggered (Ctrl/Cmd + Shift + Z)");
-        // This would typically move forward in the history stack
-    }, []);
+        if (editor?.canRedo()) {
+            if (editor?.redo()) {
+                toast.success("Redo functionality triggered (Ctrl/Cmd + Shift + Z)");
+            } else {
+                toast.error("No more actions to redo");
+            }
+        } else {
+            toast.error("No more actions to redo");
+        }
+    }, [editor]);
 
     // Setup keyboard shortcuts
     useKeyboardShortcuts({
@@ -39,7 +52,7 @@ const Editor = () => {
         onRedo: handleRedo,
     });
 
-    if (!sessionId) {
+    if (!currentSession) {
         return <Navigate to="/" replace />
     }
 
