@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { ItemComponentType, SingleChoiceQuestionItem, SurveyItemTranslations, SurveyItemType } from "survey-engine";
 import { useSurveyEditor } from "../../../store/useSurveyEditor";
-import { useItemNavigation } from "./_components/useItemNavigation";
+import { useItemNavigation } from "../../../store/useItemNavigation";
 import ItemNav from "./_components/item-nav";
 
 const ItemEditor = () => {

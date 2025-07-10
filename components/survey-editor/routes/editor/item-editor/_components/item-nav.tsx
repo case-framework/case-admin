@@ -2,7 +2,7 @@ import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEdito
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ChevronDownIcon, CornerLeftUpIcon, FolderTree } from "lucide-react";
-import { useItemNavigation } from "./useItemNavigation";
+import { useItemNavigation } from "../../../../store/useItemNavigation";
 import { GroupItem, SurveyItemKey } from "survey-engine";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Fragment } from "react";
@@ -106,7 +106,7 @@ const ItemNav: React.FC = () => {
                                     onClick={() => navigateToItem(editor?.survey.surveyKey)}
                                 >
                                     <span className="font-bold flex items-center gap-2 font-mono text-xs">
-                                        <FolderTree className="size-4" />
+                                        <FolderTree className="size-4 text-muted-foreground" />
                                         {editor?.survey.surveyKey}
                                     </span>
                                 </button>
