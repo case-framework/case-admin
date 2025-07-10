@@ -2,14 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { ItemComponentType, SingleChoiceQuestionItem, SurveyItemTranslations, SurveyItemType } from "survey-engine";
 import { useSurveyEditor } from "../../../store/useSurveyEditor";
+import { useItemNavigation } from "../../../store/useItemNavigation";
+import ItemNav from "./_components/item-nav";
 
 const ItemEditor = () => {
     const { editor, isEditorReady, isInitializing } = useSurveyEditor();
+    const { selectedItemKey, navigateToItem } = useItemNavigation();
 
     return <div className="space-y-4">
-        <div>
-            breadrcumbs
-        </div>
+        <ItemNav />
 
         <div>
             {isEditorReady ? 'Editor ready' : 'Editor not ready'}
@@ -19,13 +20,22 @@ const ItemEditor = () => {
             {isInitializing ? 'Initializing' : 'Not initializing'}
         </div>
 
+        <div className="p-4 bg-muted/50 rounded-lg">
+            <p className="text-sm font-medium">Currently selected item:</p>
+            <p className="text-sm text-muted-foreground">
+                {selectedItemKey || 'No item selected'}
+            </p>
+        </div>
+
         <input type="text" defaultValue={editor?.survey.surveyKey} />
 
         <div>
             {editor?.survey.rootItem.items?.map((item) => (
-                <div key={item}>
+                <button key={item}
+                    className="block"
+                    onClick={() => navigateToItem(item)}>
                     {item}
-                </div>
+                </button>
             ))}
             <Button
                 variant="outline"

@@ -6,7 +6,7 @@ import { useSessionStore } from "./session-store"
 let globalEditorInstance: SurveyEditor | null = null // Replace 'any' with your SurveyEditor class type
 let currentLoadedSessionId: string | null = null
 
-const UPDATE_INTERVAL = 10000 // 10 seconds
+const UPDATE_INTERVAL = 20 * 1000
 
 export const useSurveyEditor = () => {
     const initializingRef = useRef(false)
