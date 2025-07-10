@@ -12,13 +12,13 @@ export const useItemNavigation = () => {
     const { editor } = useSurveyEditor();
 
     useEffect(() => {
-        if (itemKey && !editor?.survey.surveyItems[itemKey]) {
+        if (itemKey && !editor?.survey?.surveyItems?.[itemKey]) {
             navigate("/editor/item-editor", { replace: true });
         }
     }, [editor?.survey.surveyItems, itemKey, navigate]);
 
     // Get the currently selected item key from the URL
-    const selectedItemKey = itemKey ? decodeURIComponent(itemKey) : null;
+    const selectedItemKey = itemKey;
 
     // Navigate to a specific item
     const navigateToItem = (newItemKey?: string) => {
@@ -27,8 +27,7 @@ export const useItemNavigation = () => {
         }
 
         if (newItemKey) {
-            const encodedItemKey = encodeURIComponent(newItemKey);
-            navigate(`/editor/item-editor/${encodedItemKey}`);
+            navigate(`/editor/item-editor/${newItemKey}`);
         } else {
             navigate("/editor/item-editor");
         }
