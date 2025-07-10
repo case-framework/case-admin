@@ -9,13 +9,17 @@ import { useNavigate, useParams } from "react-router";
 export const useItemNavigation = () => {
     const navigate = useNavigate();
     const { itemKey } = useParams<{ itemKey?: string }>();
-    const { editor } = useSurveyEditor();
+    const { editor, isEditorReady } = useSurveyEditor();
 
     useEffect(() => {
+        if (!isEditorReady) {
+            return;
+        }
+
         if (itemKey && !editor?.survey?.surveyItems?.[itemKey]) {
             navigate("/editor/item-editor", { replace: true });
         }
-    }, [editor?.survey.surveyItems, itemKey, navigate]);
+    }, [editor?.survey?.surveyItems, itemKey, navigate, isEditorReady]);
 
     // Get the currently selected item key from the URL
     const selectedItemKey = itemKey;
