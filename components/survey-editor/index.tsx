@@ -33,6 +33,7 @@ const SurveyEditor: React.FC<SurveyEditorProps> = (props) => {
                 <Routes>
                     <Route path="/editor" element={<EditorLayout />}>
                         <Route path="item-editor" element={<ItemEditor />} />
+                        <Route path="item-editor/:itemKey" element={<ItemEditor />} />
                         <Route path="translation-mode" element={<TranslationMode />} />
                         <Route path="simulator" element={<Simulator />} />
                     </Route>
