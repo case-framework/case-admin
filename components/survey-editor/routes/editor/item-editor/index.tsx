@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { ItemComponentType, SingleChoiceQuestionItem, SurveyItemTranslations, SurveyItemType } from "survey-engine";
 import { useSurveyEditor } from "../../../store/useSurveyEditor";
 import { useItemNavigation } from "../../../store/useItemNavigation";
-import ItemNav from "./_components/item-nav";
+import BreadcrumbsNav from "./_components/breadcrumbs-nav";
 
 const ItemEditor = () => {
     const { editor, isEditorReady, isInitializing } = useSurveyEditor();
     const { selectedItemKey, navigateToItem } = useItemNavigation();
 
     return <div className="space-y-4">
-        <ItemNav />
+        <BreadcrumbsNav />
 
         <div>
             {isEditorReady ? 'Editor ready' : 'Editor not ready'}

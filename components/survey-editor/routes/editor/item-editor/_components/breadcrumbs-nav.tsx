@@ -7,7 +7,7 @@ import { GroupItem, SurveyItemKey } from "survey-engine";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Fragment } from "react";
 
-const ItemNav: React.FC = () => {
+const BreadcrumbsNav: React.FC = () => {
 
     const { editor } = useSurveyEditor();
     const { selectedItemKey, navigateToItem } = useItemNavigation();
@@ -123,4 +123,4 @@ const ItemNav: React.FC = () => {
     );
 }
 
-export default ItemNav;
+export default BreadcrumbsNav;
