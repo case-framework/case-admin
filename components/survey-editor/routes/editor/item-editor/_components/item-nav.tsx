@@ -12,7 +12,7 @@ const ItemNav: React.FC = () => {
     const { editor } = useSurveyEditor();
     const { selectedItemKey, navigateToItem } = useItemNavigation();
 
-    const getBreadcrumbItems = (itemKey: string | null) => {
+    const getBreadcrumbItems = (itemKey: string | undefined) => {
         if (!itemKey) {
             return null;
         }
