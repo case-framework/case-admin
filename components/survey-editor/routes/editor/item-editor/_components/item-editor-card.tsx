@@ -1,6 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { Edit3, Eye, Filter, MoreHorizontal, Palette } from "lucide-react";
 import { Database } from "lucide-react";
 import { Settings } from "lucide-react";
@@ -10,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import ItemLabelPreviewAndEditor from "@/components/survey-editor/routes/editor/item-editor/_components/item-label-preview-and-editor";
 
 const editorModes = [
     {
@@ -60,21 +60,30 @@ const ItemEditorCard: React.FC = () => {
     return <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-4 items-start relative">
 
         {/* Main Card */}
-        <Card className="w-full md:w-auto flex-1 border-border order-2 md:order-1">
-            <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h3 className="text-lg font-semibold">Home Page</h3>
-                        <p className="text-sm text-muted-foreground">Edit your page structure and content</p>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">
-                        <div className="size-2 rounded-full bg-green-500 mr-1" />
-                        Published
-                    </Badge>
-                </div>
-            </CardHeader>
+        <div className="w-full md:w-auto flex-1 border-border order-2 md:order-1 bg-background rounded-xl shadow-md  border border-border">
 
-            <CardContent>
+            {/* Header */}
+            <div className="py-2 border-b border-border h-9 flex items-center">
+                <div className="flex items-center justify-between relative w-full">
+                    <div className="absolute px-4 rounded-s-lg left-0 top-0 bottom-0 flex items-center justify-center bg-white">
+                        icon and key
+                    </div>
+
+                    <div className="text-center grow">
+                        <ItemLabelPreviewAndEditor
+                            key={'todo'}
+                            itemLabel={'current label'}
+                            onChangeItemLabel={(newLabel: string) => {
+                                //props.onChangeItemLabel(newLabel);
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+
+
+
+            <CardContent className="p-0 m-0">
                 <Tabs value={activeMode} onValueChange={setActiveMode} className="w-full">
                     <div className="min-h-[400px]">
                         {/* All TabsContent sections remain exactly the same */}
@@ -106,12 +115,12 @@ const ItemEditorCard: React.FC = () => {
                     </div>
                 </Tabs>
             </CardContent>
-        </Card>
+        </div>
 
 
         {/* Floating Responsive Tab Sidebar */}
         <div className="relative md:sticky top-0 order-1 md:order-2 w-full md:w-fit flex justify-end">
-            <Card className="shadow-sm w-fit border-border p-0">
+            <Card className="shadow-md w-fit border-border p-0">
                 <CardContent className="p-0 flex flex-row md:flex-col">
                     <div className="border-r border-border md:border-b md:border-r-0">
                         <DropdownMenu>
