@@ -4,6 +4,7 @@ import { ItemComponentType, SingleChoiceQuestionItem, SurveyItemTranslations, Su
 import { useSurveyEditor } from "../../../store/useSurveyEditor";
 import { useItemNavigation } from "../../../store/useItemNavigation";
 import BreadcrumbsNav from "./_components/breadcrumbs-nav";
+import ItemEditorCard from "./_components/item-editor-card";
 
 const ItemEditor = () => {
     const { editor, isEditorReady, isInitializing } = useSurveyEditor();
@@ -26,6 +27,8 @@ const ItemEditor = () => {
                 {selectedItemKey || 'No item selected'}
             </p>
         </div>
+
+        <ItemEditorCard />
 
         <input type="text" defaultValue={editor?.survey.surveyKey} />
 
