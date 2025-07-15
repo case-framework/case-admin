@@ -9,13 +9,28 @@ interface ItemLabelPreviewAndEditorProps {
 
 const ItemLabelPreviewAndEditor: React.FC<ItemLabelPreviewAndEditorProps> = (props) => {
     const [editMode, setEditMode] = React.useState(false);
+    const [currentLabel, setCurrentLabel] = React.useState(props.itemLabel);
     const inputRef = React.useRef<HTMLInputElement>(null);
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
 
     React.useEffect(() => {
         if (editMode && inputRef.current) {
             inputRef.current.focus();
+        } else if (!editMode && buttonRef.current) {
+            buttonRef.current.focus();
         }
     }, [editMode]);
+
+    React.useEffect(() => {
+        setCurrentLabel(props.itemLabel);
+    }, [props.itemLabel]);
+
+    const onChangeItemLabel = (newLabel: string) => {
+        if (newLabel === props.itemLabel) {
+            return;
+        }
+        props.onChangeItemLabel(newLabel);
+    }
 
     if (!editMode) {
         return (
@@ -25,14 +40,15 @@ const ItemLabelPreviewAndEditor: React.FC<ItemLabelPreviewAndEditorProps> = (pro
             >
                 <TooltipTrigger asChild>
                     <button
+                        ref={buttonRef}
                         type='button'
                         className='font-medium text-base w-full text-center hover:underline underline-offset-4'
                         onClick={() => {
                             setEditMode(true);
                         }}
                     >
-                        {props.itemLabel}
-                        {props.itemLabel.length < 1 && <span className='text-muted-foreground text-xs'>
+                        {currentLabel}
+                        {currentLabel.length < 1 && <span className='text-muted-foreground text-xs'>
                             {'(click here to add item label)'}
                         </span>}
                     </button>
@@ -46,11 +62,11 @@ const ItemLabelPreviewAndEditor: React.FC<ItemLabelPreviewAndEditorProps> = (pro
 
     return (
         <input
-            defaultValue={props.itemLabel}
+            defaultValue={currentLabel}
             ref={inputRef}
             onChange={(e) => {
                 const value = e.target.value;
-                props.onChangeItemLabel(value);
+                setCurrentLabel(value);
             }}
             id='new-item-label'
             autoComplete='off'
@@ -64,9 +80,17 @@ const ItemLabelPreviewAndEditor: React.FC<ItemLabelPreviewAndEditorProps> = (pro
             placeholder='Enter item label'
             onBlur={() => {
                 setEditMode(false);
+                onChangeItemLabel(currentLabel);
             }}
             onKeyDown={(e) => {
                 if (e.key === 'Escape') {
+                    e.preventDefault();
+                    setCurrentLabel(props.itemLabel);
+                    setEditMode(false);
+                }
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    onChangeItemLabel(currentLabel);
                     setEditMode(false);
                 }
             }}

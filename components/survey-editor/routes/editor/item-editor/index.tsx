@@ -5,28 +5,24 @@ import { useSurveyEditor } from "../../../store/useSurveyEditor";
 import { useItemNavigation } from "../../../store/useItemNavigation";
 import BreadcrumbsNav from "./_components/breadcrumbs-nav";
 import ItemEditorCard from "./_components/item-editor-card";
+import { Loader2 } from "lucide-react";
 
 const ItemEditor = () => {
     const { editor, isEditorReady, isInitializing } = useSurveyEditor();
     const { selectedItemKey, navigateToItem } = useItemNavigation();
 
+    if (isInitializing || !isEditorReady) {
+        return <div className="relative h-full flex items-center justify-center">
+            <p className="flex items-center gap-2">
+                <Loader2 className="size-4 animate-spin" />
+                Loading...
+            </p>
+
+        </div>
+    }
+
     return <div className="space-y-4">
         <BreadcrumbsNav />
-
-        <div>
-            {isEditorReady ? 'Editor ready' : 'Editor not ready'}
-        </div>
-
-        <div>
-            {isInitializing ? 'Initializing' : 'Not initializing'}
-        </div>
-
-        <div className="p-4 bg-muted/50 rounded-lg">
-            <p className="text-sm font-medium">Currently selected item:</p>
-            <p className="text-sm text-muted-foreground">
-                {selectedItemKey || 'No item selected'}
-            </p>
-        </div>
 
         <ItemEditorCard />
 

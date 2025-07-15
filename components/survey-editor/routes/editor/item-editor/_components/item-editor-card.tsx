@@ -10,6 +10,11 @@ import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import ItemLabelPreviewAndEditor from "@/components/survey-editor/routes/editor/item-editor/_components/item-label-preview-and-editor";
+import { getItemColor, getItemTypeInfos } from "@/components/survey-editor/utils/item-type-infos";
+import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEditor";
+import { useItemNavigation } from "@/components/survey-editor/store/useItemNavigation";
+import { GenericSurveyItemEditor } from "survey-engine/editor";
+
 
 const editorModes = [
     {
@@ -57,24 +62,66 @@ const ItemEditorCard: React.FC = () => {
     const { width } = useWindowSize();
     const isMobile = width < 768;
 
+    const { editor } = useSurveyEditor();
+    let { selectedItemKey } = useItemNavigation();
+    if (!selectedItemKey) {
+        selectedItemKey = editor?.survey.surveyKey;
+    }
+
+    if (!editor || !selectedItemKey) {
+        return null;
+    }
+
+    const surveyItem = editor?.survey.surveyItems[selectedItemKey];
+
+    const itemInfos = {
+        typeInfos: getItemTypeInfos(surveyItem),
+        color: getItemColor(surveyItem)
+    }
+
     return <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row gap-4 items-start relative">
 
         {/* Main Card */}
-        <div className="w-full md:w-auto flex-1 border-border order-2 md:order-1 bg-background rounded-xl shadow-md  border border-border">
+        <div className="w-full md:w-auto flex-1 border-border order-2 md:order-1 bg-background rounded-xl border border-border">
 
             {/* Header */}
-            <div className="py-2 border-b border-border h-9 flex items-center">
+            <div className="py-2 border-b border-border h-[37px] flex items-center">
                 <div className="flex items-center justify-between relative w-full">
-                    <div className="absolute px-4 rounded-s-lg left-0 top-0 bottom-0 flex items-center justify-center bg-white">
-                        icon and key
+                    <div className="absolute px-4 rounded-s-lg left-0 top-0 bottom-0 flex items-center gap-2 justify-center bg-white">
+                        <Tooltip
+                            delayDuration={0}
+                        >
+                            <TooltipTrigger>
+                                <div
+                                    className={itemInfos.typeInfos.defaultItemClassName}
+                                    style={{
+                                        color: itemInfos.color
+                                    }}>
+                                    <itemInfos.typeInfos.icon
+                                        className='size-5'
+                                    />
+                                </div>
+                            </TooltipTrigger>
+                            <TooltipContent align='start' side='bottom'
+
+                            >
+                                {itemInfos.typeInfos.label}
+                            </TooltipContent>
+                        </Tooltip>
+                        key editor ({selectedItemKey})
                     </div>
 
                     <div className="text-center grow">
                         <ItemLabelPreviewAndEditor
-                            key={'todo'}
-                            itemLabel={'current label'}
+                            key={surveyItem.key.fullKey}
+                            itemLabel={surveyItem.metadata?.itemLabel ?? ''}
                             onChangeItemLabel={(newLabel: string) => {
-                                //props.onChangeItemLabel(newLabel);
+                                const newMetadata = {
+                                    ...surveyItem.metadata,
+                                    itemLabel: newLabel
+                                }
+                                const genericItemEditor = new GenericSurveyItemEditor(editor!, selectedItemKey, surveyItem.itemType)
+                                genericItemEditor.updateItemMetadata(newMetadata)
                             }}
                         />
                     </div>
@@ -120,7 +167,7 @@ const ItemEditorCard: React.FC = () => {
 
         {/* Floating Responsive Tab Sidebar */}
         <div className="relative md:sticky top-0 order-1 md:order-2 w-full md:w-fit flex justify-end">
-            <Card className="shadow-md w-fit border-border p-0">
+            <Card className="shadow-none w-fit border-border p-0">
                 <CardContent className="p-0 flex flex-row md:flex-col">
                     <div className="border-r border-border md:border-b md:border-r-0">
                         <DropdownMenu>

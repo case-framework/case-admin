@@ -2,6 +2,7 @@ import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEdito
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { History } from "lucide-react";
@@ -51,9 +52,16 @@ const HistoryStack: React.FC = () => {
                                 )}
                                 onClick={() => editor?.jumpToIndex(entry.index)}
                             >
-                                <p className="truncate text-sm font-medium">
-                                    {entry.description}
-                                </p>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <p className="truncate text-xs font-medium">
+                                            {entry.description}
+                                        </p>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        {entry.description}
+                                    </TooltipContent>
+                                </Tooltip>
                                 <p className={cn(
                                     "text-xs text-muted-foreground",
                                     entry.index === historyInstance?.getCurrentIndex() && "text-primary-foreground/80"
