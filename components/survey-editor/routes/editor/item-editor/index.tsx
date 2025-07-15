@@ -26,8 +26,6 @@ const ItemEditor = () => {
 
         <ItemEditorCard />
 
-        <input type="text" defaultValue={editor?.survey.surveyKey} />
-
         <div>
             {editor?.survey.rootItem.items?.map((item) => (
                 <button key={item}

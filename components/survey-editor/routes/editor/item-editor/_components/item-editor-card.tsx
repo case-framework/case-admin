@@ -14,6 +14,8 @@ import { getItemColor, getItemTypeInfos } from "@/components/survey-editor/utils
 import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEditor";
 import { useItemNavigation } from "@/components/survey-editor/store/useItemNavigation";
 import { GenericSurveyItemEditor } from "survey-engine/editor";
+import ItemKeyEditor from "./item-key-editor";
+import { toast } from "sonner";
 
 
 const editorModes = [
@@ -63,6 +65,7 @@ const ItemEditorCard: React.FC = () => {
     const isMobile = width < 768;
 
     const { editor } = useSurveyEditor();
+    const { navigateToItem } = useItemNavigation();
     let { selectedItemKey } = useItemNavigation();
     if (!selectedItemKey) {
         selectedItemKey = editor?.survey.surveyKey;
@@ -73,6 +76,9 @@ const ItemEditorCard: React.FC = () => {
     }
 
     const surveyItem = editor?.survey.surveyItems[selectedItemKey];
+    if (!surveyItem) {
+        return null;
+    }
 
     const itemInfos = {
         typeInfos: getItemTypeInfos(surveyItem),
@@ -108,7 +114,19 @@ const ItemEditorCard: React.FC = () => {
                                 {itemInfos.typeInfos.label}
                             </TooltipContent>
                         </Tooltip>
-                        key editor ({selectedItemKey})
+
+                        <ItemKeyEditor
+                            key={surveyItem.key.fullKey}
+                            currentItemKey={surveyItem.key}
+                            siblingKeys={new GenericSurveyItemEditor(editor!, selectedItemKey, surveyItem.itemType).getSiblingKeys()}
+                            color={itemInfos.color ?? ''}
+                            onChangeItemKey={(newKey) => {
+                                const genericItemEditor = new GenericSurveyItemEditor(editor!, selectedItemKey, surveyItem.itemType)
+                                genericItemEditor.changeItemKey(newKey.itemKey);
+                                navigateToItem(newKey.fullKey);
+                                toast.success('Key and its references updated.');
+                            }}
+                        />
                     </div>
 
                     <div className="text-center grow">
