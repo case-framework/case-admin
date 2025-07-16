@@ -19,6 +19,7 @@ const EditorCardForRoot: React.FC<CommonItemEditorCardProps> = (props) => {
         surveyItem={props.item}
         menu={{
             hideColorSelector: false,
+            hideDeleteItem: true,
             items: [
                 <DropdownMenuItem key="todo-item">
                     Todo
@@ -27,7 +28,9 @@ const EditorCardForRoot: React.FC<CommonItemEditorCardProps> = (props) => {
         }}
         navItems={editorModes}
     >
-        <TabsContent value="items">
+        <TabsContent value="items"
+            className="px-4 pt-2 pb-4"
+        >
             <GroupItems />
         </TabsContent>
         <TabsContent value="preview" className="space-y-4">

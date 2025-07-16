@@ -15,6 +15,7 @@ import { GenericSurveyItemEditor } from "survey-engine/editor";
 import ItemKeyEditor from "./item-key-editor";
 import { toast } from "sonner";
 import { SurveyItem } from "survey-engine";
+import { DeleteItemDropdownMenuItem } from "./delete-item-dropdown-menu";
 
 
 export interface CommonItemEditorCardProps {
@@ -32,6 +33,7 @@ interface ItemEditorCardProps {
     menu: {
         hideColorSelector?: boolean;
         items: React.ReactNode[];
+        hideDeleteItem?: boolean;
     }
     navItems: NavItem[];
     children: React.ReactNode;
@@ -66,7 +68,7 @@ const ItemEditorCard: React.FC<ItemEditorCardProps> = ({
     return <div className="w-full flex flex-col md:flex-row gap-4 items-start relative">
 
         {/* Main Card */}
-        <div className="w-full md:w-auto flex-1 border-border order-2 md:order-1 bg-background rounded-xl border border-border">
+        <div className="w-full md:w-auto flex-1 order-2 md:order-1 bg-background rounded-xl border border-border">
 
             {/* Header */}
             <div className="py-2 border-b border-border h-[37px] flex items-center">
@@ -178,7 +180,18 @@ const ItemEditorCard: React.FC<ItemEditorCardProps> = ({
                                     </>
                                 )}
 
+
+
                                 {...props.menu.items}
+
+                                {!props.menu.hideDeleteItem && (
+                                    <>
+                                        {props.menu.items.length > 0 && (
+                                            <DropdownMenuSeparator />
+                                        )}
+                                        <DeleteItemDropdownMenuItem />
+                                    </>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
 

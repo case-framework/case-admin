@@ -34,7 +34,7 @@ const HistoryStack: React.FC = () => {
                 <History className="size-3.5" />
             </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-0 border-border" align="start" side="top">
+        <PopoverContent className="min-w-96 p-0 border-border" align="start" side="top">
             <div className="p-3 border-b border-border">
                 <h4 className="font-medium text-sm">Recent changes</h4>
                 <p className="text-xs text-muted-foreground">Click a state to jump to roll back to that point</p>
