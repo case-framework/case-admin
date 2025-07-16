@@ -4,9 +4,9 @@ export const miscExpressions: ExpressionDef[] = [
     {
         categories: ['misc'],
         id: 'timestampWithOffset',
-        label: 'GET TIMESTAMP',
+        label: 'Get timestamp',
         returnType: 'num',
-        icon: 'calendar',
+        icon: 'calendar-days',
         color: 'lime',
         slots: [
             {
@@ -101,7 +101,7 @@ export const logicalOperators: ExpressionDef[] = [
         id: 'and',
         label: 'and',
         returnType: 'boolean',
-        icon: 'brackets',
+        icon: 'ampersands',
         color: 'blue',
         slots: [
             {
@@ -130,7 +130,7 @@ export const logicalOperators: ExpressionDef[] = [
         id: 'or',
         label: 'or',
         returnType: 'boolean',
-        icon: 'braces',
+        icon: 'tally',
         color: 'blue',
         slots: [
             {
@@ -190,7 +190,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'eq',
         label: 'Equals (L == R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'equal',
         color: 'teal',
         slots: [
             {
@@ -245,7 +245,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'lte',
         label: 'Less than or equal (L <= R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'less-than-or-equal',
         color: 'teal',
         slots: [
             {
@@ -309,7 +309,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'lt',
         label: 'Less than (L < R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'less-than',
         color: 'teal',
         slots: [
             {
@@ -373,7 +373,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'gte',
         label: 'Greater than or equal (L >= R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'greater-than-or-equal',
         color: 'teal',
         slots: [
             {
@@ -437,7 +437,7 @@ export const comparisonOperators: ExpressionDef[] = [
         id: 'gt',
         label: 'Greater than (L > R)',
         returnType: 'boolean',
-        icon: 'code',
+        icon: 'greater-than',
         color: 'blue',
         slots: [
             {
