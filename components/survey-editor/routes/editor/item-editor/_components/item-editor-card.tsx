@@ -8,10 +8,10 @@ import { useState } from "react";
 import { useWindowSize } from "usehooks-ts";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import ItemLabelPreviewAndEditor from "@/components/survey-editor/routes/editor/item-editor/_components/item-label-preview-and-editor";
-import { getItemColor, getItemTypeInfos } from "@/components/survey-editor/utils/item-type-infos";
+import { getItemColor, getItemTypeInfos, builtInItemColors } from "@/components/survey-editor/utils/item-type-infos";
 import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEditor";
 import { useItemNavigation } from "@/components/survey-editor/store/useItemNavigation";
 import { GenericSurveyItemEditor } from "survey-engine/editor";
@@ -199,9 +199,32 @@ const ItemEditorCard: React.FC = () => {
                             <DropdownMenuContent side="left" align="start"
                                 className="border-border"
                             >
+                                <DropdownMenuSub>
+                                    <DropdownMenuSubTrigger>
+                                        <Palette className="mr-2 h-4 w-4" />
+                                        <span>Item color (editor only)</span>
+                                    </DropdownMenuSubTrigger>
+                                    <DropdownMenuSubContent className="border-border">
+                                        <ItemColorSelector
+                                            currentColor={itemInfos.color || '#404040'}
+                                            onColorChange={(color) => {
+                                                const genericItemEditor = new GenericSurveyItemEditor(editor!, selectedItemKey, surveyItem.itemType)
+                                                genericItemEditor.updateItemMetadata({
+                                                    ...surveyItem.metadata,
+                                                    editorItemColor: color
+                                                })
+                                                toast.success('Item color updated.');
+                                            }}
+                                        />
+                                    </DropdownMenuSubContent>
+                                </DropdownMenuSub>
+
+                                <DropdownMenuSeparator />
+
                                 {editorModes.map((mode) => (
                                     <DropdownMenuItem key={mode.id}>{mode.label}</DropdownMenuItem>
                                 ))}
+
                             </DropdownMenuContent>
                         </DropdownMenu>
 
@@ -323,6 +346,30 @@ const ItemEditorCardSkeleton: React.FC = () => {
                     </CardContent>
                 </Card>
             </div>
+        </div>
+    );
+};
+
+// Color Selector Component
+const ItemColorSelector: React.FC<{ currentColor: string; onColorChange: (color: string) => void }> = ({ currentColor, onColorChange }) => {
+    return (
+        <div className="grid grid-cols-4 gap-2 p-2">
+            {builtInItemColors.map((color) => (
+                <Button
+                    key={color}
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                        "w-8 h-8 p-0 rounded-md border-2 hover:scale-110 transition-all",
+                        currentColor === color
+                            ? "border-foreground ring-2 ring-foreground ring-offset-1"
+                            : "border-transparent hover:border-muted-foreground"
+                    )}
+                    style={{ backgroundColor: color }}
+                    onClick={() => onColorChange(color)}
+                    title={`Color: ${color}`}
+                />
+            ))}
         </div>
     );
 };
