@@ -25,6 +25,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "fuse.js": "^7.1.0",
+    "html2canvas-pro": "^1.5.11",
     "lucide-react": "^0.523.0",
     "monaco-editor": "^0.52.2",
     "next": "15.3.4",

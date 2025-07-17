@@ -29,7 +29,7 @@ const EditorCardForRoot: React.FC<CommonItemEditorCardProps> = (props) => {
         navItems={editorModes}
     >
         <TabsContent value="items"
-            className="px-4 pt-2 pb-4"
+            className="flex flex-col"
         >
             <GroupItems />
         </TabsContent>

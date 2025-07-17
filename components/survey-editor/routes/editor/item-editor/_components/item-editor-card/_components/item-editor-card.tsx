@@ -16,6 +16,7 @@ import ItemKeyEditor from "./item-key-editor";
 import { toast } from "sonner";
 import { SurveyItem } from "survey-engine";
 import { DeleteItemDropdownMenuItem } from "./delete-item-dropdown-menu";
+import ItemTypeIconWithTooltip from "./item-type-icon-with-tooltip";
 
 
 export interface CommonItemEditorCardProps {
@@ -74,27 +75,7 @@ const ItemEditorCard: React.FC<ItemEditorCardProps> = ({
             <div className="py-2 border-b border-border h-[37px] flex items-center">
                 <div className="flex items-center justify-between relative w-full">
                     <div className="absolute px-4 rounded-s-lg left-0 top-0 bottom-0 flex items-center gap-2 justify-center bg-white">
-                        <Tooltip
-                            delayDuration={0}
-                        >
-                            <TooltipTrigger>
-                                <div
-                                    className={itemInfos.typeInfos.defaultItemClassName}
-                                    style={{
-                                        color: itemInfos.color
-                                    }}>
-                                    <itemInfos.typeInfos.icon
-                                        className='size-5'
-                                    />
-                                </div>
-                            </TooltipTrigger>
-                            <TooltipContent
-                                align='start'
-                                side='bottom'
-                            >
-                                {itemInfos.typeInfos.label}
-                            </TooltipContent>
-                        </Tooltip>
+                        <ItemTypeIconWithTooltip item={surveyItem} iconClassName="size-5" />
 
                         <ItemKeyEditor
                             key={surveyItem.key.fullKey}
@@ -128,14 +109,9 @@ const ItemEditorCard: React.FC<ItemEditorCardProps> = ({
             </div>
 
 
-
-            <CardContent className="p-0 m-0">
-                <Tabs value={activeMode} onValueChange={setActiveMode} className="w-full">
-                    <div className="min-h-[400px]">
-                        {props.children}
-                    </div>
-                </Tabs>
-            </CardContent>
+            <Tabs value={activeMode} onValueChange={setActiveMode} className="min-h-[400px] grow flex flex-col w-full">
+                {props.children}
+            </Tabs>
         </div>
 
 
