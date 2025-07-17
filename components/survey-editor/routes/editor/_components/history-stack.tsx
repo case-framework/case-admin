@@ -2,6 +2,7 @@ import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEdito
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { History } from "lucide-react";
@@ -33,7 +34,7 @@ const HistoryStack: React.FC = () => {
                 <History className="size-3.5" />
             </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-0 border-border" align="start" side="top">
+        <PopoverContent className="min-w-96 p-0 border-border" align="start" side="top">
             <div className="p-3 border-b border-border">
                 <h4 className="font-medium text-sm">Recent changes</h4>
                 <p className="text-xs text-muted-foreground">Click a state to jump to roll back to that point</p>
@@ -51,9 +52,16 @@ const HistoryStack: React.FC = () => {
                                 )}
                                 onClick={() => editor?.jumpToIndex(entry.index)}
                             >
-                                <p className="truncate text-sm font-medium">
-                                    {entry.description}
-                                </p>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <p className="truncate text-xs font-medium">
+                                            {entry.description}
+                                        </p>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        {entry.description}
+                                    </TooltipContent>
+                                </Tooltip>
                                 <p className={cn(
                                     "text-xs text-muted-foreground",
                                     entry.index === historyInstance?.getCurrentIndex() && "text-primary-foreground/80"

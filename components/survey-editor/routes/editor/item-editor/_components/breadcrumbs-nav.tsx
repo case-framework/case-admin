@@ -7,7 +7,7 @@ import { GroupItem, SurveyItemKey } from "survey-engine";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Fragment } from "react";
 
-const ItemNav: React.FC = () => {
+const BreadcrumbsNav: React.FC = () => {
 
     const { editor } = useSurveyEditor();
     const { selectedItemKey, navigateToItem } = useItemNavigation();
@@ -50,7 +50,7 @@ const ItemNav: React.FC = () => {
 
                     <DropdownMenu>
                         <DropdownMenuTrigger
-                            className="ring-offset-2 rounded-lg outline-none hover:ring-[3px] hover:ring-ring/50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                            className="ring-offset-2 rounded-sm outline-none hover:ring-[3px] hover:ring-ring/50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
                         >
                             <span className="flex items-center gap-1 font-mono text-xs">
                                 {levelKey.itemKey}
@@ -95,14 +95,14 @@ const ItemNav: React.FC = () => {
 
 
     return (
-        <div className="px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-xs border border-border w-fit">
+        <div className="px-4 py-1.5 rounded-xl bg-white/70 backdrop-blur-xs border border-border w-fit">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <button
-                                    className="ring-offset-2 rounded-lg outline-none hover:ring-[3px] hover:ring-ring/50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                                    className="ring-offset-2 rounded-sm outline-none hover:ring-[3px] hover:ring-ring/50 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
                                     onClick={() => navigateToItem(editor?.survey.surveyKey)}
                                 >
                                     <span className="font-bold flex items-center gap-2 font-mono text-xs">
@@ -123,4 +123,4 @@ const ItemNav: React.FC = () => {
     );
 }
 
-export default ItemNav;
+export default BreadcrumbsNav;

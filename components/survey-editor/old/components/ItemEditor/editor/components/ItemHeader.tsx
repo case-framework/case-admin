@@ -12,7 +12,7 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useCopyToClipboard } from 'usehooks-ts';
 import { toast } from 'sonner';
 import MoveItemDialog from './MoveItemDialog';
-import ItemLabelPreviewAndEditor from './item-label-preview-and-editor';
+import ItemLabelPreviewAndEditor from '../../../../../routes/editor/item-editor/_components/item-editor-card/_components/item-label-preview-and-editor';
 import { PopoverKeyBadge } from './KeyBadge';
 import { useItemEditorCtx } from '../../item-editor-context';
 
