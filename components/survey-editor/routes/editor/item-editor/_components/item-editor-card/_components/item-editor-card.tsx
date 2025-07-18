@@ -178,7 +178,7 @@ const ItemEditorCard: React.FC<ItemEditorCardProps> = ({
                         onValueChange={setActiveMode}
                         orientation={isMobile ? "horizontal" : "vertical"}
                     >
-                        <TabsList className="flex rounded-s-none md:rounded-s-lg md:rounded-t-none  flex-row md:flex-col h-auto w-full bg-transparent p-0 md:space-y-1 space-x-1 md:space-x-0 focus-within:outline-none focus-within:ring-4 focus-within:ring-ring/30 overflow-hidden">
+                        <TabsList className="flex rounded-l-none md:rounded-b-lg md:rounded-t-none flex-row md:flex-col h-auto w-full bg-transparent p-0 md:space-y-1 space-x-1 md:space-x-0 focus-within:outline-none focus-within:ring-4 focus-within:ring-ring/30 overflow-hidden">
 
                             {props.navItems.map((mode) => (
                                 <Tooltip key={mode.id}>
