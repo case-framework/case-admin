@@ -336,9 +336,11 @@ const ItemPreview = ({ item }: ItemPreviewProps) => {
                         <DropdownMenuItem
                             onClick={() => {
                                 if (item && editor) {
-                                    // TODO: use editor copy item to clipboard
-                                    // Copy the item to clipboard
-                                    navigator.clipboard.writeText(JSON.stringify(item, null, 2))
+                                    const copiedItem = editor.copyItem(item.key.fullKey);
+
+                                    console.log(copiedItem);
+
+                                    navigator.clipboard.writeText(JSON.stringify(copiedItem, null, 2))
                                         .then(() => {
                                             toast.success("Item copied to clipboard");
                                         })
