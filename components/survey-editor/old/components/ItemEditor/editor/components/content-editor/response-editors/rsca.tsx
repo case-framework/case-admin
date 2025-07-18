@@ -1,4 +1,4 @@
-import SortableWrapper from '@/components/survey-editor/old/components/general/SortableWrapper';
+import SortableWrapper from '@/components/survey-editor/_components/sortable/sortable-wrapper';
 import AddDropdown from '@/components/survey-editor/old/components/general/add-dropdown';
 import { localisedObjectToMap } from '@/components/survey-editor/old/utils/localeUtils';
 import { Input } from '@/components/ui/input';

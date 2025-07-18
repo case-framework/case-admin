@@ -1,8 +1,8 @@
 import ExpArgEditor from '@/components/expression-editor/exp-arg-editor';
 import { supportedBuiltInSlotTypes, surveyExpressionCategories, surveyEngineRegistry } from '@/components/expression-editor/registries/surveyEngineRegistry';
 import { ExpArg, ExpressionArg } from '@/components/expression-editor/utils';
-import SortableItem from '@/components/survey-editor/old/components/general/SortableItem';
-import SortableWrapper from '@/components/survey-editor/old/components/general/SortableWrapper';
+import SortableItem from '@/components/survey-editor/_components/sortable/sortable-item';
+import SortableWrapper from '@/components/survey-editor/_components/sortable/sortable-wrapper';
 import { supportedLanguages } from '@/components/survey-editor/old/components/general/SurveyLanguageToggle';
 import AddDropdown from '@/components/survey-editor/old/components/general/add-dropdown';
 import { Button } from '@/components/ui/button';

@@ -1,4 +1,4 @@
-import SortableItem from "@/components/survey-editor/old/components/general/SortableItem";
+import SortableItem from "@/components/survey-editor/_components/sortable/sortable-item";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";

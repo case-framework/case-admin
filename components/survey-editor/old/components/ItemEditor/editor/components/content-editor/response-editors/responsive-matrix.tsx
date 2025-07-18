@@ -6,7 +6,7 @@ import { ItemComponentRole } from '@/components/survey-editor/old/components/typ
 import DropdownContentConfig from './dropdown-content-config';
 import TextInputContentConfig from './text-input-content-config';
 import NumberInputContentConfig from './number-input-content-config';
-import SortableWrapper from '@/components/survey-editor/old/components/general/SortableWrapper';
+import SortableWrapper from '@/components/survey-editor/_components/sortable/sortable-wrapper';
 import AddDropdown from '@/components/survey-editor/old/components/general/add-dropdown';
 import ComponentEditor, { ComponentEditorGenericProps } from '../component-editor';
 import { PopoverKeyBadge } from '../../KeyBadge';

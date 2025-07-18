@@ -3,7 +3,7 @@ import EditorWrapper from './editor-wrapper';
 import { ItemComponent, SurveySingleItem } from 'survey-engine/data_types';
 import { AlertCircle, AlertTriangle, Type } from 'lucide-react';
 import SurveyLanguageToggle from '@/components/survey-editor/old/components/general/SurveyLanguageToggle';
-import SortableWrapper from '@/components/survey-editor/old/components/general/SortableWrapper';
+import SortableWrapper from '@/components/survey-editor/_components/sortable/sortable-wrapper';
 import AddDropdown from '@/components/survey-editor/old/components/general/add-dropdown';
 import { filterForBodyComponents, findBottomComponents } from '@/components/survey-renderer/SurveySingleItemView/utils';
 import { generateLocStrings } from 'case-editor-tools/surveys/utils/simple-generators';

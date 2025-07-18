@@ -4,10 +4,10 @@ import ItemCreator from '../../../explorer/ItemCreator';
 import { Button } from '@/components/ui/button';
 import { ClipboardCopyIcon, GripVertical, Plus, Shield, TrashIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import SortableWrapper from '@/components/survey-editor/old/components/general/SortableWrapper';
+import SortableWrapper from '@/components/survey-editor/_components/sortable/sortable-wrapper';
 import { getItemColor, getItemTypeInfos, isValidSurveyItemGroup } from '@/components/survey-editor/old/utils/utils';
 import { cn } from '@/lib/utils';
-import SortableItem from '@/components/survey-editor/old/components/general/SortableItem';
+import SortableItem from '@/components/survey-editor/_components/sortable/sortable-item';
 import { generateNewItemForType } from '@/components/survey-editor/old/utils/new-item-init';
 import { toast } from 'sonner';
 import {
@@ -119,90 +119,7 @@ const ItemListEditor: React.FC<ItemListEditorProps> = (props) => {
 
     }
 
-    const renderRowItem = (i: number, isDragOverlay: boolean) => {
-        const item = currentItems[i];
-        return <ContextMenu>
-            <ContextMenuTrigger disabled={isDragOverlay}
-                asChild
-            >
-                <Button
-                    variant={'outline-solid'}
-                    className={cn(
-                        'w-full gap-2 py-3 h-auto px-3 text-start group relative',
-                        item.className,
-                        (draggedId === item.id && !isDragOverlay) && 'invisible',
-                        {
-                            'font-bold': item.isPathActive,
-                        })}
-                    style={{
-                        color: item.textColor,
-                        borderColor: item.textColor,
-                    }}
-                    onClick={isDragOverlay ? undefined : () => {
-                        setCurrentPath(groupItem.key);
-                        setSelectedItemKey(item.id);
-                    }}
-                    onDoubleClick={isDragOverlay ? undefined : () => {
-                        setCurrentPath(groupItem.key);
-                        setSelectedItemKey(item.id);
-                    }}
-                >
-                    <div>
-                        <item.icon className='size-4' />
-                    </div>
-                    <span className={cn(
-                        'grow space-x-2',
-                    )}>
-                        {item.itemKey &&
-                            <span className={cn(
-                                'font-mono',
-                            )}
-                                style={{
-                                    borderColor: item.textColor,
-                                }}
-                            >{item.itemKey}</span>}
-                        <span className='font-semibold italic'>{item.label}</span>
-                    </span>
-                    {item.isConfidential && <span className='p-1'>
-                        <Shield color={item.textColor} className='size-4' />
-                    </span>}
-                    <span className='absolute -left-4 top-0 hidden group-hover:flex items-center h-full'>
-                        <GripVertical className='size-4 text-muted-foreground' />
-                    </span>
-                </Button>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-                <ContextMenuItem
-                    onClick={() => {
-                        const surveyItemToCopy = (props.surveyItem as SurveyGroupItem).items.find(i => i.key === item.id);
-                        if (!surveyItemToCopy) {
-                            toast.error('Item not found');
-                            return;
-                        }
-                        const surveyItemJSON = JSON.stringify(surveyItemToCopy, null, 2);
-                        copy(surveyItemJSON);
-                        toast('Item copied to clipboard');
-                    }}
-                >
-                    <ClipboardCopyIcon className='size-4' />
-                    <span className='ml-2'>Copy</span>
-                </ContextMenuItem>
 
-                <ContextMenuSeparator />
-                <ContextMenuItem
-                    onClick={() => {
-                        if (confirm('Are you sure you want to delete this item?')) {
-                            props.onDeleteItem(item.id);
-                        }
-                    }}
-                >
-                    <TrashIcon className='size-4' />
-                    <span className='ml-2'>Delete</span>
-                </ContextMenuItem>
-            </ContextMenuContent>
-        </ContextMenu >
-
-    }
 
     return (
         <div className='flex-1 pb-6'>
