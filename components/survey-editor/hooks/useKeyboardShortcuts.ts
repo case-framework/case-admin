@@ -4,6 +4,7 @@ export interface KeyboardShortcutHandlers {
     onSave?: () => void;
     onUndo?: () => void;
     onRedo?: () => void;
+    onSearch?: () => void;
 }
 
 export const useKeyboardShortcuts = (handlers: KeyboardShortcutHandlers) => {
@@ -37,6 +38,10 @@ export const useKeyboardShortcuts = (handlers: KeyboardShortcutHandlers) => {
                         event.preventDefault();
                         handlers.onRedo?.();
                     }
+                    break;
+                case 'k':
+                    event.preventDefault();
+                    handlers.onSearch?.();
                     break;
                 default:
                     break;
