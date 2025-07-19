@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useKeyboardShortcuts } from '@/components/survey-editor/hooks/useKeyboardShortcuts';
 import SurveySearch from './survey-search';
+import { isMacOs } from 'react-device-detect';
+
 
 const SearchTrigger: React.FC = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -14,6 +16,8 @@ const SearchTrigger: React.FC = () => {
     useKeyboardShortcuts({
         onSearch: () => setIsSearchOpen(true),
     });
+
+    const shortcutText = isMacOs ? '⌘K' : 'Ctrl+K';
 
     return (
         <>
@@ -30,14 +34,14 @@ const SearchTrigger: React.FC = () => {
 
                         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 bg-muted rounded-md px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                             <span className="text-xs tracking-widest">
-                                {'⌘'}K
+                                {shortcutText}
                             </span>
                         </kbd>
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>
                     <p>Search survey items</p>
-                    <p className="text-xs text-muted-foreground">⌘K</p>
+                    <p className="text-xs text-muted-foreground">{shortcutText}</p>
                 </TooltipContent>
             </Tooltip>
 
