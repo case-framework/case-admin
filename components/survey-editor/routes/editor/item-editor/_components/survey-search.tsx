@@ -41,10 +41,11 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
         }
 
         const results: SearchResult[] = [];
+        const addedItems = new Set<string>(); // Track items already added to prevent duplicates
         const searchLower = searchTerm.toLowerCase().trim();
 
         Object.entries(editor.survey.surveyItems).forEach(([fullKey, item]) => {
-            if (!item || !fullKey) return;
+            if (!item || !fullKey || addedItems.has(fullKey)) return;
 
             const itemInfos = getItemTypeInfos(item);
             const itemColor = getItemColor(item);
@@ -53,6 +54,7 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                 return;
             }
 
+            // Priority 1: Check if key matches (highest priority)
             if (fullKey.toLowerCase().includes(searchLower)) {
                 results.push({
                     fullKey,
@@ -62,8 +64,11 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                     matchType: 'key',
                     matchText: fullKey,
                 });
+                addedItems.add(fullKey);
+                return; // Exit early since we found a match
             }
 
+            // Priority 2: Check if label matches
             if (item.metadata?.itemLabel?.toLowerCase().includes(searchLower)) {
                 results.push({
                     fullKey,
@@ -71,15 +76,19 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                     itemInfos,
                     itemColor,
                     matchType: 'label',
-                    matchText: item.metadata?.itemLabel,
+                    matchText: item.metadata.itemLabel || '', // Ensure string type
                 });
+                addedItems.add(fullKey);
+                return; // Exit early since we found a match
             }
 
+            // Priority 3: Check content across all locales (lowest priority)
             const itemTranslations = editor.survey.getItemTranslations(fullKey);
             if (itemTranslations) {
                 for (const locale of editor.survey.locales) {
                     const localeValues = itemTranslations.getAllForLocale(locale);
                     if (!localeValues) continue;
+
                     for (const key of Object.keys(localeValues)) {
                         const content = localeValues[key];
                         if (content?.content?.toLowerCase().includes(searchLower)) {
@@ -89,8 +98,10 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                                 itemInfos,
                                 itemColor,
                                 matchType: 'content',
-                                matchText: content.content,
+                                matchText: content.content || '', // Ensure string type
                             });
+                            addedItems.add(fullKey);
+                            return; // Exit early since we found a match
                         }
                     }
                 }
