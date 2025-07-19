@@ -200,6 +200,14 @@ export const getItemColor = (surveyItem: SurveyItem): string | undefined => {
     return itemColor;
 }
 
+export interface ItemTypeInfos {
+    key: string;
+    label: string;
+    description: string;
+    defaultItemClassName?: string;
+    icon: LucideIcon;
+}
+
 export const getItemTypeInfos = (item: SurveyItem): { key: string, label: string, description: string, defaultItemClassName?: string, icon: LucideIcon } => {
     if (item.key.isRoot) {
         return SurveyItemTypeRegistry.find(i => i.key === 'root')!;

@@ -1,20 +1,21 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { Search, Command } from 'lucide-react';
+import { FileText, Hash, Search, TagIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { useSurveyEditor } from '@/components/survey-editor/store/useSurveyEditor';
 import { useItemNavigation } from '@/components/survey-editor/store/useItemNavigation';
-import { SurveyItem, SurveyItemKey } from 'survey-engine';
-import { getItemTypeInfos } from '@/components/survey-editor/utils/item-type-infos';
+import { SurveyItem } from 'survey-engine';
+import { getItemColor, getItemTypeInfos, ItemTypeInfos } from '@/components/survey-editor/utils/item-type-infos';
+import ItemTypeIconWithTooltip from './item-editor-card/_components/item-type-icon-with-tooltip';
 
 interface SearchResult {
     item: SurveyItem;
     fullKey: string;
-    itemKey: string;
-    matchType: 'key' | 'translation' | 'label';
+    itemInfos: ItemTypeInfos;
+    itemColor?: string;
+    matchType: 'key' | 'content' | 'label';
     matchText: string;
 }
 
@@ -22,6 +23,8 @@ interface SurveySearchProps {
     isOpen: boolean;
     onOpenChange: (open: boolean) => void;
 }
+
+const SEARCH_LIMIT = 20;
 
 const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => {
     const { editor } = useSurveyEditor();
@@ -43,127 +46,58 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
         Object.entries(editor.survey.surveyItems).forEach(([fullKey, item]) => {
             if (!item || !fullKey) return;
 
-            const itemKeyObj = SurveyItemKey.fromFullKey(fullKey);
-            const itemKey = itemKeyObj.itemKey;
+            const itemInfos = getItemTypeInfos(item);
+            const itemColor = getItemColor(item);
+
+            if (results.length >= SEARCH_LIMIT) {
+                return;
+            }
 
             if (fullKey.toLowerCase().includes(searchLower)) {
                 results.push({
-                    item,
                     fullKey,
-                    itemKey,
+                    item,
+                    itemInfos,
+                    itemColor,
                     matchType: 'key',
                     matchText: fullKey,
                 });
             }
-        });
-        /* Object.entries(editor.survey.surveyItems).forEach(([fullKey, item]) => {
-            if (!item || !fullKey) return;
 
-            try {
-                const itemKeyObj = SurveyItemKey.fromFullKey(fullKey);
-                const itemKey = itemKeyObj.itemKey;
+            if (item.metadata?.itemLabel?.toLowerCase().includes(searchLower)) {
+                results.push({
+                    fullKey,
+                    item,
+                    itemInfos,
+                    itemColor,
+                    matchType: 'label',
+                    matchText: item.metadata?.itemLabel,
+                });
+            }
 
-                // Search in full key
-                if (fullKey.toLowerCase().includes(searchLower)) {
-                    results.push({
-                        item,
-                        fullKey,
-                        itemKey,
-                        matchType: 'key',
-                        matchText: fullKey,
-                    });
-                    return;
-                }
-
-                // Search in item key
-                if (itemKey.toLowerCase().includes(searchLower)) {
-                    results.push({
-                        item,
-                        fullKey,
-                        itemKey,
-                        matchType: 'key',
-                        matchText: itemKey,
-                    });
-                    return;
-                }
-
-                // Search in translations
-                try {
-                    const itemTranslations = editor.survey.getItemTranslations(fullKey);
-                    if (itemTranslations) {
-                        // Check all available locales
-                        const availableLocales = itemTranslations.getAvailableLocales();
-                        for (const locale of availableLocales) {
-                            // Check title translations
-                            const titleContent = itemTranslations.getContent(locale, 'title');
-                            if (titleContent?.content && titleContent.content.toLowerCase().includes(searchLower)) {
-                                results.push({
-                                    item,
-                                    fullKey,
-                                    itemKey,
-                                    matchType: 'translation',
-                                    matchText: titleContent.content,
-                                });
-                                return;
-                            }
-
-                            // Check subtitle translations
-                            const subtitleContent = itemTranslations.getContent(locale, 'subtitle');
-                            if (subtitleContent?.content && subtitleContent.content.toLowerCase().includes(searchLower)) {
-                                results.push({
-                                    item,
-                                    fullKey,
-                                    itemKey,
-                                    matchType: 'translation',
-                                    matchText: subtitleContent.content,
-                                });
-                                return;
-                            }
-                        }
-                    }
-                } catch (error) {
-                    // Continue if translations are not available
-                }
-
-                // Search in components (labels)
-                if (item.components?.items) {
-                    for (const component of item.components.items) {
-                        if (component.translations) {
-                            for (const [locale, translations] of Object.entries(component.translations)) {
-                                for (const [key, value] of Object.entries(translations)) {
-                                    if (typeof value === 'string' && value.toLowerCase().includes(searchLower)) {
-                                        results.push({
-                                            item,
-                                            fullKey,
-                                            itemKey,
-                                            matchType: 'label',
-                                            matchText: value,
-                                        });
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-
-                        // Also search in component content if it's a string
-                        if (typeof component.content === 'string' && component.content.toLowerCase().includes(searchLower)) {
+            const itemTranslations = editor.survey.getItemTranslations(fullKey);
+            if (itemTranslations) {
+                for (const locale of editor.survey.locales) {
+                    const localeValues = itemTranslations.getAllForLocale(locale);
+                    if (!localeValues) continue;
+                    for (const key of Object.keys(localeValues)) {
+                        const content = localeValues[key];
+                        if (content?.content?.toLowerCase().includes(searchLower)) {
                             results.push({
-                                item,
                                 fullKey,
-                                itemKey,
-                                matchType: 'label',
-                                matchText: component.content,
+                                item,
+                                itemInfos,
+                                itemColor,
+                                matchType: 'content',
+                                matchText: content.content,
                             });
-                            return;
                         }
                     }
-                } catch (error) {
-                    // Skip items that can't be processed
-                    console.warn('Error processing survey item:', fullKey, error);
                 }
-            });
- */
-        return results.slice(0, 10); // Limit to 10 results
+            }
+        });
+
+        return results.slice(0, SEARCH_LIMIT);
     }, [editor?.survey, searchTerm]);
 
     const handleSelect = useCallback((result: SearchResult) => {
@@ -222,11 +156,20 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
     const getMatchTypeBadge = (matchType: SearchResult['matchType']) => {
         switch (matchType) {
             case 'key':
-                return <Badge variant="outline" className="text-xs">Key</Badge>;
-            case 'translation':
-                return <Badge variant="outline" className="text-xs">Translation</Badge>;
+                return <span className="text-xs text-muted-foreground flex items-center gap-0.5">
+                    <Hash className="size-3" />
+                    Key:
+                </span>;
+            case 'content':
+                return <span className="text-xs text-muted-foreground flex items-center gap-0.5">
+                    <FileText className="size-3" />
+                    Content:
+                </span>;
             case 'label':
-                return <Badge variant="outline" className="text-xs">Label</Badge>;
+                return <span className="text-xs text-muted-foreground flex items-center gap-0.5">
+                    <TagIcon className="size-3" />
+                    Label:
+                </span>;
             default:
                 return null;
         }
@@ -275,38 +218,46 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                     <div ref={resultsContainerRef} className="max-h-96 overflow-y-auto divide-y divide-border">
                         {searchResults.length > 0 ? (
                             searchResults.map((result, index) => {
-                                const typeInfo = getItemTypeInfos(result.item);
+                                const typeInfo = result.itemInfos;
                                 const isSelected = index === selectedIndex;
 
                                 return (
                                     <div
                                         key={result.fullKey}
                                         ref={(el) => { resultItemRefs.current[index] = el; }}
-                                        className={`flex items-center gap-3 px-4 py-3 cursor-pointer ${isSelected ? 'bg-muted' : 'hover:bg-muted/50'
+                                        className={`px-4 py-3 cursor-pointer space-y-2 ${isSelected ? 'bg-muted' : 'hover:bg-muted/50'
                                             }`}
                                         onClick={() => handleSelect(result)}
                                     >
-                                        <div className="flex items-center gap-2 flex-shrink-0">
-                                            <typeInfo.icon className="w-4 h-4 text-muted-foreground" />
-                                            {getMatchTypeBadge(result.matchType)}
+                                        <div className="flex items-center gap-2 w-full">
+                                            <ItemTypeIconWithTooltip
+                                                item={result.item}
+                                                iconClassName="size-5"
+                                            />
+
+                                            <span className="text-sm font-mono grow text-ellipsis font-medium"
+                                                style={{
+                                                    color: result.itemColor
+                                                }}
+                                            >
+                                                {result.fullKey}
+                                            </span>
+
+
+
+
+                                            <span className="text-sm text-muted-foreground">
+                                                {result.item.metadata?.itemLabel}
+                                            </span>
+
                                         </div>
 
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="font-mono text-sm text-muted-foreground">
-                                                    {highlightMatch(result.fullKey, searchTerm)}
-                                                </span>
-                                            </div>
+                                        <div className="flex items-center gap-2">
+                                            {getMatchTypeBadge(result.matchType)}
 
-                                            <div className="text-sm text-foreground truncate">
+                                            <div className="text-xs text-foreground truncate">
                                                 {highlightMatch(result.matchText, searchTerm)}
                                             </div>
-
-                                            {result.matchType !== 'key' && (
-                                                <div className="text-xs text-muted-foreground mt-1">
-                                                    in {result.matchType}
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 );
