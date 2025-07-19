@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Search, Command } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -28,6 +28,8 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
     const { navigateToItem } = useItemNavigation();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const resultsContainerRef = useRef<HTMLDivElement>(null);
+    const resultItemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     // Get all survey items and search through them
     const searchResults = useMemo(() => {
@@ -201,6 +203,22 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
         }
     }, [isOpen]);
 
+    // Update refs array length when search results change
+    useEffect(() => {
+        resultItemRefs.current = resultItemRefs.current.slice(0, searchResults.length);
+    }, [searchResults.length]);
+
+    // Scroll selected item into view
+    useEffect(() => {
+        const selectedElement = resultItemRefs.current[selectedIndex];
+        if (selectedElement && resultsContainerRef.current) {
+            selectedElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+            });
+        }
+    }, [selectedIndex, searchResults.length]);
+
     const getMatchTypeBadge = (matchType: SearchResult['matchType']) => {
         switch (matchType) {
             case 'key':
@@ -231,12 +249,12 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-2xl p-0 border-border">
+            <DialogContent className="sm:max-w-2xl p-0 border-border overflow-hidden">
                 <DialogTitle className="sr-only">Search Survey Items</DialogTitle>
                 <div className="flex flex-col">
                     {/* Search Header */}
                     <div className="flex items-center px-4 py-3 pe-12 border-b border-border">
-                        <Search className="w-4 h-4 text-muted-foreground mr-2" />
+                        <Search className="size-5 text-muted-foreground mr-2" />
                         <Input
                             placeholder="Search survey items..."
                             value={searchTerm}
@@ -254,7 +272,7 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                     </div>
 
                     {/* Search Results */}
-                    <div className="max-h-96 overflow-y-auto">
+                    <div ref={resultsContainerRef} className="max-h-96 overflow-y-auto divide-y divide-border">
                         {searchResults.length > 0 ? (
                             searchResults.map((result, index) => {
                                 const typeInfo = getItemTypeInfos(result.item);
@@ -263,7 +281,8 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                                 return (
                                     <div
                                         key={result.fullKey}
-                                        className={`flex items-center gap-3 px-4 py-3 cursor-pointer border-b last:border-b-0 ${isSelected ? 'bg-muted' : 'hover:bg-muted/50'
+                                        ref={(el) => { resultItemRefs.current[index] = el; }}
+                                        className={`flex items-center gap-3 px-4 py-3 cursor-pointer ${isSelected ? 'bg-muted' : 'hover:bg-muted/50'
                                             }`}
                                         onClick={() => handleSelect(result)}
                                     >
