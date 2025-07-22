@@ -11,15 +11,18 @@ import SortableWrapper from "@/components/survey-editor/_components/sortable/sor
 import SortableItem from "@/components/survey-editor/_components/sortable/sortable-item";
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSeparator, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { cn } from "@/lib/utils";
-import { ClipboardCopyIcon, Edit3, GripVertical, Shield } from "lucide-react";
+import { ClipboardCopyIcon, Edit3, GripVertical, PlusIcon, Shield } from "lucide-react";
 import { DeleteItemContextMenuItem } from "./delete-item-context-menu";
 import { getItemColor, getItemTypeInfos } from "@/components/survey-editor/utils/item-type-infos";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useItemEditor } from "../../item-editor-context";
 
 
 const GroupItems = () => {
     const { editor } = useSurveyEditor();
     let { selectedItemKey } = useItemNavigation();
     const { navigateToItem } = useItemNavigation();
+    const { openAddItemDialog } = useItemEditor();
 
     const [itemKeyForPreview, setItemKeyForPreview] = useState<string | null>(null);
 
@@ -148,9 +151,18 @@ const GroupItems = () => {
                         </div>
                         <p className='text-xs text-muted-foreground italic'>Double click on item to open it, drag and drop to reorder.</p>
                     </div>
-                    <div>
-                        add
-                    </div>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button variant="ghost" size="icon"
+                                className="-mr-2"
+                                onClick={() => openAddItemDialog()}>
+                                <PlusIcon className="size-4" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            Add new item
+                        </TooltipContent>
+                    </Tooltip>
                 </div>
 
                 {(groupItem.items?.length ?? 0) < 1 &&
