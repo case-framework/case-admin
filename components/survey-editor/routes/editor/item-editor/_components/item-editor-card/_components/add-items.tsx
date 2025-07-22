@@ -6,33 +6,48 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { useSurveyEditor } from '@/components/survey-editor/store/useSurveyEditor';
 import { useItemNavigation } from '@/components/survey-editor/store/useItemNavigation';
 import { useClipboardValue } from '@/hooks/useClipboardValue';
-import { SurveyItemTypeRegistry } from '@/components/survey-editor/utils/item-type-infos';
-import { SurveyItemType, SingleChoiceQuestionItem, GroupItem, MultipleChoiceQuestionItem, SurveyItemTranslations, ItemComponentType } from 'survey-engine';
+import { ItemTypeInfos, SurveyItemTypeRegistry } from '@/components/survey-editor/utils/item-type-infos';
+import { SurveyItemType, GroupItem, SurveyItemTranslations } from 'survey-engine';
 import { Clipboard, Folder, Users, CornerDownLeft, Info } from 'lucide-react';
 import { toast } from 'sonner';
+import { useItemEditor } from '../../item-editor-context';
+import { cn } from '@/lib/utils';
 
-interface AddItemDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    parentKey?: string;
-    targetIndex?: number;
+
+interface ItemTypeOption extends ItemTypeInfos {
+    categories: Array<'structure' | 'display' | 'question' | 'special'>;
 }
 
-interface ItemTypeOption {
-    id: string;
-    label: string;
-    description: string;
-    icon: React.ComponentType<any>;
-    category: 'structure' | 'questions' | 'inputs' | 'special';
-    action: () => void;
-}
+const itemTypeOptions: ItemTypeOption[] = [
+    {
+        ...SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.Group)!,
+        categories: ['structure']
+    },
+    {
+        ...SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.PageBreak)!,
+        categories: ['structure']
+    },
+    {
+        ...SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.SurveyEnd)!,
+        categories: ['structure']
+    },
+    {
+        ...SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.Display)!,
+        categories: ['display']
+    },
+    {
+        ...SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.SingleChoiceQuestion)!,
+        categories: ['question']
+    },
+    {
+        ...SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.MultipleChoiceQuestion)!,
+        categories: ['question']
+    }
+]
 
-export const AddItemDialog: React.FC<AddItemDialogProps> = ({
-    open,
-    onOpenChange,
-    parentKey,
-    targetIndex
-}) => {
+
+export const AddItemDialog: React.FC = () => {
+    const { addItemDialogOpen, setAddItemDialogOpen } = useItemEditor();
     const { editor } = useSurveyEditor();
     const { selectedItemKey } = useItemNavigation();
     const [search, setSearch] = useState('');
@@ -40,8 +55,18 @@ export const AddItemDialog: React.FC<AddItemDialogProps> = ({
 
     // Determine the target group where the item would be added
     const targetGroupInfo = useMemo(() => {
-        if (!editor || !selectedItemKey) {
+        if (!editor) {
             return null;
+        }
+
+        if (!selectedItemKey) {
+            const itemCount = editor.survey.rootItem.items?.length || 0;
+            return {
+                key: editor.survey.surveyKey,
+                label: 'Survey Root',
+                isRoot: true,
+                itemCount: itemCount
+            };
         }
 
         const selectedItem = editor.survey.surveyItems[selectedItemKey];
@@ -89,376 +114,151 @@ export const AddItemDialog: React.FC<AddItemDialogProps> = ({
         }
     }, [clipboardValue]);
 
-    const generateNewItemKey = useCallback((itemType: string) => {
-        const surveyKey = editor?.survey.surveyKey || 'survey';
-        const parentKeyToUse = parentKey || targetGroupInfo?.key || surveyKey;
-        const timestamp = Date.now().toString().slice(-6); // Last 6 digits for shorter key
-        const itemCount = Object.keys(editor?.survey.surveyItems || {}).length;
-        return `${parentKeyToUse}.${itemType}_${itemCount}_${timestamp}`;
-    }, [editor, parentKey, targetGroupInfo]);
-
-    const createSingleChoiceQuestion = useCallback(() => {
-        try {
-            const newItemKey = generateNewItemKey('scq');
-            const item = SingleChoiceQuestionItem.fromJson(newItemKey, {
-                itemType: SurveyItemType.SingleChoiceQuestion,
-                header: {
-                    title: {
-                        key: 'title',
-                        type: ItemComponentType.Text
-                    }
-                },
-                responseConfig: {
-                    type: ItemComponentType.SingleChoice,
-                    key: 'scg',
-                    items: [
-                        {
-                            key: 'option1',
-                            type: ItemComponentType.ScgMcgOption,
-                        },
-                        {
-                            key: 'option2',
-                            type: ItemComponentType.ScgMcgOption,
-                        },
-                    ]
-                }
-            });
-            const targetParentKey = parentKey || targetGroupInfo?.key;
-            editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, item, new SurveyItemTranslations());
-            toast.success('Single choice question added');
-            onOpenChange(false);
-        } catch (error) {
-            console.error('Failed to create single choice question:', error);
-            toast.error('Failed to add single choice question');
-        }
-    }, [editor, parentKey, targetIndex, generateNewItemKey, onOpenChange, targetGroupInfo]);
-
-    const createMultipleChoiceQuestion = useCallback(() => {
-        try {
-            const newItemKey = generateNewItemKey('mcq');
-            const item = MultipleChoiceQuestionItem.fromJson(newItemKey, {
-                itemType: SurveyItemType.MultipleChoiceQuestion,
-                header: {
-                    title: {
-                        key: 'title',
-                        type: ItemComponentType.Text
-                    }
-                },
-                responseConfig: {
-                    type: ItemComponentType.MultipleChoice,
-                    key: 'mcg',
-                    items: [
-                        {
-                            key: 'option1',
-                            type: ItemComponentType.ScgMcgOption,
-                        },
-                        {
-                            key: 'option2',
-                            type: ItemComponentType.ScgMcgOption,
-                        },
-                    ]
-                }
-            });
-            const targetParentKey = parentKey || targetGroupInfo?.key;
-            editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, item, new SurveyItemTranslations());
-            toast.success('Multiple choice question added');
-            onOpenChange(false);
-        } catch (error) {
-            console.error('Failed to create multiple choice question:', error);
-            toast.error('Failed to add multiple choice question');
-        }
-    }, [editor, parentKey, targetIndex, generateNewItemKey, onOpenChange, targetGroupInfo]);
-
-    const createGroup = useCallback(() => {
-        try {
-            const newItemKey = generateNewItemKey('group');
-            const item = GroupItem.fromJson(newItemKey, {
-                itemType: SurveyItemType.Group
-            });
-            const targetParentKey = parentKey || targetGroupInfo?.key;
-            editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, item, new SurveyItemTranslations());
-            toast.success('Group added');
-            onOpenChange(false);
-        } catch (error) {
-            console.error('Failed to create group:', error);
-            toast.error('Failed to add group');
-        }
-    }, [editor, parentKey, targetIndex, generateNewItemKey, onOpenChange, targetGroupInfo]);
-
-    const createPageBreak = useCallback(() => {
-        try {
-            const newItemKey = generateNewItemKey('pageBreak');
-            // Create a basic page break item using the fromJson pattern
-            const item = SingleChoiceQuestionItem.fromJson(newItemKey, {
-                itemType: SurveyItemType.PageBreak,
-                responseConfig: {
-                    type: ItemComponentType.SingleChoice,
-                    key: 'scg',
-                    items: []
-                }
-            });
-            const targetParentKey = parentKey || targetGroupInfo?.key;
-            editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, item, new SurveyItemTranslations());
-            toast.success('Page break added');
-            onOpenChange(false);
-        } catch (error) {
-            console.error('Failed to add page break:', error);
-            toast.error('Failed to add page break');
-        }
-    }, [editor, parentKey, targetIndex, generateNewItemKey, onOpenChange, targetGroupInfo]);
-
-    const createSurveyEnd = useCallback(() => {
-        try {
-            const newItemKey = generateNewItemKey('surveyEnd');
-            // Create a basic survey end item
-            const item = SingleChoiceQuestionItem.fromJson(newItemKey, {
-                itemType: SurveyItemType.SurveyEnd,
-                responseConfig: {
-                    type: ItemComponentType.SingleChoice,
-                    key: 'scg',
-                    items: []
-                }
-            });
-            const targetParentKey = parentKey || targetGroupInfo?.key;
-            editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, item, new SurveyItemTranslations());
-            toast.success('Survey end content added');
-            onOpenChange(false);
-        } catch (error) {
-            console.error('Failed to add survey end:', error);
-            toast.error('Failed to add survey end content');
-        }
-    }, [editor, parentKey, targetIndex, generateNewItemKey, onOpenChange, targetGroupInfo]);
-
-    const createDisplay = useCallback(() => {
-        try {
-            const newItemKey = generateNewItemKey('display');
-            // Create a basic display item
-            const item = SingleChoiceQuestionItem.fromJson(newItemKey, {
-                itemType: SurveyItemType.Display,
-                header: {
-                    title: {
-                        key: 'title',
-                        type: ItemComponentType.Text
-                    }
-                },
-                responseConfig: {
-                    type: ItemComponentType.SingleChoice,
-                    key: 'scg',
-                    items: []
-                }
-            });
-            const targetParentKey = parentKey || targetGroupInfo?.key;
-            editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, item, new SurveyItemTranslations());
-            toast.success('Display item added');
-            onOpenChange(false);
-        } catch (error) {
-            console.error('Failed to add display item:', error);
-            toast.error('Failed to add display item');
-        }
-    }, [editor, parentKey, targetIndex, generateNewItemKey, onOpenChange, targetGroupInfo]);
 
     const pasteFromClipboard = useCallback(async () => {
-        try {
-            if (!clipboardValue) {
-                updateClipboardValue();
-                return;
-            }
+        /*  try {
+             if (!clipboardValue) {
+                 updateClipboardValue();
+                 return;
+             }
 
-            const content = JSON.parse(clipboardValue);
+             const content = JSON.parse(clipboardValue);
 
-            if (!content || !content.key || content.key === '') {
-                toast.error('Clipboard content is not valid survey item');
-                return;
-            }
+             if (!content || !content.key || content.key === '') {
+                 toast.error('Clipboard content is not valid survey item');
+                 return;
+             }
 
-            const oldKey = content.key as string;
-            let copiedItemKey = oldKey.split('.').pop();
+             const oldKey = content.key as string;
+             let copiedItemKey = oldKey.split('.').pop();
 
-            if (copiedItemKey === undefined) {
-                toast.error('Clipboard content is not valid');
-                return;
-            }
+             if (copiedItemKey === undefined) {
+                 toast.error('Clipboard content is not valid');
+                 return;
+             }
 
-            // Check if item already exists and modify key if needed
-            const surveyKey = editor?.survey.surveyKey || 'survey';
-            const targetParentKey = parentKey || targetGroupInfo?.key || surveyKey;
-            const existingItems = editor?.survey.rootItem.items || [];
+             // Check if item already exists and modify key if needed
+             const surveyKey = editor?.survey.surveyKey || 'survey';
+             const targetParentKey = parentKey || targetGroupInfo?.key || surveyKey;
+             const existingItems = editor?.survey.rootItem.items || [];
 
-            if (existingItems.includes(`${targetParentKey}.${copiedItemKey}`)) {
-                copiedItemKey = copiedItemKey + '_copy';
-            }
+             if (existingItems.includes(`${targetParentKey}.${copiedItemKey}`)) {
+                 copiedItemKey = copiedItemKey + '_copy';
+             }
 
-            const newKey = `${targetParentKey}.${copiedItemKey}`;
+             const newKey = `${targetParentKey}.${copiedItemKey}`;
 
-            // Replace all instances of the old key with the new key in the JSON
-            const keyRegex = new RegExp(`"${oldKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\.|")`, 'g');
-            const newClipboardContent = clipboardValue.replace(keyRegex, (_match, suffix) => {
-                return `"${newKey}${suffix}`;
-            });
+             // Replace all instances of the old key with the new key in the JSON
+             const keyRegex = new RegExp(`"${oldKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\.|")`, 'g');
+             const newClipboardContent = clipboardValue.replace(keyRegex, (_match, suffix) => {
+                 return `"${newKey}${suffix}`;
+             });
 
-            const contentToInsert = JSON.parse(newClipboardContent);
+             const contentToInsert = JSON.parse(newClipboardContent);
 
-            // Use the SurveyEditor API to add the item
-            editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, contentToInsert, new SurveyItemTranslations());
+             // Use the SurveyEditor API to add the item
+             editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, contentToInsert, new SurveyItemTranslations());
 
-            toast.success('Item pasted from clipboard');
-            onOpenChange(false);
-        } catch (error) {
-            console.error('Error pasting from clipboard:', error);
-            toast.error('Error reading clipboard content');
-        }
-    }, [clipboardValue, updateClipboardValue, onOpenChange, editor, parentKey, targetIndex, targetGroupInfo]);
-
-    const itemTypeOptions: ItemTypeOption[] = useMemo(() => {
-        const options: ItemTypeOption[] = [];
-
-        // Add paste option if clipboard has valid content
-        if (hasValidClipboardItem) {
-            options.push({
-                id: 'paste',
-                label: 'Paste from clipboard',
-                description: 'Paste a previously copied survey item',
-                icon: Clipboard,
-                category: 'special',
-                action: pasteFromClipboard
-            });
-        }
-
-        // Add structure items
-        options.push(
-            {
-                id: 'group',
-                label: 'Group',
-                description: 'A container for organizing survey items',
-                icon: Folder,
-                category: 'structure',
-                action: createGroup
-            }
-        );
-
-        // Add question types
-        options.push(
-            {
-                id: 'singleChoice',
-                label: 'Single Choice Question',
-                description: 'Radio buttons - participant can select one option',
-                icon: SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.SingleChoiceQuestion)?.icon || Users,
-                category: 'questions',
-                action: createSingleChoiceQuestion
-            },
-            {
-                id: 'multipleChoice',
-                label: 'Multiple Choice Question',
-                description: 'Checkboxes - participant can select multiple options',
-                icon: SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.MultipleChoiceQuestion)?.icon || Users,
-                category: 'questions',
-                action: createMultipleChoiceQuestion
-            }
-        );
-
-        // Add other types
-        options.push(
-            {
-                id: 'display',
-                label: 'Display Item',
-                description: 'Show text or instructions without collecting responses',
-                icon: Info,
-                category: 'special',
-                action: createDisplay
-            },
-            {
-                id: 'pageBreak',
-                label: 'Page Break',
-                description: 'Force items after this to appear on a new page',
-                icon: CornerDownLeft,
-                category: 'structure',
-                action: createPageBreak
-            },
-            {
-                id: 'surveyEnd',
-                label: 'Survey End Content',
-                description: 'Content shown next to the submit button',
-                icon: SurveyItemTypeRegistry.find(i => i.key === SurveyItemType.SurveyEnd)?.icon || Users,
-                category: 'special',
-                action: createSurveyEnd
-            }
-        );
-
-        return options;
-    }, [hasValidClipboardItem, pasteFromClipboard, createGroup, createPageBreak, createSingleChoiceQuestion, createMultipleChoiceQuestion, createDisplay, createSurveyEnd]);
+             toast.success('Item pasted from clipboard');
+             onOpenChange(false);
+         } catch (error) {
+             console.error('Error pasting from clipboard:', error);
+             toast.error('Error reading clipboard content');
+         } */
+    }, [clipboardValue, updateClipboardValue, editor, targetGroupInfo]);
 
     const filteredOptions = useMemo(() => {
         if (!search.trim()) return itemTypeOptions;
 
         const searchTerm = search.toLowerCase();
+        itemTypeOptions.forEach(option => {
+            console.log(option.label, option.description, option.categories);
+            console.log(option.description.toLowerCase().includes(searchTerm))
+        });
+        console.log(searchTerm, itemTypeOptions.filter(option =>
+            option.label.toLowerCase().includes(searchTerm) ||
+            option.description.toLowerCase().includes(searchTerm) ||
+            option.categories.some(category => category.toLowerCase().includes(searchTerm))
+        ));
         return itemTypeOptions.filter(option =>
             option.label.toLowerCase().includes(searchTerm) ||
             option.description.toLowerCase().includes(searchTerm) ||
-            option.category.toLowerCase().includes(searchTerm)
+            option.categories.some(category => category.toLowerCase().includes(searchTerm))
         );
+
+
     }, [itemTypeOptions, search]);
 
     const groupedOptions = useMemo(() => {
         const groups: Record<string, ItemTypeOption[]> = {
-            special: [],
             structure: [],
-            questions: [],
-            inputs: []
+            display: [],
+            question: [],
+            special: []
         };
 
         filteredOptions.forEach(option => {
-            groups[option.category].push(option);
+            option.categories.forEach(category => {
+                groups[category].push(option);
+            });
         });
 
         return Object.entries(groups).filter(([, options]) => options.length > 0);
     }, [filteredOptions]);
 
+    console.log(groupedOptions);
+
     const handleSelectOption = useCallback((option: ItemTypeOption) => {
-        option.action();
-        onOpenChange(false);
+        // option.action();
+        //onOpenChange(false);
+        setAddItemDialogOpen(false);
         setSearch('');
-    }, [onOpenChange]);
+    }, []);
 
     const getCategoryLabel = (category: string): string => {
         switch (category) {
             case 'special': return 'Special Items';
+            case 'display': return 'Display';
+            case 'question': return 'Questions';
             case 'structure': return 'Structure';
-            case 'questions': return 'Questions';
-            case 'inputs': return 'Input Components';
             default: return category;
         }
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="p-0 max-w-2xl">
-                <DialogHeader className="px-6 pt-6 pb-2">
+        <Dialog open={addItemDialogOpen} onOpenChange={setAddItemDialogOpen}>
+            <DialogContent className="p-0 max-w-2xl border-border bg-muted">
+                <DialogHeader className="px-6 pt-6">
                     <DialogTitle>Add Survey Item</DialogTitle>
                     <DialogDescription>
                         {targetGroupInfo ? (
-                            <div className="flex items-center gap-2 mt-2 p-3 bg-muted/50 rounded-lg">
+                            <span className="flex items-center gap-2 p-2 mt-1 bg-white/50 rounded-lg border border-border">
                                 <Folder className="w-4 h-4 text-muted-foreground" />
-                                <span className="text-sm">
+                                <span className="text-xs">
                                     Adding to: <span className="font-medium">{targetGroupInfo.label}</span>
                                     {targetGroupInfo.itemCount > 0 && (
                                         <span className="text-muted-foreground"> ({targetGroupInfo.itemCount} items)</span>
                                     )}
                                 </span>
-                            </div>
+                            </span>
                         ) : (
                             'Search and select the type of survey item to add'
                         )}
                     </DialogDescription>
                 </DialogHeader>
 
-                <Command className="border-none">
+                <Command className="border-none rounded-t-none"
+                    shouldFilter={false}
+                >
                     <CommandInput
                         placeholder="Search item types..."
                         value={search}
                         onValueChange={setSearch}
-                        className="border-none focus:ring-0"
+                        className="border-none rounded-none focus:ring-0"
+                        containerClassName="border-b border-border h-11 bg-white drop-shadow-sm"
                     />
-                    <CommandList className="max-h-96">
+
+                    <CommandList className="max-h-96 border-border">
                         <CommandEmpty>No item types found.</CommandEmpty>
 
                         {groupedOptions.map(([category, options]) => (
@@ -467,17 +267,17 @@ export const AddItemDialog: React.FC<AddItemDialogProps> = ({
                                     const IconComponent = option.icon;
                                     return (
                                         <CommandItem
-                                            key={option.id}
+                                            key={option.key}
                                             value={option.label}
                                             onSelect={() => handleSelectOption(option)}
-                                            className="flex items-center gap-3 p-3 cursor-pointer"
+                                            className="flex items-center gap-3 px-2 py-1.5 cursor-pointer border border-border mb-1"
                                         >
-                                            <div className="flex items-center justify-center w-8 h-8 rounded bg-muted">
-                                                <IconComponent className="w-4 h-4" />
+                                            <div className="flex items-center justify-center size-7">
+                                                <IconComponent className={cn("w-4 h-4", option.defaultItemClassName)} />
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <div className="font-medium">{option.label}</div>
-                                                <div className="text-sm text-muted-foreground">
+                                                <div className="text-xs text-muted-foreground">
                                                     {option.description}
                                                 </div>
                                             </div>
