@@ -33,8 +33,7 @@ const ItemPreview = ({ item }: ItemPreviewProps) => {
     const isMountedRef = useRef(true);
     const abortControllerRef = useRef<AbortController | null>(null);
 
-    const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
-    const { editor } = useSurveyEditor();
+    const { selectedLanguage, editor } = useSurveyEditor();
     const { navigateToItem } = useItemNavigation();
 
     const [surveyEngine] = useState<SurveyEngineCore>(new SurveyEngineCore(
@@ -239,7 +238,7 @@ const ItemPreview = ({ item }: ItemPreviewProps) => {
             <SurveyContextProvider
                 survey={surveyEngine.survey}
                 onRunExternalHandler={undefined}
-                locale={selectedLanguage}
+                locale={selectedLanguage ?? 'en'}
                 surveyEngine={surveyEngine}
             >
                 <SurveyItemRenderer
