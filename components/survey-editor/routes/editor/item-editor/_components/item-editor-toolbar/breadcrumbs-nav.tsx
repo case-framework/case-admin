@@ -1,16 +1,19 @@
 import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEditor";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ChevronDownIcon, CornerLeftUpIcon, FolderTree } from "lucide-react";
+import { ChevronDownIcon, CornerLeftUpIcon, FolderTree, PlusIcon } from "lucide-react";
 import { useItemNavigation } from "../../../../../store/useItemNavigation";
 import { GroupItem, SurveyItemKey } from "survey-engine";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Fragment } from "react";
+import { useItemEditor } from "../item-editor-context";
+
 
 const BreadcrumbsNav: React.FC = () => {
 
     const { editor } = useSurveyEditor();
     const { selectedItemKey, navigateToItem } = useItemNavigation();
+    const { openAddItemDialog } = useItemEditor();
 
     const getBreadcrumbItems = (itemKey: string | undefined) => {
         if (!itemKey) {
@@ -86,6 +89,16 @@ const BreadcrumbsNav: React.FC = () => {
                                     </DropdownMenuRadioItem>
                                 ))}
                             </DropdownMenuRadioGroup>
+
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                onClick={() => openAddItemDialog()}
+                            >
+                                <span className="flex items-center gap-2 text-xs">
+                                    <PlusIcon className="size-4 text-muted-foreground" />
+                                    Add new item
+                                </span>
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </BreadcrumbItem>
