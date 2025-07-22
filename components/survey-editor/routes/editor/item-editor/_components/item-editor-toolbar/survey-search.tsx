@@ -8,7 +8,7 @@ import { useSurveyEditor } from '@/components/survey-editor/store/useSurveyEdito
 import { useItemNavigation } from '@/components/survey-editor/store/useItemNavigation';
 import { SurveyItem } from 'survey-engine';
 import { getItemColor, getItemTypeInfos, ItemTypeInfos } from '@/components/survey-editor/utils/item-type-infos';
-import ItemTypeIconWithTooltip from './item-editor-card/_components/item-type-icon-with-tooltip';
+import ItemTypeIconWithTooltip from '../item-editor-card/_components/item-type-icon-with-tooltip';
 
 interface SearchResult {
     item: SurveyItem;

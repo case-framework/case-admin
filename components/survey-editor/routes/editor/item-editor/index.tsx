@@ -1,13 +1,16 @@
 import { useSurveyEditor } from "../../../store/useSurveyEditor";
-import BreadcrumbsNav from "./_components/breadcrumbs-nav";
 import ItemEditorCard from "./_components/item-editor-card";
-import SearchTrigger from "./_components/search-trigger";
-import LanguagePicker from "./_components/language-picker";
+
 import { Loader2 } from "lucide-react";
+import { AddItemDialog } from "./_components/item-editor-card/_components/add-items";
+import { useItemNavigation } from "../../../store/useItemNavigation";
+import { ItemEditorProvider, useItemEditor } from "./_components/item-editor-context";
+import ItemEditorToolbar from "./_components/item-editor-toolbar/item-editor-toolbar";
 
-
-const ItemEditor = () => {
-    const { isEditorReady, isInitializing } = useSurveyEditor();
+const ItemEditorContent = () => {
+    const { isEditorReady, isInitializing, editor } = useSurveyEditor();
+    const { selectedItemKey } = useItemNavigation();
+    const { addItemDialogOpen, setAddItemDialogOpen, openAddItemDialog } = useItemEditor();
 
     if (isInitializing || !isEditorReady) {
         return <div className="relative h-full flex items-center justify-center">
@@ -15,20 +18,26 @@ const ItemEditor = () => {
                 <Loader2 className="size-4 animate-spin" />
                 Loading...
             </p>
-
         </div>
     }
 
     return <div className="space-y-4">
-        <div className="flex items-center justify-between gap-4">
-            <BreadcrumbsNav />
-            <div className="flex items-center gap-4">
-                <SearchTrigger />
-                <LanguagePicker />
-            </div>
-        </div>
+        <ItemEditorToolbar />
         <ItemEditorCard />
+        <AddItemDialog
+            open={addItemDialogOpen}
+            onOpenChange={setAddItemDialogOpen}
+            parentKey={selectedItemKey}
+        />
     </div>
+}
+
+const ItemEditor = () => {
+    return (
+        <ItemEditorProvider>
+            <ItemEditorContent />
+        </ItemEditorProvider>
+    );
 }
 
 export default ItemEditor;

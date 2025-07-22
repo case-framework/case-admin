@@ -38,9 +38,7 @@ const GroupItems = () => {
 
     const [draggedId, setDraggedId] = useState<string | null>(null);
 
-
     const draggedItem = draggedId ? currentItems.find(item => item.id === draggedId) : null;
-
 
     const renderRowItem = (i: number, isDragOverlay: boolean) => {
         const itemKey = currentItems[i].id;
@@ -154,8 +152,6 @@ const GroupItems = () => {
                         add
                     </div>
                 </div>
-
-
 
                 {(groupItem.items?.length ?? 0) < 1 &&
                     <p className='text-sm text-center my-32 text-muted-foreground'>TODO: Add first item to start.</p>
