@@ -2,7 +2,7 @@ import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEdito
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Edit3, Languages } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 
 const LanguagePicker = () => {
@@ -10,16 +10,16 @@ const LanguagePicker = () => {
     const navigate = useNavigate();
 
     // Get available locales from the survey, default to English if none available
-    const availableLocales = editor?.survey?.locales || [];
-    if (availableLocales.length < 1) {
-        availableLocales.push('en')
-    }
+    const availableLocales = useMemo(() => {
+        const locales = editor?.survey?.locales || [];
+        return locales.length > 0 ? [...locales] : ['en'];
+    }, [editor?.survey?.locales]);
 
     useEffect(() => {
         if (selectedLanguage && !availableLocales.includes(selectedLanguage)) {
-            setSelectedLanguage(availableLocales.at(0) ?? 'en')
+            setSelectedLanguage(availableLocales[0] ?? 'en');
         }
-    }, [availableLocales, selectedLanguage])
+    }, [availableLocales, selectedLanguage]);
 
     const handleEditLanguages = () => {
         navigate("/editor/translation-mode");
@@ -41,7 +41,6 @@ const LanguagePicker = () => {
             <DropdownMenuContent align="end" className="border-border">
                 <DropdownMenuLabel>Languages:</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={selectedLanguage ?? 'en'} onValueChange={setSelectedLanguage}>
-                    {availableLocales.length < 1 && <p className="text-muted-foreground text-xs px-4 py-2">No languages available</p>}
                     {availableLocales.map((locale) => (
                         <DropdownMenuRadioItem key={locale} value={locale}>
                             {locale}
