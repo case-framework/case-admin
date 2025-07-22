@@ -166,7 +166,7 @@ const GroupItems = () => {
                 </div>
 
                 {(groupItem.items?.length ?? 0) < 1 &&
-                    <p className='text-sm text-center my-32 text-muted-foreground'>TODO: Add first item to start.</p>
+                    <p className='text-sm text-center my-32 text-muted-foreground'>This group is empty. Start adding items now...</p>
                 }
 
                 <SortableWrapper
@@ -191,46 +191,15 @@ const GroupItems = () => {
                     </ol>
                 </SortableWrapper>
 
-                <Button
-                    variant="outline"
-                    onClick={() => {
-                        const newItemKey = editor?.survey.surveyKey + '.' + Object.keys(editor?.survey.surveyItems || {}).length;
-                        console.log(newItemKey);
-                        editor?.addItem(undefined, SingleChoiceQuestionItem.fromJson(newItemKey, {
-                            itemType: SurveyItemType.SingleChoiceQuestion,
-                            header: {
-                                title: {
-                                    key: 'title',
-                                    type: ItemComponentType.Text
-                                },
-                                subtitle: {
-                                    key: 'subtitle',
-                                    type: ItemComponentType.Text
-                                }
-                            },
-
-                            responseConfig: {
-                                type: ItemComponentType.SingleChoice,
-                                key: 'scg',
-                                properties: {
-                                    shuffleItems: true
-                                },
-                                items: [
-                                    {
-                                        key: 'A1',
-                                        type: ItemComponentType.ScgMcgOption,
-                                    },
-                                    {
-                                        key: 'A2',
-                                        type: ItemComponentType.ScgMcgOption,
-                                    },
-                                ]
-                            }
-                        }), new SurveyItemTranslations())
-                    }}
-                >
-                    Add item
-                </Button >
+                <div className="flex justify-center">
+                    <Button
+                        variant="outline"
+                        onClick={() => openAddItemDialog()}
+                    >
+                        <PlusIcon className="size-4" />
+                        Add item
+                    </Button >
+                </div>
             </div>
         </div>
 
