@@ -3,8 +3,9 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 interface ItemEditorContextType {
     addItemDialogOpen: boolean;
     setAddItemDialogOpen: (open: boolean) => void;
-    openAddItemDialog: () => void;
+    openAddItemDialog: (targetParentKey?: string) => void;
     closeAddItemDialog: () => void;
+    targetParentKey: string | undefined;
 }
 
 const ItemEditorContext = createContext<ItemEditorContextType | undefined>(undefined);
@@ -15,8 +16,12 @@ interface ItemEditorProviderProps {
 
 export const ItemEditorProvider: React.FC<ItemEditorProviderProps> = ({ children }) => {
     const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
+    const [targetParentKey, setTargetParentKey] = useState<string | undefined>(undefined);
 
-    const openAddItemDialog = () => setAddItemDialogOpen(true);
+    const openAddItemDialog = (targetParentKey?: string) => {
+        setTargetParentKey(targetParentKey);
+        setAddItemDialogOpen(true);
+    };
     const closeAddItemDialog = () => setAddItemDialogOpen(false);
 
     const value: ItemEditorContextType = {
@@ -24,6 +29,7 @@ export const ItemEditorProvider: React.FC<ItemEditorProviderProps> = ({ children
         setAddItemDialogOpen,
         openAddItemDialog,
         closeAddItemDialog,
+        targetParentKey,
     };
 
     return (
