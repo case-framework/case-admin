@@ -1,7 +1,7 @@
 import { useItemNavigation } from "@/components/survey-editor/store/useItemNavigation";
 import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEditor";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { GroupItem, QuestionItem, SurveyItemType } from "survey-engine";
 import {
     GroupItemEditor
@@ -210,7 +210,12 @@ const GroupItems = () => {
         </div>
 
         <div className="flex-1 pt-2 px-4 pb-4">
-            <ItemPreview item={editor?.survey.surveyItems[itemKeyForPreview as string]} />
+            <Suspense>
+                <ItemPreview
+                    key={itemKeyForPreview}
+                    item={editor?.survey.surveyItems[itemKeyForPreview as string]}
+                />
+            </Suspense>
         </div>
     </div>
 }

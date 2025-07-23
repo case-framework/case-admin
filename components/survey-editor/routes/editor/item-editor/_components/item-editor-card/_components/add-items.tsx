@@ -50,7 +50,7 @@ const itemTypeOptions: ItemTypeOption[] = [
 export const AddItemDialog: React.FC = () => {
     const { addItemDialogOpen, setAddItemDialogOpen, targetParentKey } = useItemEditor();
     const { editor } = useSurveyEditor();
-    const { selectedItemKey } = useItemNavigation();
+    const { selectedItemKey, navigateToItem } = useItemNavigation();
     const [search, setSearch] = useState('');
     const [clipboardValue, updateClipboardValue] = useClipboardValue();
 
@@ -246,6 +246,11 @@ export const AddItemDialog: React.FC = () => {
                     break;
             }
             toast.success(`Item added: ${newKey}`);
+            if (option.key === SurveyItemType.PageBreak) {
+                navigateToItem(targetGroupInfo?.key);
+            } else {
+                navigateToItem(newKey);
+            }
         }
 
 
