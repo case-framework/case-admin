@@ -1,9 +1,15 @@
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import ItemEditorCard, { CommonItemEditorCardProps } from "./_components/item-editor-card";
-import { Edit3, Eye, Filter } from "lucide-react";
+import { Edit3, Eye, Filter, List } from "lucide-react";
 import { TabsContent } from "@/components/ui/tabs";
+import GroupItems from "./_components/group-items";
 
 const editorModes = [
+    {
+        id: "items",
+        label: "Items",
+        icon: List,
+    },
     {
         id: "structure",
         label: "Structure",
@@ -39,8 +45,10 @@ const EditorCardForGroup: React.FC<CommonItemEditorCardProps> = (props) => {
         }}
         navItems={editorModes}
     >
-        <TabsContent value="structure" className="space-y-4">
-            todo: structure tab
+        <TabsContent value="items"
+            className="flex flex-col"
+        >
+            <GroupItems />
         </TabsContent>
     </ItemEditorCard>
 }

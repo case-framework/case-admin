@@ -7,8 +7,9 @@ import { useSurveyEditor } from '@/components/survey-editor/store/useSurveyEdito
 import { useItemNavigation } from '@/components/survey-editor/store/useItemNavigation';
 import { useClipboardValue } from '@/hooks/useClipboardValue';
 import { ItemTypeInfos, SurveyItemTypeRegistry } from '@/components/survey-editor/utils/item-type-infos';
-import { SurveyItemType, GroupItem, SurveyItemTranslations } from 'survey-engine';
-import { Clipboard, Folder, Users, CornerDownLeft, Info } from 'lucide-react';
+import { SurveyItemType, GroupItem } from 'survey-engine';
+import { ItemInitHelper } from 'survey-engine/editor';
+import { Folder } from 'lucide-react';
 import { toast } from 'sonner';
 import { useItemEditor } from '../../item-editor-context';
 import { cn } from '@/lib/utils';
@@ -47,7 +48,7 @@ const itemTypeOptions: ItemTypeOption[] = [
 
 
 export const AddItemDialog: React.FC = () => {
-    const { addItemDialogOpen, setAddItemDialogOpen } = useItemEditor();
+    const { addItemDialogOpen, setAddItemDialogOpen, targetParentKey } = useItemEditor();
     const { editor } = useSurveyEditor();
     const { selectedItemKey } = useItemNavigation();
     const [search, setSearch] = useState('');
@@ -57,6 +58,18 @@ export const AddItemDialog: React.FC = () => {
     const targetGroupInfo = useMemo(() => {
         if (!editor) {
             return null;
+        }
+
+        if (targetParentKey) {
+            const targetItem = editor.survey.surveyItems[targetParentKey];
+            if (targetItem) {
+                return {
+                    key: targetItem.key.fullKey,
+                    label: targetItem.key.isRoot ? 'Survey Root' : targetItem.key.itemKey,
+                    isRoot: targetItem.key.isRoot,
+                    itemCount: targetItem.itemType === SurveyItemType.Group ? (targetItem as GroupItem).items?.length || 0 : 0
+                };
+            }
         }
 
         if (!selectedItemKey) {
@@ -101,7 +114,9 @@ export const AddItemDialog: React.FC = () => {
             isRoot: parentItem.key.isRoot,
             itemCount: parentItem.itemType === SurveyItemType.Group ? (parentItem as GroupItem).items?.length || 0 : 0
         };
-    }, [editor, selectedItemKey]);
+    }, [editor, selectedItemKey, targetParentKey]);
+
+
 
     // Check if clipboard contains valid survey item
     const hasValidClipboardItem = useMemo(() => {
@@ -206,14 +221,46 @@ export const AddItemDialog: React.FC = () => {
         return Object.entries(groups).filter(([, options]) => options.length > 0);
     }, [filteredOptions]);
 
-    console.log(groupedOptions);
+    const handleSelectOption = (option: ItemTypeOption) => {
+        if (option.key === 'clipboard') {
+            alert('TODO: paste')
 
-    const handleSelectOption = useCallback((option: ItemTypeOption) => {
-        // option.action();
-        //onOpenChange(false);
+        } else {
+            if (!editor) {
+                return;
+            }
+            const addAndInit = new ItemInitHelper(editor)
+            let newKey = '';
+            switch (option.key) {
+                case SurveyItemType.Display:
+                    newKey = addAndInit.displayItem({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                    break;
+                case SurveyItemType.Group:
+                    newKey = addAndInit.group({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                    break;
+                case SurveyItemType.PageBreak:
+                    newKey = addAndInit.pageBreak({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                    break;
+                case SurveyItemType.SurveyEnd:
+                    newKey = addAndInit.surveyEnd({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                    break;
+                case SurveyItemType.SingleChoiceQuestion:
+                    newKey = addAndInit.singleChoiceQuestion({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                    break;
+                case SurveyItemType.MultipleChoiceQuestion:
+                    newKey = addAndInit.multipleChoiceQuestion({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                    break;
+                default:
+                    alert('TODO: init item')
+                    break;
+            }
+            toast.success(`Item added: ${newKey}`);
+        }
+
+
         setAddItemDialogOpen(false);
         setSearch('');
-    }, []);
+    }
 
     const getCategoryLabel = (category: string): string => {
         switch (category) {
@@ -255,7 +302,7 @@ export const AddItemDialog: React.FC = () => {
                         value={search}
                         onValueChange={setSearch}
                         className="border-none rounded-none focus:ring-0"
-                        containerClassName="border-b border-border h-11 bg-white drop-shadow-sm"
+                        containerClassName="h-11 bg-white drop-shadow-xs"
                     />
 
                     <CommandList className="max-h-96 border-border">

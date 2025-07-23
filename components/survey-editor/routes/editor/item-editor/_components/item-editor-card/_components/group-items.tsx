@@ -2,7 +2,7 @@ import { useItemNavigation } from "@/components/survey-editor/store/useItemNavig
 import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEditor";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { GroupItem, ItemComponentType, QuestionItem, SingleChoiceQuestionItem, SurveyItemTranslations, SurveyItemType } from "survey-engine";
+import { GroupItem, QuestionItem, SurveyItemType } from "survey-engine";
 import {
     GroupItemEditor
 } from "survey-engine/editor";
@@ -76,6 +76,10 @@ const GroupItems = () => {
                         setItemKeyForPreview(item.key.fullKey);
                     }}
                     onDoubleClick={isDragOverlay ? undefined : () => {
+                        if (item.itemType === SurveyItemType.PageBreak) {
+                            return;
+                        }
+                        setItemKeyForPreview(null);
                         navigateToItem(item.key.fullKey);
                     }}
                 >
@@ -92,7 +96,9 @@ const GroupItems = () => {
                             style={{
                                 borderColor: itemInfos.color,
                             }}
-                        >{item.key.itemKey}</span>
+                        >{
+                                item.itemType === SurveyItemType.PageBreak ? 'Page Break' :
+                                    item.key.itemKey}</span>
                         <span className='font-semibold italic'>{item.metadata?.itemLabel}</span>
                     </span>
                     {(item as QuestionItem).confidentiality?.mode !== undefined && <span className='p-1'>
@@ -104,7 +110,7 @@ const GroupItems = () => {
                 </button>
             </ContextMenuTrigger>
             <ContextMenuContent className="border-border">
-                <ContextMenuItem
+                {item.itemType !== SurveyItemType.PageBreak && <ContextMenuItem
                     onClick={() => {
                         navigateToItem(item.key.fullKey);
                     }}
@@ -113,7 +119,7 @@ const GroupItems = () => {
                         <Edit3 className='size-4' />
                         <span className="ml-2">Open</span>
                     </span>
-                </ContextMenuItem>
+                </ContextMenuItem>}
 
                 <ContextMenuItem
                     onClick={() => {
@@ -145,7 +151,7 @@ const GroupItems = () => {
                             <h3 className='font-semibold text-sm'>
                                 Items
                                 <span className='text-sm text-muted-foreground ml-2'>
-                                    ({groupItem.items?.length})
+                                    ({groupItem.items?.length ?? 0})
                                 </span>
                             </h3>
                         </div>
@@ -193,7 +199,7 @@ const GroupItems = () => {
 
                 <div className="flex justify-center">
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => openAddItemDialog()}
                     >
                         <PlusIcon className="size-4" />
