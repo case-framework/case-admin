@@ -40,13 +40,13 @@ const EditorCardForScgMcg: React.FC<CommonItemEditorCardProps> = (props) => {
         }}
         navItems={editorModes}
     >
-        <TabsContent value="structure" className="space-y-4">
+        <TabsContent value="structure" className="space-y-4 h-full min-h-0 overflow-y-auto">
             todo: structure tab
         </TabsContent>
-        <TabsContent value="preview" className="space-y-4">
+        <TabsContent value="preview" className="space-y-4 h-full min-h-0 overflow-y-auto">
             todo: preview tab
         </TabsContent>
-        <TabsContent value="conditions" className="space-y-4">
+        <TabsContent value="conditions" className="space-y-4 h-full min-h-0 overflow-y-auto">
             todo: conditions tab
         </TabsContent>
     </ItemEditorCard>

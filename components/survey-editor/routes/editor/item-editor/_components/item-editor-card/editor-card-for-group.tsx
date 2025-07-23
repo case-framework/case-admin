@@ -46,7 +46,7 @@ const EditorCardForGroup: React.FC<CommonItemEditorCardProps> = (props) => {
         navItems={editorModes}
     >
         <TabsContent value="items"
-            className="flex flex-col"
+            className="flex flex-col h-full min-h-0 overflow-hidden"
         >
             <GroupItems />
         </TabsContent>

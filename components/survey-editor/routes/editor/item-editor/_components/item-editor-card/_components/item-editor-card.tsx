@@ -66,13 +66,13 @@ const ItemEditorCard: React.FC<ItemEditorCardProps> = ({
         color: getItemColor(surveyItem)
     }
 
-    return <div className="w-full flex flex-col md:flex-row gap-4 items-start relative">
+    return <div className="w-full h-full flex flex-col md:flex-row gap-4 items-start relative overflow-y-hidden">
 
         {/* Main Card */}
-        <div className="w-full md:w-auto flex-1 order-2 md:order-1 bg-background rounded-xl border border-border">
+        <div className="w-full h-full md:w-auto flex-1 order-2 md:order-1 bg-background rounded-xl border border-border flex flex-col min-h-0">
 
             {/* Header */}
-            <div className="py-2 border-b border-border h-[37px] flex items-center">
+            <div className="py-2 border-b border-border h-[37px] flex items-center flex-shrink-0">
                 <div className="flex items-center justify-between relative w-full">
                     <div className="absolute px-4 rounded-s-lg left-0 top-0 bottom-0 flex items-center gap-2 justify-center bg-white">
                         <ItemTypeIconWithTooltip item={surveyItem} iconClassName="size-5" />
@@ -109,7 +109,7 @@ const ItemEditorCard: React.FC<ItemEditorCardProps> = ({
             </div>
 
 
-            <Tabs value={activeMode} onValueChange={setActiveMode} className="min-h-[400px] grow flex flex-col w-full">
+            <Tabs value={activeMode} onValueChange={setActiveMode} className="flex-1 flex flex-col w-full min-h-0">
                 {props.children}
             </Tabs>
         </div>

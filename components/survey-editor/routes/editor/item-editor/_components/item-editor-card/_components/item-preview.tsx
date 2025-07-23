@@ -270,17 +270,11 @@ const ItemPreview = ({ item }: ItemPreviewProps) => {
         }
     }, [item, generateImage]);
 
-    const title = (
-        <h3 className="text-sm font-medium">Item Preview</h3>
-    )
 
     if (!item) {
         return (
-            <div>
-                {title}
-                <div className="flex items-center justify-center h-32 text-center text-muted-foreground">
-                    <p className="text-sm">No item selected</p>
-                </div>
+            <div className="flex items-center justify-center h-full text-center text-muted-foreground">
+                <p className="text-sm">No item selected</p>
             </div>
         );
     }
@@ -300,19 +294,16 @@ const ItemPreview = ({ item }: ItemPreviewProps) => {
         </div>
     )
 
-    if (item.itemType === SurveyItemType.PageBreak) {
-        return (
-            <div className="space-y-4">
-                {title}
-                {itemInfos}
-            </div>
-        )
-    }
 
     const itemRenderer = () => {
         if (item.itemType === SurveyItemType.Group) {
             return <GroupItemPreview item={item} />
+        } else if (item.itemType === SurveyItemType.PageBreak) {
+            return <div className="text-center text-muted-foreground text-6xl py-4">
+                Page Break
+            </div>
         }
+
 
         return (<div className='max-w-[832px] w-full mx-auto space-y-6 survey'>
             <SurveyContextProvider
@@ -330,114 +321,118 @@ const ItemPreview = ({ item }: ItemPreviewProps) => {
 
 
     return (
-        <div className="space-y-4 relative">
-            {title}
-            {itemInfos}
+        <div className="gap-4 h-full flex flex-col">
+            <div className="flex items-center justify-center flex-1">
+                <div className="relative w-full space-y-2">
+                    <div className="flex justify-center py-2">
+                        {itemInfos}
+                    </div>
 
-            {/* Hidden renderer for image generation */}
-            <div
-                ref={rendererRef}
-                className="absolute !-left-[9999px] !-top-[9999px] pointer-events-none w-[1000px]"
-            >
-                {itemRenderer()}
-            </div>
+                    {/* Hidden renderer for image generation */}
+                    <div
+                        ref={rendererRef}
+                        className="absolute !-left-[9999px] !-top-[9999px] pointer-events-none w-[1000px]"
+                    >
+                        {itemRenderer()}
+                    </div>
 
-            {/* Generated image display - Square container */}
-            <div className="border border-border shadow-sm rounded-lg overflow-y-auto bg-white max-w-[300px] mx-auto aspect-square flex flex-col justify-center">
-                <div className="">
-                    {error && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center text-red-600 bg-red-50">
-                            <AlertCircle className="h-4 w-4 mb-2" />
-                            <p className="text-sm">{error}</p>
+                    {/* Generated image display - Square container */}
+                    <div className="border border-border shadow-sm rounded-lg overflow-y-auto bg-white max-w-[300px] mx-auto aspect-square flex flex-col justify-center">
+                        <div className="">
+                            {error && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center text-red-600 bg-red-50">
+                                    <AlertCircle className="h-4 w-4 mb-2" />
+                                    <p className="text-sm">{error}</p>
+                                </div>
+                            )}
+
+                            {isGenerating && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                    <Loader className="size-5 animate-spin mb-2" />
+                                    <p className="text-sm text-muted-foreground">Generating preview...</p>
+                                </div>
+                            )}
+
+                            {generatedImageUrl && !isGenerating && (
+                                <div className="w-full h-full overflow-y-auto p-2">
+                                    <img
+                                        src={generatedImageUrl}
+                                        alt={`Preview of ${item.key.fullKey}`}
+                                        className="w-full h-auto rounded"
+                                    />
+                                </div>
+                            )}
+
+                            {!generatedImageUrl && !isGenerating && !error && (
+                                <div className="flex flex-col items-center justify-center text-muted-foreground">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={generateImage}
+                                        disabled={isGenerating}
+                                    >
+                                        <RefreshCw className={cn("h-4 w-4", isGenerating && "animate-spin")} />
+                                        {isGenerating ? "Generating..." : "Regenerate"}
+                                    </Button>
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
 
-                    {isGenerating && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center">
-                            <Loader className="size-5 animate-spin mb-2" />
-                            <p className="text-sm text-muted-foreground">Generating preview...</p>
-                        </div>
-                    )}
-
-                    {generatedImageUrl && !isGenerating && (
-                        <div className="w-full h-full overflow-y-auto p-2">
-                            <img
-                                src={generatedImageUrl}
-                                alt={`Preview of ${item.key.fullKey}`}
-                                className="w-full h-auto rounded"
-                            />
-                        </div>
-                    )}
-
-                    {!generatedImageUrl && !isGenerating && !error && (
-                        <div className="flex flex-col items-center justify-center text-muted-foreground">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={generateImage}
-                                disabled={isGenerating}
-                            >
-                                <RefreshCw className={cn("h-4 w-4", isGenerating && "animate-spin")} />
-                                {isGenerating ? "Generating..." : "Regenerate"}
-                            </Button>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            <div className="flex items-center gap-4 w-fit mx-auto">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                        if (item) {
-                            navigateToItem(item.key.fullKey);
-                        }
-                    }}
-                    className="flex flex-col gap-1 h-auto py-2"
-                >
-                    <Edit3 className="size-4" />
-                    <span className="text-xs">Open item</span>
-                </Button>
-
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
+                    <div className="flex items-center gap-4 w-fit mx-auto">
+                        {item.itemType !== SurveyItemType.PageBreak && <Button
                             variant="ghost"
                             size="sm"
-                            className="flex flex-col gap-1 h-auto py-2"
-                        >
-                            <CircleEllipsis className="size-4" />
-                            <span className="text-xs">More</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="border-border">
-                        <DropdownMenuItem
                             onClick={() => {
-                                if (item && editor) {
-                                    const copiedItem = editor.copyItem(item.key.fullKey);
-
-                                    console.log(copiedItem);
-
-                                    navigator.clipboard.writeText(JSON.stringify(copiedItem, null, 2))
-                                        .then(() => {
-                                            toast.success("Item copied to clipboard");
-                                        })
-                                        .catch(() => {
-                                            toast.error("Failed to copy item");
-                                        });
+                                if (item) {
+                                    navigateToItem(item.key.fullKey);
                                 }
                             }}
+                            className="flex flex-col gap-1 h-auto py-2"
                         >
-                            <Copy className="size-4 mr-2" />
-                            Copy
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DeleteItemDropdownMenuItem overrideItemKey={item.key.fullKey} />
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </div>
+                            <Edit3 className="size-4" />
+                            <span className="text-xs">Open item</span>
+                        </Button>}
 
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="flex flex-col gap-1 h-auto py-2"
+                                >
+                                    <CircleEllipsis className="size-4" />
+                                    <span className="text-xs">More</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="border-border">
+                                <DropdownMenuItem
+                                    onClick={() => {
+                                        if (item && editor) {
+                                            const copiedItem = editor.copyItem(item.key.fullKey);
+
+                                            console.log(copiedItem);
+
+                                            navigator.clipboard.writeText(JSON.stringify(copiedItem, null, 2))
+                                                .then(() => {
+                                                    toast.success("Item copied to clipboard");
+                                                })
+                                                .catch(() => {
+                                                    toast.error("Failed to copy item");
+                                                });
+                                        }
+                                    }}
+                                >
+                                    <Copy className="size-4 mr-2" />
+                                    Copy
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DeleteItemDropdownMenuItem overrideItemKey={item.key.fullKey} />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                </div>
+            </div>
 
         </div>
     );

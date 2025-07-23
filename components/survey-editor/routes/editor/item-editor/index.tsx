@@ -20,9 +20,11 @@ const ItemEditor = () => {
     }
 
     return <ItemEditorProvider>
-        <div className="space-y-4">
+        <div className="h-full flex flex-col gap-4">
             <ItemEditorToolbar />
-            <ItemEditorCard />
+            <div className="flex-1 min-h-0">
+                <ItemEditorCard />
+            </div>
             <AddItemDialog />
         </div>
     </ItemEditorProvider>

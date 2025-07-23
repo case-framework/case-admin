@@ -139,11 +139,11 @@ const GroupItems = () => {
 
     }
 
-    return <div className="flex grow ">
-        <div className="flex-1 pt-2 px-4 pb-4 border-r border-border">
-            <div>
+    return <div className="flex grow h-full min-h-0">
+        <div className="flex-1 pt-2 px-4 pb-4 border-r border-border flex flex-col min-h-0">
+            <div className="flex flex-col h-full min-h-0">
 
-                <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start justify-between gap-2 flex-shrink-0">
                     <div>
 
 
@@ -171,51 +171,60 @@ const GroupItems = () => {
                     </Tooltip>
                 </div>
 
-                {(groupItem.items?.length ?? 0) < 1 &&
-                    <p className='text-sm text-center my-32 text-muted-foreground'>This group is empty. Start adding items now...</p>
-                }
 
-                <SortableWrapper
-                    sortableID={`items-of-${groupItem.key.fullKey}`}
-                    items={currentItems}
-                    onDraggedIdChange={(id) => {
-                        setDraggedId(id);
-                    }}
-                    onReorder={(activeIndex, overIndex) => {
-                        new GroupItemEditor(editor, groupItem.key.fullKey).moveItem(activeIndex, overIndex);
-                    }}
-                    dragOverlayItem={(draggedId && draggedItem) ? renderRowItem(currentItems.findIndex(item => item.id === draggedId), true) : null}>
-                    <ol className='space-y-1.5 py-4'>
-                        {currentItems.map((item, i) => (
-                            <SortableItem
-                                id={item.id}
-                                key={item.id}
-                            >
-                                {renderRowItem(i, false)}
-                            </SortableItem>
-                        ))}
-                    </ol>
-                </SortableWrapper>
 
-                <div className="flex justify-center">
-                    <Button
-                        variant="ghost"
-                        onClick={() => openAddItemDialog()}
-                    >
-                        <PlusIcon className="size-4" />
-                        Add item
-                    </Button >
+                <div className="flex-1 min-h-0 overflow-y-auto -mx-4 px-4">
+                    {(groupItem.items?.length ?? 0) < 1 ?
+                        <p className='text-sm text-center mt-12 mb-6 text-muted-foreground'>
+                            This group is empty. Start adding items now...
+                        </p>
+                        : <SortableWrapper
+                            sortableID={`items-of-${groupItem.key.fullKey}`}
+                            items={currentItems}
+                            onDraggedIdChange={(id) => {
+                                setDraggedId(id);
+                            }}
+                            onReorder={(activeIndex, overIndex) => {
+                                new GroupItemEditor(editor, groupItem.key.fullKey).moveItem(activeIndex, overIndex);
+                            }}
+                            dragOverlayItem={(draggedId && draggedItem) ? renderRowItem(currentItems.findIndex(item => item.id === draggedId), true) : null}>
+                            <ol className='space-y-1.5 py-4'>
+                                {currentItems.map((item, i) => (
+                                    <SortableItem
+                                        id={item.id}
+                                        key={item.id}
+                                    >
+                                        {renderRowItem(i, false)}
+                                    </SortableItem>
+                                ))}
+                            </ol>
+                        </SortableWrapper>
+                    }
+
+                    <div className="flex justify-center">
+                        <Button
+                            variant="ghost"
+                            onClick={() => openAddItemDialog()}
+                        >
+                            <PlusIcon className="size-4" />
+                            Add item
+                        </Button >
+                    </div>
                 </div>
+
+
             </div>
         </div>
 
-        <div className="flex-1 pt-2 px-4 pb-4">
-            <Suspense>
-                <ItemPreview
-                    key={itemKeyForPreview}
-                    item={editor?.survey.surveyItems[itemKeyForPreview as string]}
-                />
-            </Suspense>
+        <div className="flex-1 pt-2 px-4 pb-4 flex flex-col min-h-0 bg-muted/30">
+            <div className="flex-1 min-h-0 overflow-y-auto">
+                <Suspense>
+                    <ItemPreview
+                        key={itemKeyForPreview}
+                        item={editor?.survey.surveyItems[itemKeyForPreview as string]}
+                    />
+                </Suspense>
+            </div>
         </div>
     </div>
 }
