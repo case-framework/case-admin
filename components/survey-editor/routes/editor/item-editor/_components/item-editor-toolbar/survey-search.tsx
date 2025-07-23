@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { FileText, Hash, Search, TagIcon } from 'lucide-react';
+import { FileText, Hash, Search, TagIcon, TypeIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useSurveyEditor } from '@/components/survey-editor/store/useSurveyEditor';
 import { useItemNavigation } from '@/components/survey-editor/store/useItemNavigation';
-import { SurveyItem } from 'survey-engine';
+import { SurveyItem, SurveyItemType } from 'survey-engine';
 import { getItemColor, getItemTypeInfos, ItemTypeInfos } from '@/components/survey-editor/utils/item-type-infos';
 import ItemTypeIconWithTooltip from '../item-editor-card/_components/item-type-icon-with-tooltip';
 
@@ -15,7 +15,7 @@ interface SearchResult {
     fullKey: string;
     itemInfos: ItemTypeInfos;
     itemColor?: string;
-    matchType: 'key' | 'content' | 'label';
+    matchType: 'key' | 'content' | 'label' | 'itemType';
     matchText: string;
 }
 
@@ -45,7 +45,7 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
         const searchLower = searchTerm.toLowerCase().trim();
 
         Object.entries(editor.survey.surveyItems).forEach(([fullKey, item]) => {
-            if (!item || !fullKey || addedItems.has(fullKey)) return;
+            if (!item || !fullKey || addedItems.has(fullKey) || item.itemType === SurveyItemType.PageBreak) return;
 
             const itemInfos = getItemTypeInfos(item);
             const itemColor = getItemColor(item);
@@ -105,6 +105,20 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                         }
                     }
                 }
+            }
+
+            // Priority 4: Check item type
+            if (itemInfos.key.toLowerCase().includes(searchLower)) {
+                results.push({
+                    fullKey,
+                    item,
+                    itemInfos,
+                    itemColor,
+                    matchType: 'itemType',
+                    matchText: itemInfos.key,
+                });
+                addedItems.add(fullKey);
+                return; // Exit early since we found a match
             }
         });
 
@@ -180,6 +194,11 @@ const SurveySearch: React.FC<SurveySearchProps> = ({ isOpen, onOpenChange }) => 
                 return <span className="text-xs text-muted-foreground flex items-center gap-0.5">
                     <TagIcon className="size-3" />
                     Label:
+                </span>;
+            case 'itemType':
+                return <span className="text-xs text-muted-foreground flex items-center gap-0.5">
+                    <TypeIcon className="size-3" />
+                    Item Type:
                 </span>;
             default:
                 return null;

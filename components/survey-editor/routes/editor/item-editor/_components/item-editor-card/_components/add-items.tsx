@@ -186,15 +186,6 @@ export const AddItemDialog: React.FC = () => {
         if (!search.trim()) return itemTypeOptions;
 
         const searchTerm = search.toLowerCase();
-        itemTypeOptions.forEach(option => {
-            console.log(option.label, option.description, option.categories);
-            console.log(option.description.toLowerCase().includes(searchTerm))
-        });
-        console.log(searchTerm, itemTypeOptions.filter(option =>
-            option.label.toLowerCase().includes(searchTerm) ||
-            option.description.toLowerCase().includes(searchTerm) ||
-            option.categories.some(category => category.toLowerCase().includes(searchTerm))
-        ));
         return itemTypeOptions.filter(option =>
             option.label.toLowerCase().includes(searchTerm) ||
             option.description.toLowerCase().includes(searchTerm) ||
