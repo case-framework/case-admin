@@ -9,7 +9,7 @@ import SurveyItemRenderer from "@/components/survey-renderer/SurveySingleItemVie
 import { useSurveyEditor } from "@/components/survey-editor/store/useSurveyEditor";
 import { useItemNavigation } from "@/components/survey-editor/store/useItemNavigation";
 import ItemTypeIconWithTooltip from "./item-type-icon-with-tooltip";
-import { getItemColor } from "@/components/survey-editor/utils/item-type-infos";
+import { getItemColor, getItemTypeInfos } from "@/components/survey-editor/utils/item-type-infos";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -24,6 +24,96 @@ interface ItemPreviewProps {
     item: SurveyItem | undefined;
 }
 
+
+const GroupItemPreview = ({ item }: ItemPreviewProps) => {
+    const { editor } = useSurveyEditor();
+
+    const groupItem = item as GroupItem;
+    const itemKeys = groupItem.items || [];
+
+    if (itemKeys.length === 0) {
+        return (
+            <div className="flex grow justify-center items-center text-center text-muted-foreground px-12 py-24 rounded-3xl border-2 border-dashed border-border">
+                <div>
+                    <p className="text-lg font-medium mb-2">Empty Group</p>
+                    <p className="text-sm">No items in this group yet</p>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-3 p-4 bg-muted/30 rounded-lg">
+            <div className="text-2xl block font-medium text-muted-foreground mb-2">
+                <span className="me-2">
+                    {'Items'}
+                </span>
+                <span className="text-muted-foreground ml-2">
+                    ({itemKeys.length})
+                </span>
+            </div>
+            <div className="space-y-2">
+                {itemKeys.map((itemKey) => {
+                    const surveyItem = editor?.survey.surveyItems[itemKey];
+
+                    if (!surveyItem) {
+                        return (
+                            <div
+                                key={itemKey}
+                                className="flex items-center gap-3 p-3 bg-red-50 rounded-lg border border-red-200"
+                            >
+                                <div className="flex-shrink-0 text-red-500">
+                                    <AlertCircle className="size-5" />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="font-mono text-sm font-medium text-red-700">
+                                        {itemKey}
+                                    </p>
+                                    <p className="text-xs text-red-600 mt-1">
+                                        Item not found
+                                    </p>
+                                </div>
+                            </div>
+                        );
+                    }
+
+                    const itemInfos = getItemTypeInfos(surveyItem);
+                    const itemColor = getItemColor(surveyItem);
+
+                    return (
+                        <div
+                            key={itemKey}
+                            className="flex items-center gap-3 p-3 bg-white rounded-lg border border-border"
+                        >
+                            <div
+                                className="flex-shrink-0"
+                                style={{ color: itemColor }}
+                            >
+                                <itemInfos.icon className="size-6" />
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                    <p
+                                        className="font-mono text-lg font-medium truncate grow"
+                                        style={{ color: itemColor }}
+                                    >
+                                        {surveyItem.key.itemKey}
+                                    </p>
+                                    {surveyItem.metadata?.itemLabel && (
+                                        <p className="text-lg text-muted-foreground truncate">
+                                            {surveyItem.metadata.itemLabel}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+}
 
 const ItemPreview = ({ item }: ItemPreviewProps) => {
     const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
@@ -221,17 +311,7 @@ const ItemPreview = ({ item }: ItemPreviewProps) => {
 
     const itemRenderer = () => {
         if (item.itemType === SurveyItemType.Group) {
-            return (
-                <div className="flex grow justify-center items-center text-center text-white text-6xl px-12 py-24 rounded-3xl"
-                    style={{
-                        backgroundColor: getItemColor(item)
-                    }}
-                >
-                    <div>
-                        Group with {(item as GroupItem).items?.length || 0} items.
-                    </div>
-                </div>
-            )
+            return <GroupItemPreview item={item} />
         }
 
         return (<div className='max-w-[832px] w-full mx-auto space-y-6 survey'>
