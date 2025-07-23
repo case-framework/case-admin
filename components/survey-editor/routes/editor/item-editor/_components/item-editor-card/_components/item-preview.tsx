@@ -280,13 +280,15 @@ const ItemPreview = ({ item }: ItemPreviewProps) => {
     }
 
     const itemInfos = (
-        <div className="text-sm text-muted-foreground flex items-center gap-2">
-            <ItemTypeIconWithTooltip item={item} iconClassName="size-5" />
-            <p className="font-mono grow"
-                style={{
-                    color: getItemColor(item)
-                }}
-            >{item.key.fullKey}</p>
+        <div className="text-sm text-muted-foreground flex items-center gap-6">
+            <div className="flex items-center gap-1.5">
+                <ItemTypeIconWithTooltip item={item} iconClassName="size-5" />
+                <p className="font-mono grow"
+                    style={{
+                        color: getItemColor(item)
+                    }}
+                >{item.key.fullKey}</p>
+            </div>
 
             <p className="text-muted-foreground font-medium">
                 {item.metadata?.itemLabel}
