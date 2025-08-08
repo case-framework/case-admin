@@ -16,6 +16,7 @@ import { DeleteItemContextMenuItem } from "./delete-item-context-menu";
 import { getItemColor, getItemTypeInfos } from "@/components/survey-editor/utils/item-type-infos";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useItemEditor } from "../../item-editor-context";
+import { toast } from "sonner";
 
 
 const GroupItems = () => {
@@ -123,7 +124,21 @@ const GroupItems = () => {
 
                 <ContextMenuItem
                     onClick={() => {
-                        alert('copy');
+                        if (item && editor) {
+                            try {
+                                const copiedItem = editor.copyItem(item.key.fullKey);
+                                navigator.clipboard.writeText(JSON.stringify(copiedItem, null, 2))
+                                    .then(() => {
+                                        toast.success("Item copied to clipboard");
+                                    })
+                                    .catch(() => {
+                                        toast.error("Failed to copy item to clipboard");
+                                    });
+                            } catch (error) {
+                                console.error('Error copying item:', error);
+                                toast.error("Failed to copy item");
+                            }
+                        }
                     }}
                 >
                     <ClipboardCopyIcon className='size-4' />

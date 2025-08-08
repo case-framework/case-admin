@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useSurveyEditor } from '@/components/survey-editor/store/useSurveyEditor';
@@ -9,7 +9,8 @@ import { useClipboardValue } from '@/hooks/useClipboardValue';
 import { ItemTypeInfos, SurveyItemTypeRegistry } from '@/components/survey-editor/utils/item-type-infos';
 import { SurveyItemType, GroupItem } from 'survey-engine';
 import { ItemInitHelper } from 'survey-engine/editor';
-import { Folder } from 'lucide-react';
+import { ItemCopyPaste } from 'survey-engine/editor';
+import { Folder, Clipboard } from 'lucide-react';
 import { toast } from 'sonner';
 import { useItemEditor } from '../../item-editor-context';
 import { cn } from '@/lib/utils';
@@ -53,6 +54,12 @@ export const AddItemDialog: React.FC = () => {
     const { selectedItemKey, navigateToItem } = useItemNavigation();
     const [search, setSearch] = useState('');
     const [clipboardValue, updateClipboardValue] = useClipboardValue();
+
+    // Refresh clipboard content whenever dialog open state changes
+    useEffect(() => {
+        updateClipboardValue();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [addItemDialogOpen]);
 
     // Determine the target group where the item would be added
     const targetGroupInfo = useMemo(() => {
@@ -117,70 +124,16 @@ export const AddItemDialog: React.FC = () => {
     }, [editor, selectedItemKey, targetParentKey]);
 
 
-
-    // Check if clipboard contains valid survey item
     const hasValidClipboardItem = useMemo(() => {
         if (!clipboardValue) return false;
         try {
-            const parsed = JSON.parse(clipboardValue);
-            return parsed && parsed.key && (parsed.itemType || parsed.type);
+            ItemCopyPaste.isValidClipboardData(JSON.parse(clipboardValue));
+            return true;
         } catch {
             return false;
         }
     }, [clipboardValue]);
 
-
-    const pasteFromClipboard = useCallback(async () => {
-        /*  try {
-             if (!clipboardValue) {
-                 updateClipboardValue();
-                 return;
-             }
-
-             const content = JSON.parse(clipboardValue);
-
-             if (!content || !content.key || content.key === '') {
-                 toast.error('Clipboard content is not valid survey item');
-                 return;
-             }
-
-             const oldKey = content.key as string;
-             let copiedItemKey = oldKey.split('.').pop();
-
-             if (copiedItemKey === undefined) {
-                 toast.error('Clipboard content is not valid');
-                 return;
-             }
-
-             // Check if item already exists and modify key if needed
-             const surveyKey = editor?.survey.surveyKey || 'survey';
-             const targetParentKey = parentKey || targetGroupInfo?.key || surveyKey;
-             const existingItems = editor?.survey.rootItem.items || [];
-
-             if (existingItems.includes(`${targetParentKey}.${copiedItemKey}`)) {
-                 copiedItemKey = copiedItemKey + '_copy';
-             }
-
-             const newKey = `${targetParentKey}.${copiedItemKey}`;
-
-             // Replace all instances of the old key with the new key in the JSON
-             const keyRegex = new RegExp(`"${oldKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\.|")`, 'g');
-             const newClipboardContent = clipboardValue.replace(keyRegex, (_match, suffix) => {
-                 return `"${newKey}${suffix}`;
-             });
-
-             const contentToInsert = JSON.parse(newClipboardContent);
-
-             // Use the SurveyEditor API to add the item
-             editor?.addItem(targetParentKey ? { parentKey: targetParentKey } : undefined, contentToInsert, new SurveyItemTranslations());
-
-             toast.success('Item pasted from clipboard');
-             onOpenChange(false);
-         } catch (error) {
-             console.error('Error pasting from clipboard:', error);
-             toast.error('Error reading clipboard content');
-         } */
-    }, [clipboardValue, updateClipboardValue, editor, targetGroupInfo]);
 
     const filteredOptions = useMemo(() => {
         if (!search.trim()) return itemTypeOptions;
@@ -191,9 +144,7 @@ export const AddItemDialog: React.FC = () => {
             option.description.toLowerCase().includes(searchTerm) ||
             option.categories.some(category => category.toLowerCase().includes(searchTerm))
         );
-
-
-    }, [itemTypeOptions, search]);
+    }, [search]);
 
     const groupedOptions = useMemo(() => {
         const groups: Record<string, ItemTypeOption[]> = {
@@ -303,6 +254,31 @@ export const AddItemDialog: React.FC = () => {
 
                     <CommandList className="max-h-96 border-border">
                         <CommandEmpty>No item types found.</CommandEmpty>
+
+                        {hasValidClipboardItem && (
+                            <CommandGroup heading="Clipboard">
+                                <CommandItem
+                                    value="Paste from clipboard"
+                                    onSelect={() => {
+                                        // TODO: Implement paste logic using survey-engine ItemCopyPaste
+                                        toast.message('Paste from clipboard', {
+                                            description: 'Clipboard item detected. Paste action coming soon.',
+                                        });
+                                    }}
+                                    className="flex items-center gap-3 px-2 py-1.5 cursor-pointer border border-border mb-1"
+                                >
+                                    <div className="flex items-center justify-center size-7">
+                                        <Clipboard className="w-4 h-4" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="font-medium">Paste from clipboard</div>
+                                        <div className="text-xs text-muted-foreground">
+                                            Insert the item copied from the survey editor
+                                        </div>
+                                    </div>
+                                </CommandItem>
+                            </CommandGroup>
+                        )}
 
                         {groupedOptions.map(([category, options]) => (
                             <CommandGroup key={category} heading={getCategoryLabel(category)}>
