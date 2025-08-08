@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useSurveyEditor } from '@/components/survey-editor/store/useSurveyEditor';
@@ -134,6 +134,13 @@ export const AddItemDialog: React.FC = () => {
         }
     }, [clipboardValue]);
 
+    const pasteFromClipboard = useCallback(() => {
+        if (!clipboardValue) return;
+        const parsed = JSON.parse(clipboardValue);
+        editor?.pasteItem(parsed, { parentKey: targetGroupInfo?.key || editor.survey.surveyKey });
+        setAddItemDialogOpen(false);
+    }, [clipboardValue, editor, targetGroupInfo?.key, setAddItemDialogOpen]);
+
 
     const filteredOptions = useMemo(() => {
         if (!search.trim()) return itemTypeOptions;
@@ -164,46 +171,40 @@ export const AddItemDialog: React.FC = () => {
     }, [filteredOptions]);
 
     const handleSelectOption = (option: ItemTypeOption) => {
-        if (option.key === 'clipboard') {
-            alert('TODO: paste')
-
-        } else {
-            if (!editor) {
-                return;
-            }
-            const addAndInit = new ItemInitHelper(editor)
-            let newKey = '';
-            switch (option.key) {
-                case SurveyItemType.Display:
-                    newKey = addAndInit.displayItem({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
-                    break;
-                case SurveyItemType.Group:
-                    newKey = addAndInit.group({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
-                    break;
-                case SurveyItemType.PageBreak:
-                    newKey = addAndInit.pageBreak({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
-                    break;
-                case SurveyItemType.SurveyEnd:
-                    newKey = addAndInit.surveyEnd({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
-                    break;
-                case SurveyItemType.SingleChoiceQuestion:
-                    newKey = addAndInit.singleChoiceQuestion({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
-                    break;
-                case SurveyItemType.MultipleChoiceQuestion:
-                    newKey = addAndInit.multipleChoiceQuestion({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
-                    break;
-                default:
-                    alert('TODO: init item')
-                    break;
-            }
-            toast.success(`Item added: ${newKey}`);
-            if (option.key === SurveyItemType.PageBreak) {
-                navigateToItem(targetGroupInfo?.key);
-            } else {
-                navigateToItem(newKey);
-            }
+        if (!editor) {
+            return;
         }
-
+        const addAndInit = new ItemInitHelper(editor)
+        let newKey = '';
+        switch (option.key) {
+            case SurveyItemType.Display:
+                newKey = addAndInit.displayItem({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                break;
+            case SurveyItemType.Group:
+                newKey = addAndInit.group({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                break;
+            case SurveyItemType.PageBreak:
+                newKey = addAndInit.pageBreak({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                break;
+            case SurveyItemType.SurveyEnd:
+                newKey = addAndInit.surveyEnd({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                break;
+            case SurveyItemType.SingleChoiceQuestion:
+                newKey = addAndInit.singleChoiceQuestion({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                break;
+            case SurveyItemType.MultipleChoiceQuestion:
+                newKey = addAndInit.multipleChoiceQuestion({ parentFullKey: targetGroupInfo?.key || editor.survey.surveyKey })
+                break;
+            default:
+                alert('TODO: init item')
+                break;
+        }
+        toast.success(`Item added: ${newKey}`);
+        if (option.key === SurveyItemType.PageBreak) {
+            navigateToItem(targetGroupInfo?.key);
+        } else {
+            navigateToItem(newKey);
+        }
 
         setAddItemDialogOpen(false);
         setSearch('');
@@ -259,12 +260,7 @@ export const AddItemDialog: React.FC = () => {
                             <CommandGroup heading="Clipboard">
                                 <CommandItem
                                     value="Paste from clipboard"
-                                    onSelect={() => {
-                                        // TODO: Implement paste logic using survey-engine ItemCopyPaste
-                                        toast.message('Paste from clipboard', {
-                                            description: 'Clipboard item detected. Paste action coming soon.',
-                                        });
-                                    }}
+                                    onSelect={pasteFromClipboard}
                                     className="flex items-center gap-3 px-2 py-1.5 cursor-pointer border border-border mb-1"
                                 >
                                     <div className="flex items-center justify-center size-7">
