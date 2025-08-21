@@ -13,148 +13,148 @@ export const SurveyItemTypeRegistry = [
     {
         key: SurveyItemType.Group,
         label: 'Group',
-        description: 'A container for a group of items.',
+        description: 'A container for organizing survey items.',
         defaultItemClassName: 'text-sky-600',
         icon: Folder,
     },
     {
         key: SurveyItemType.PageBreak,
         label: 'Page break',
-        description: 'Items after this will be displayed on a new page.',
+        description: 'Force items after this to appear on a new page',
         defaultItemClassName: 'text-red-800',
         icon: CornerDownLeft,
     },
     {
         key: SurveyItemType.SurveyEnd,
         label: 'Survey end content',
-        description: 'Content displayed next to the submit button.',
+        description: 'Content shown next to the submit button.',
         defaultItemClassName: 'text-red-800',
         icon: Send,
     },
     {
         key: SurveyItemType.Display,
         label: 'Display',
-        description: 'Displays text, without response slots. For information or instructions.',
-        className: 'text-neutral-700',
+        description: 'Show text or instructions without collecting responses',
+        defaultItemClassName: 'text-neutral-700',
         icon: Info,
     },
     {
         key: SurveyItemType.SingleChoiceQuestion,
         label: 'Single choice',
         description: 'Allows the participant to select one option from a radio group.',
-        className: 'text-fuchsia-800',
+        defaultItemClassName: 'text-fuchsia-800',
         icon: CheckCircle2
     },
     {
         key: SurveyItemType.MultipleChoiceQuestion,
         label: 'Multiple choice',
         description: 'Allows the participant to select multiple options from a list of checkboxes.',
-        className: 'text-indigo-800',
+        defaultItemClassName: 'text-indigo-800',
         icon: CheckSquare2
     },
     {
         key: 'dateInput',
         label: 'Date input',
         description: 'Allows the participant to enter a date.',
-        className: 'text-lime-700',
+        defaultItemClassName: 'text-lime-700',
         icon: Calendar,
     },
     {
         key: 'timeInput',
         label: 'Time input',
         description: 'Allows the participant to enter a time.',
-        className: 'text-lime-700',
+        defaultItemClassName: 'text-lime-700',
         icon: Clock
     },
     {
         key: 'textInput',
         label: 'Text input',
         description: 'Allows the participant to enter text.',
-        className: 'text-sky-700',
+        defaultItemClassName: 'text-sky-700',
         icon: TextCursorInput,
     },
     {
         key: 'codeValidator',
         label: 'Code validator',
         description: 'Validates a code entered by the participant.',
-        className: 'text-purple-800',
+        defaultItemClassName: 'text-purple-800',
         icon: ShieldIcon,
     },
     {
         key: 'numericInput',
         label: 'Numeric input',
         description: 'Allows the participant to enter a number.',
-        className: 'text-green-700',
+        defaultItemClassName: 'text-green-700',
         icon: Binary,
     },
     {
         key: 'sliderNumeric',
         label: 'Slider',
         description: 'Allows the participant to select a value from a range.',
-        className: 'text-green-700',
+        defaultItemClassName: 'text-green-700',
         icon: Settings2,
     },
     {
         key: 'responsiveSingleChoiceArray',
         label: 'Single choice array',
         description: 'A list of single choice questions (likert scale). Different view modes are available per screen size.',
-        className: 'text-teal-800',
+        defaultItemClassName: 'text-teal-800',
         icon: GanttChart,
     },
     {
         key: 'responsiveBipolarLikertScaleArray',
         label: 'Bipolar likert array',
         description: 'A list of bipolar likert scale questions. Different view modes are available per screen size.',
-        className: 'text-teal-800',
+        defaultItemClassName: 'text-teal-800',
         icon: UnfoldHorizontal,
     },
     {
         key: 'responsiveMatrix',
         label: 'Adaptive Question Grid',
         description: 'Same response slots arranged in a grid. Different view modes are available per screen size.',
-        className: 'text-purple-800',
+        defaultItemClassName: 'text-purple-800',
         icon: TableIcon,
     },
     {
         key: 'matrix',
         label: 'Matrix',
         description: 'Rows and columns of response slots can be used for more complex questions.',
-        className: 'text-purple-800',
+        defaultItemClassName: 'text-purple-800',
         icon: Grid3X3,
     },
     {
         key: 'clozeQuestion',
         label: 'Cloze question',
         description: 'A cloze question with a mix of text and response slots.',
-        className: 'text-purple-800',
+        defaultItemClassName: 'text-purple-800',
         icon: SquareStack,
     },
     {
         key: 'consent',
         label: 'Consent',
         description: 'Displays a consent form.',
-        className: 'text-rose-800',
+        defaultItemClassName: 'text-rose-800',
         icon: MessageCircleQuestion,
     },
     {
         key: 'dropdown',
         label: 'Dropdown',
         description: 'Allows the participant to select one option from a list of options.',
-        className: 'text-fuchsia-800',
+        efaultItemClassName: 'text-fuchsia-800',
         icon: ChevronDownSquare,
     },
     {
         key: 'validatedRandomQuestion',
         label: 'Validated Random Question',
         description: 'Selects a random question from a list of questions and accept only valid responses.',
-        className: 'text-blue-800',
+        defaultItemClassName: 'text-blue-800',
         icon: BotOff,
     },
     {
         key: 'contact',
         label: 'Contact Form Question',
         description: 'Name, email, phone or address of the participant.',
-        className: 'text-blue-800',
+        defaultItemClassName: 'text-blue-800',
         icon: Contact,
     },
 ]
@@ -200,6 +200,14 @@ export const getItemColor = (surveyItem: SurveyItem): string | undefined => {
     return itemColor;
 }
 
+export interface ItemTypeInfos {
+    key: string;
+    label: string;
+    description: string;
+    defaultItemClassName?: string;
+    icon: LucideIcon;
+}
+
 export const getItemTypeInfos = (item: SurveyItem): { key: string, label: string, description: string, defaultItemClassName?: string, icon: LucideIcon } => {
     if (item.key.isRoot) {
         return SurveyItemTypeRegistry.find(i => i.key === 'root')!;
@@ -211,7 +219,7 @@ export const getItemTypeInfos = (item: SurveyItem): { key: string, label: string
             key: itemInfos.key,
             label: itemInfos.label,
             description: itemInfos.description,
-            defaultItemClassName: itemInfos.className,
+            defaultItemClassName: itemInfos.defaultItemClassName,
             icon: itemInfos.icon,
         };
     }

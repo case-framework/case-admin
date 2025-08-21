@@ -8,8 +8,8 @@ import { BoxSelectIcon, ChevronRight, Plus, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getItemColor, getItemTypeInfos, getItemKeyFromFullKey, isValidSurveyItemGroup } from '../../../utils/utils';
 import { cn } from '@/lib/utils';
-import SortableWrapper from '../../general/SortableWrapper';
-import SortableItem from '@/components/survey-editor/old/components/general/SortableItem';
+import SortableWrapper from '../../../../_components/sortable/sortable-wrapper';
+import SortableItem from '@/components/survey-editor/_components/sortable/sortable-item';
 
 interface ExplorerColumnProps {
     root: SurveyGroupItem;

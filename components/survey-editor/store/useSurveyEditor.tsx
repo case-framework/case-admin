@@ -12,6 +12,7 @@ export const useSurveyEditor = () => {
     const initializingRef = useRef(false)
     const lastUpdateRef = useRef<number>(0)
     const [isEditorReady, setIsEditorReady] = useState(false)
+    const [selectedLanguage, setSelectedLanguage] = useState<string | undefined>()
 
     const {
         currentSession,
@@ -160,5 +161,7 @@ export const useSurveyEditor = () => {
         editor: globalEditorInstance,
         isEditorReady,
         isInitializing: initializingRef.current,
+        selectedLanguage,
+        setSelectedLanguage,
     }
 }

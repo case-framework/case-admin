@@ -1,3 +1,4 @@
 rm -rf .next
-yarn upgrade ../../libs/survey-engine/build
-yarn dev -p 3001
+pnpm remove survey-engine
+pnpm add file:../../libs/survey-engine/build
+pnpm dev -p 3001

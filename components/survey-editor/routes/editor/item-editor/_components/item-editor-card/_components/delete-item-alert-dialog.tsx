@@ -33,7 +33,7 @@ export const DeleteItemAlertDialog: React.FC<DeleteItemAlertDialogProps> = ({
 
         const currentFullKey = currentItem.key.fullKey;
         const references = editor.survey.getReferenceUsages(currentFullKey)
-        console.log(references);
+        // console.log(references);
         return references;
     }, [currentItem, editor?.survey]);
 
@@ -45,8 +45,6 @@ export const DeleteItemAlertDialog: React.FC<DeleteItemAlertDialogProps> = ({
 
         try {
             editor.removeItem(currentItem.key.fullKey);
-
-
 
             // Navigate to parent after deletion
             navigateToItem(currentItem.key.parentFullKey);

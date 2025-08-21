@@ -29,7 +29,7 @@ const SingleChoice: React.FC<SingleChoiceProps> = ({ responseConfig }) => {
             </p>
         </div>
         {renderedItemInfos.responseCompOrder?.map((option) => {
-            const optionItem = responseConfig.options.find((o) => o.key.fullKey === option);
+            const optionItem = responseConfig.items.find((o) => o.key.fullKey === option);
             if (!optionItem) return null;
 
             const disabled = surveyEngine.getDisabledConditionValue(optionItem.key.parentItemKey.fullKey, optionItem.key.fullKey);

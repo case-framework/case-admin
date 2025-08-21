@@ -1,4 +1,4 @@
-import SortableItem from '@/components/survey-editor/old/components/general/SortableItem';
+import SortableItem from '@/components/survey-editor/_components/sortable/sortable-item';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';

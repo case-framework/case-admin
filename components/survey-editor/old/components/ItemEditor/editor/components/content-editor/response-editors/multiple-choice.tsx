@@ -1,4 +1,4 @@
-import SortableWrapper from '@/components/survey-editor/old/components/general/SortableWrapper';
+import SortableWrapper from '@/components/survey-editor/_components/sortable/sortable-wrapper';
 import AddDropdown from '@/components/survey-editor/old/components/general/add-dropdown';
 import { Binary, Calendar, Check, CheckSquare, ClipboardCopyIcon, ClipboardPasteIcon, Clock, Copy, FormInput, Heading, SquareStack, Trash2 } from 'lucide-react';
 import React from 'react';

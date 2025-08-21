@@ -1,15 +1,4 @@
-import {
-    AlertTriangle,
-    Binary, Calendar, CheckCircle2, CheckSquare2, ChevronDownSquare, Clock,
-    CornerDownLeft,
-    Folder,
-    GanttChart, Grid3X3, Info, LucideIcon, MessageCircleQuestion, Send, Settings2, SquareStack,
-    TextCursorInput, UnfoldHorizontal, BotOff,
-    Contact,
-    ShieldIcon,
-    TableIcon
-} from "lucide-react";
-import { ItemGroupComponent, Survey, SurveyGroupItem, SurveyItem, SurveySingleItem, isSurveyGroupItem } from "survey-engine/data_types";
+import { ItemGroupComponent, Survey, SurveyGroupItem, SurveyItem, SurveySingleItem, isSurveyGroupItem } from "survey-engine";
 
 export const isValidSurveyItemGroup = (item: SurveyItem): item is SurveyGroupItem => {
     return isSurveyGroupItem(item) || (item as SurveyGroupItem).items !== undefined;

@@ -11,7 +11,7 @@ import { SurveyGroupItem, SurveySingleItem } from 'survey-engine/data_types';
 import { getItemColor, getItemTypeInfos, isValidSurveyItemGroup } from '../../../utils/utils';
 import ItemCreator from './ItemCreator';
 
-import SortableWrapper from '../../general/SortableWrapper';
+import SortableWrapper from '../../../../_components/sortable/sortable-wrapper';
 
 interface CompactExplorerProps {
     root: SurveyGroupItem;
