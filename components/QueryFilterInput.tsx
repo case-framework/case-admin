@@ -8,6 +8,7 @@ import React from 'react';
 
 interface QueryFilterInputProps {
     id: string;
+    placeholder?: string;
 }
 
 const QueryFilterInput: React.FC<QueryFilterInputProps> = (props) => {
@@ -40,7 +41,7 @@ const QueryFilterInput: React.FC<QueryFilterInputProps> = (props) => {
                 name={props.id}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search..."
+                placeholder={props.placeholder || 'Search...'}
                 onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                         handleSearch();

@@ -60,6 +60,7 @@ export default async function Page(props: PageProps) {
 
                         <QueryFilterInput
                             id='files-filter'
+                            placeholder='Search by participant ID'
                         />
                     </CardHeader>
                     <Separator
