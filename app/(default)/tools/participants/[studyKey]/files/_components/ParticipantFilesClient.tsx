@@ -214,7 +214,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                     next.delete(fileInfo.id);
                     return next;
                 });
-
+                setTotalCount(prev => prev ? prev - 1 : 0);
             } catch (e) {
                 console.error(e);
                 toast.error('Failed to delete file');
@@ -256,6 +256,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                         return next;
                     });
                     setBulkDeleteProgress((prev) => prev ? { ...prev, deleted: prev.deleted + 1 } : prev);
+                    setTotalCount(prev => prev ? prev - 1 : 0);
                 } catch (error) {
                     errors.push(error instanceof Error ? error.message : 'Failed to delete file');
                 }
