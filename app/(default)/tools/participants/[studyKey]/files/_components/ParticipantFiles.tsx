@@ -11,11 +11,31 @@ interface ParticipantFilesProps {
 }
 
 const ParticipantFiles: React.FC<ParticipantFilesProps> = async (props) => {
-    const pageSize = 10;
+    const pageSize = 100;
+    const rawFilter = props.filter ? decodeURIComponent(props.filter) : undefined;
+    const normalizedFilter = rawFilter?.trim();
+    let parsedFilter: string | undefined;
+
+    if (normalizedFilter) {
+        let participantId = normalizedFilter;
+        try {
+            const parsed = JSON.parse(normalizedFilter);
+            if (parsed && typeof parsed === 'object' && typeof parsed.participantID === 'string') {
+                participantId = parsed.participantID.trim();
+            }
+        } catch {
+            // Non-JSON filter input; treat as a participant ID.
+        }
+
+        if (participantId) {
+            parsedFilter = encodeURIComponent(JSON.stringify({ participantID: participantId }));
+        }
+    }
+
     const resp = await getFileInfos(
         props.studyKey,
         1,
-        props.filter,
+        parsedFilter,
         pageSize,
     );
 
@@ -43,10 +63,10 @@ const ParticipantFiles: React.FC<ParticipantFilesProps> = async (props) => {
                         <List className='size-8 mb-2 mx-auto' />
                     </div>
                     <p>
-                        No file infos found.
+                        No files found.
                     </p>
                     <p className='text-sm mt-3'>
-                        Check back later or try a different filter.
+                        Check back later or filter by participant ID.
                     </p>
                 </div>
             </div>
@@ -56,7 +76,7 @@ const ParticipantFiles: React.FC<ParticipantFilesProps> = async (props) => {
     return (
         <ParticipantFilesClient
             studyKey={props.studyKey}
-            filter={props.filter}
+            filter={parsedFilter}
             fileInfos={fileInfos}
             pageSize={pageSize}
             totalCount={resp.pagination?.totalCount || 0}
