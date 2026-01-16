@@ -44,6 +44,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
     const [bulkDeleteOpen, setBulkDeleteOpen] = React.useState(false);
     const [bulkDeleteConfirmText, setBulkDeleteConfirmText] = React.useState('');
     const [bulkDeleteProgress, setBulkDeleteProgress] = React.useState<{ total: number; deleted: number } | null>(null);
+    const isBulkDeletingRef = React.useRef(false);
 
     const pageSize = props.pageSize || 100;
 
@@ -151,9 +152,9 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                 await downloadFile(fileInfo);
             } catch (e) {
                 console.error(e);
-                if (!(e instanceof Error)) {
-                    toast.error('Failed to download file');
-                }
+                toast.error('Failed to download file', {
+                    description: e instanceof Error ? e.message : undefined,
+                });
             }
         });
     }
@@ -231,6 +232,8 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
             return;
         }
 
+        // Set ref synchronously to prevent dialog from closing
+        isBulkDeletingRef.current = true;
         setIsBulkDeleting(true);
         setBulkDeleteProgress({
             total: filesToDelete.length,
@@ -273,6 +276,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
             setBulkDeleteConfirmText('');
             setBulkDeleteProgress(null);
         } finally {
+            isBulkDeletingRef.current = false;
             setIsBulkDeleting(false);
         }
     };
@@ -463,7 +467,8 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                         <AlertDialog
                             open={bulkDeleteOpen}
                             onOpenChange={(nextOpen) => {
-                                if (isBulkDeleting) {
+                                // Check ref synchronously to prevent dialog from closing during deletion
+                                if (!nextOpen && isBulkDeletingRef.current) {
                                     return;
                                 }
                                 setBulkDeleteOpen(nextOpen);
