@@ -120,9 +120,6 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
             headers: {
                 'Content-Type': 'application/json',
             },
-            next: {
-                revalidate: 5
-            }
         });
         if (resp.status !== 200) {
             const err = await resp.json();
@@ -136,10 +133,13 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
         const blob = await resp.blob();
         const fileName = resp.headers.get('Content-Disposition')?.split('filename=')[1];
         const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
+        const objectUrl = window.URL.createObjectURL(blob);
+        link.href = objectUrl;
         link.download = (fileName || 'participant_file').replaceAll('"', '');
         link.click();
-        window.URL.revokeObjectURL(link.href);
+
+        // Delay revocation to allow download to start
+        setTimeout(() => window.URL.revokeObjectURL(objectUrl), 1000);
 
         if (showToast) {
             toast.success('File downloaded');

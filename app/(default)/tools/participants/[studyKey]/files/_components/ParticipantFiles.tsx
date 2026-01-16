@@ -54,7 +54,7 @@ const ParticipantFiles: React.FC<ParticipantFilesProps> = async (props) => {
                 <div className='w-full'>
                     <ErrorAlert
                         error={error}
-                        title='Error loading reports'
+                        title='Error loading participant files'
                     />
                 </div>
             </div>
