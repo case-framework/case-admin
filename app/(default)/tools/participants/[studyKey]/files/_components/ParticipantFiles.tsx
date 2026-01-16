@@ -12,7 +12,13 @@ interface ParticipantFilesProps {
 
 const ParticipantFiles: React.FC<ParticipantFilesProps> = async (props) => {
     const pageSize = 100;
-    const rawFilter = props.filter ? decodeURIComponent(props.filter) : undefined;
+    let rawFilter: string | undefined;
+    try {
+        rawFilter = props.filter ? decodeURIComponent(props.filter) : undefined;
+    } catch {
+        // Malformed URI sequence; treat as no filter.
+        rawFilter = undefined;
+    }
     const normalizedFilter = rawFilter?.trim();
     let parsedFilter: string | undefined;
 
