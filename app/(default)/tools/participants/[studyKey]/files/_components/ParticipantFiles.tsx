@@ -34,7 +34,7 @@ const ParticipantFiles: React.FC<ParticipantFilesProps> = async (props) => {
         }
 
         if (participantId) {
-            parsedFilter = encodeURIComponent(JSON.stringify({ participantID: participantId }));
+            parsedFilter = JSON.stringify({ participantID: participantId });
         }
     }
 

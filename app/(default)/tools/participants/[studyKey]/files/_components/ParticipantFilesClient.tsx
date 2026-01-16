@@ -400,6 +400,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                                                         variant={'ghost'}
                                                         disabled={isPending}
                                                         onClick={() => onDownloadFile(fileInfo)}
+                                                        aria-label={`Download file ${fileInfo.id}`}
                                                     >
                                                         <Save className='size-4' />
                                                     </Button>
@@ -409,6 +410,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                                                         variant={'ghost'}
                                                         disabled={isPending}
                                                         onClick={() => onDeleteFile(fileInfo)}
+                                                        aria-label={`Delete file ${fileInfo.id}`}
                                                     >
                                                         <Trash2 className='size-4' />
                                                     </Button>
