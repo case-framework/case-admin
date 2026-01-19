@@ -48,7 +48,7 @@ const NotificationsSubsCard: React.FC<NotificationsSubsCardProps> = async (props
     return (
         <WrapperCard
             title="Notification subscriptions"
-            description='Controls which email address will receive notifications for which study events? To trigger a message topic, you need to explicitly add this into the study rules.'
+            description='Controls which email address will receive notifications for which study events. To trigger a message topic, you need to explicitly add this into the study rules.'
         >
             {content}
 
