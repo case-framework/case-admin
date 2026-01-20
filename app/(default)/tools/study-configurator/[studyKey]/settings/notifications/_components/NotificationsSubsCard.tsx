@@ -12,6 +12,8 @@ interface NotificationsSubsCardProps {
     studyKey: string;
 }
 
+const descriptionText = 'Controls which email address will receive notifications for which study events. To trigger a message topic, you need to explicitly add this into the study rules.';
+
 const NotificationsSubsCard: React.FC<NotificationsSubsCardProps> = async (props) => {
     const resp = await getStudyNotificationSubscriptions(props.studyKey);
 
@@ -48,7 +50,7 @@ const NotificationsSubsCard: React.FC<NotificationsSubsCardProps> = async (props
     return (
         <WrapperCard
             title="Notification subscriptions"
-            description='Controls which email address will receive notifications for which study events? To trigger a message topic, you need to explicitly add this into the study rules.'
+            description={descriptionText}
         >
             {content}
 
@@ -72,7 +74,7 @@ export const NotificationsSubsCardSkeleton = () => {
     return (
         <WrapperCard
             title="Notification subscriptions"
-            description='Which email will receive notifications for which study events? To trigger a message topic, you need to explicitly add this into the study rules.'
+            description={descriptionText}
         >
             <Skeleton className='h-8 w-40 mb-2' />
             <Skeleton className='h-8 w-1/2 mb-2' />

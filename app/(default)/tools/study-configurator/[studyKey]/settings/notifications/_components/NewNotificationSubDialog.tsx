@@ -25,7 +25,7 @@ interface NewNotificationSubDialogProps {
 
 
 const newSubSchema = z.object({
-    messageType: z.string().min(2).max(50),
+    messageType: z.string().min(1).max(50),
     email: z.string().email(),
 })
 
@@ -91,7 +91,7 @@ const NewNotificationSubDialog: React.FC<NewNotificationSubDialogProps> = (props
                                         <Input placeholder="message type" {...field} />
                                     </FormControl>
                                     <FormDescription>
-                                        Receive a notification for this topic
+                                        Receive a notification for this topic. Use <code className="px-1 py-0.5 bg-muted rounded">*</code> to subscribe to all message topics.
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
