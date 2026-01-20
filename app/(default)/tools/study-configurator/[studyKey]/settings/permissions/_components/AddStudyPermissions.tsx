@@ -254,8 +254,8 @@ const AddStudyPermissions: React.FC<AddStudyPermissionsProps> = (props) => {
                         </Command>
                     </PopoverContent>
                 </Popover>
-                <FormDescription>
-                    Allow this action to be performed on the study.
+                <FormDescription className="max-w-72">
+                    Allow this action to be performed on the study. Use <code className="px-1 py-0.5 bg-muted rounded">*</code> to allow all actions.
                 </FormDescription>
                 <FormMessage />
             </FormItem >
