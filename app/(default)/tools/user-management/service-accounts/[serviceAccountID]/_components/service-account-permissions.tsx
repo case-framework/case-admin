@@ -74,12 +74,12 @@ const ServiceAccountPermissions: React.FC<ServiceAccountPermissionsProps> = (pro
 
                     </TableBody>
                 </Table>}
-
-                <AddPermissionDialog
-                    userId={props.serviceAccountID}
-                    userType='service-account'
-                />
-
+                <div className='flex justify-between gap-2 mt-6'>
+                    <AddPermissionDialog
+                        userId={props.serviceAccountID}
+                        userType='service-account'
+                    />
+                </div>
             </CardContent>
 
         </Card>
