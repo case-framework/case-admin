@@ -8,7 +8,7 @@ import SortableWrapper from '@/components/survey-editor/components/general/Sorta
 import { ItemTypeKey, getItemColor, getItemTypeInfos, isValidSurveyItemGroup } from '@/components/survey-editor/utils/utils';
 import { cn } from '@/lib/utils';
 import SortableItem from '@/components/survey-editor/components/general/SortableItem';
-import { generateNewItemForType } from '@/components/survey-editor/utils/new-item-init';
+import { generateNewItemForType, randomString } from '@/components/survey-editor/utils/new-item-init';
 import { toast } from 'sonner';
 import {
     ContextMenu,
@@ -99,7 +99,7 @@ const ItemListEditor: React.FC<ItemListEditorProps> = (props) => {
                 return itemKey === copiedItemKey;
             })
             if (existingItem) {
-                copiedItemKey = copiedItemKey + '_copy';
+                copiedItemKey = copiedItemKey + '_copy_' + randomString(3);
             }
 
             const newKey = parentKey + '.' + copiedItemKey;

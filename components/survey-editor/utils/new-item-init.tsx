@@ -8,7 +8,7 @@ import { ComponentGenerators } from "case-editor-tools/surveys/utils/componentGe
 import { initMatrixQuestion } from "case-editor-tools/surveys/responseTypeGenerators/matrixGroupComponent";
 
 // generate random 3 letter string
-const randomString = (targetLength: number = 3) => {
+export const randomString = (targetLength: number = 3) => {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const randomLetter = letters[Math.floor(Math.random() * letters.length)];
     const randomNumbers = Math.random()
@@ -32,7 +32,7 @@ class SimpleGroup extends Group {
         this.groupEditor.setMetadata(metadata);
     }
 
-    buildGroup(): void {}
+    buildGroup(): void { }
 }
 
 export const generateNewItemForType = (props: {
