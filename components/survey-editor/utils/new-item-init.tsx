@@ -34,8 +34,7 @@ export const ensureUniqueKey = (
     do {
         candidate = `${copiedItemKey}_copy_${randomString(3)}`;
     } while (existingKeys.includes(candidate));
-    copiedItemKey = candidate;
-    return copiedItemKey;
+    return candidate;
 }
 
 class SimpleGroup extends Group {
