@@ -94,12 +94,15 @@ const ItemListEditor: React.FC<ItemListEditorProps> = (props) => {
             }
 
             // check if item already exists
-            const existingItem = groupItem.items?.find(item => {
-                const itemKey = item.key.split('.').pop();
-                return itemKey === copiedItemKey;
-            })
-            if (existingItem) {
-                copiedItemKey = copiedItemKey + '_copy_' + randomString(3);
+            const existingKeys = new Set(
+                groupItem.items?.map(item => item.key.split('.').pop())?.filter(Boolean) ?? []
+            );
+            if (existingKeys.has(copiedItemKey)) {
+                let candidate: string;
+                do {
+                    candidate = `${copiedItemKey}_copy_${randomString(3)}`;
+                } while (existingKeys.has(candidate));
+                copiedItemKey = candidate;
             }
 
             const newKey = parentKey + '.' + copiedItemKey;
