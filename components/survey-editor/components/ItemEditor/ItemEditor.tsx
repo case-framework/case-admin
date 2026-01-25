@@ -8,7 +8,7 @@ import ExplorerColumn from './explorer/ExplorerColumn';
 import EditorView from './editor/EditorView';
 import { ItemTypeKey, getParentKeyFromFullKey, getSurveyItemsAsFlatList, isValidSurveyItemGroup } from '../../utils/utils';
 import { toast } from 'sonner';
-import { generateNewItemForType } from '../../utils/new-item-init';
+import { generateNewItemForType, randomString } from '../../utils/new-item-init';
 import { SurveyEditorContext } from '../../surveyEditorContext';
 import { ItemEditorContextProvider } from './item-editor-context';
 
@@ -102,12 +102,15 @@ const ItemEditor: React.FC<ItemEditorProps> = (props) => {
             }
 
             // check if item already exists
-            const existingItem = parentItem.items?.find(item => {
-                const itemKey = item.key.split('.').pop();
-                return itemKey === copiedItemKey;
-            })
-            if (existingItem) {
-                copiedItemKey = copiedItemKey + '_copy';
+            const existingKeys = new Set(
+                parentItem.items?.map(item => item.key.split('.').pop())?.filter(Boolean) ?? []
+            );
+            if (existingKeys.has(copiedItemKey)) {
+                let candidate: string;
+                do {
+                    candidate = `${copiedItemKey}_copy_${randomString(3)}`;
+                } while (existingKeys.has(candidate));
+                copiedItemKey = candidate;
             }
 
             const newKey = parentKey + '.' + copiedItemKey;
