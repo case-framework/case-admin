@@ -8,7 +8,7 @@ import { ComponentGenerators } from "case-editor-tools/surveys/utils/componentGe
 import { initMatrixQuestion } from "case-editor-tools/surveys/responseTypeGenerators/matrixGroupComponent";
 
 // generate random 3 letter string
-export const randomString = (targetLength: number = 3) => {
+const randomString = (targetLength: number = 3) => {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const randomLetter = letters[Math.floor(Math.random() * letters.length)];
     const randomNumbers = Math.random()
@@ -25,6 +25,18 @@ export const getUniqueRandomKey = (existingKeys: string[], parentKey: string) =>
     }
     return newKey;
 };
+
+export const ensureUniqueKey = (
+    copiedItemKey: string,
+    existingKeys: string[],
+) => {
+    let candidate: string;
+    do {
+        candidate = `${copiedItemKey}_copy_${randomString(3)}`;
+    } while (existingKeys.includes(candidate));
+    copiedItemKey = candidate;
+    return copiedItemKey;
+}
 
 class SimpleGroup extends Group {
     constructor(parentKey: string, key: string, metadata?: { [key: string]: string }) {
