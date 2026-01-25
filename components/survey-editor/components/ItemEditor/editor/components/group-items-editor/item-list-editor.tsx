@@ -8,7 +8,7 @@ import SortableWrapper from '@/components/survey-editor/components/general/Sorta
 import { ItemTypeKey, getItemColor, getItemTypeInfos, isValidSurveyItemGroup } from '@/components/survey-editor/utils/utils';
 import { cn } from '@/lib/utils';
 import SortableItem from '@/components/survey-editor/components/general/SortableItem';
-import { generateNewItemForType } from '@/components/survey-editor/utils/new-item-init';
+import { ensureUniqueKey, generateNewItemForType } from '@/components/survey-editor/utils/new-item-init';
 import { toast } from 'sonner';
 import {
     ContextMenu,
@@ -94,12 +94,9 @@ const ItemListEditor: React.FC<ItemListEditorProps> = (props) => {
             }
 
             // check if item already exists
-            const existingItem = groupItem.items?.find(item => {
-                const itemKey = item.key.split('.').pop();
-                return itemKey === copiedItemKey;
-            })
-            if (existingItem) {
-                copiedItemKey = copiedItemKey + '_copy';
+            const existingKeys = groupItem.items?.map(item => item.key.split('.').pop())?.filter(Boolean) ?? []
+            if (existingKeys.includes(copiedItemKey)) {
+                copiedItemKey = ensureUniqueKey(copiedItemKey, existingKeys as string[]);
             }
 
             const newKey = parentKey + '.' + copiedItemKey;

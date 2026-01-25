@@ -26,13 +26,24 @@ export const getUniqueRandomKey = (existingKeys: string[], parentKey: string) =>
     return newKey;
 };
 
+export const ensureUniqueKey = (
+    copiedItemKey: string,
+    existingKeys: string[],
+) => {
+    let candidate: string;
+    do {
+        candidate = `${copiedItemKey}_copy_${randomString(3)}`;
+    } while (existingKeys.includes(candidate));
+    return candidate;
+}
+
 class SimpleGroup extends Group {
     constructor(parentKey: string, key: string, metadata?: { [key: string]: string }) {
         super(parentKey, key);
         this.groupEditor.setMetadata(metadata);
     }
 
-    buildGroup(): void {}
+    buildGroup(): void { }
 }
 
 export const generateNewItemForType = (props: {
