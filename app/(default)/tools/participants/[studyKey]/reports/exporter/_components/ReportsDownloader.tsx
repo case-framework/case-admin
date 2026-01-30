@@ -25,17 +25,17 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
     const [isPending, startTransition] = React.useTransition();
     const [reportKeys, setReportKeys] = React.useState<Array<string>>([]);
     const [selectedReportKey, setSelectedReportKey] = React.useState<string>('');
-    
+
     // Applied filters (used for fetching counts)
     const [appliedParticipantID, setAppliedParticipantID] = React.useState<string>('');
     const [appliedFrom, setAppliedFrom] = React.useState<Date | undefined>(undefined);
     const [appliedUntil, setAppliedUntil] = React.useState<Date | undefined>(undefined);
-    
+
     // Draft filters (shown in popover, not applied until "Apply" is clicked)
     const [draftParticipantID, setDraftParticipantID] = React.useState<string>('');
     const [draftFrom, setDraftFrom] = React.useState<Date | undefined>(undefined);
     const [draftUntil, setDraftUntil] = React.useState<Date | undefined>(undefined);
-    
+
     const [type, setType] = React.useState<'csv' | 'raw'>('csv');
     const [fromOpen, setFromOpen] = React.useState(false);
     const [untilOpen, setUntilOpen] = React.useState(false);
@@ -74,22 +74,11 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // Initialize draft filters from applied filters when popover opens
-    useEffect(() => {
-        if (filtersOpen) {
-            setDraftParticipantID(appliedParticipantID);
-            setDraftFrom(appliedFrom);
-            setDraftUntil(appliedUntil);
-        }
-    }, [filtersOpen, appliedParticipantID, appliedFrom, appliedUntil]);
 
-    // Reset draft filters when popover closes without applying
     useEffect(() => {
-        if (!filtersOpen) {
-            setDraftParticipantID(appliedParticipantID);
-            setDraftFrom(appliedFrom);
-            setDraftUntil(appliedUntil);
-        }
+        setDraftParticipantID(appliedParticipantID);
+        setDraftFrom(appliedFrom);
+        setDraftUntil(appliedUntil);
     }, [filtersOpen, appliedParticipantID, appliedFrom, appliedUntil]);
 
     // Fetch count when report key or applied filters change
