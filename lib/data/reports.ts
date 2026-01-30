@@ -3,7 +3,7 @@
 import { auth } from "@/auth";
 import { fetchCASEManagementAPI } from "@/utils/server/fetch-case-management-api";
 import { Pagination } from "@/utils/server/types/paginationInfo";
-import { Task, startFileExportTask } from "./tasks";
+import { Task } from "./tasks";
 
 export interface Report {
     id: string;
@@ -146,14 +146,53 @@ export const getReportCount = async (
     return resp.body;
 }
 
-
 export const startReportExport = async (
     studyKey: string,
-    filter?: string,
-    sort?: string,
+    reportKey?: string,
+    participantID?: string,
+    from?: Date,
+    until?: Date,
+    type?: 'csv' | 'raw',
 ): Promise<{
     error?: string,
     task?: Task
 }> => {
-    return startFileExportTask(`/v1/studies/${studyKey}/data-exporter/reports`, filter, sort);
+    const session = await auth();
+    if (!session || !session.CASEaccessToken) {
+        return { error: 'Unauthorized' };
+    }
+
+    const url = `/v1/studies/${studyKey}/data-exporter/reports`;
+
+    const queryParams = new URLSearchParams();
+    if (reportKey) {
+        queryParams.append('reportKey', reportKey);
+    }
+    if (participantID) {
+        queryParams.append('pid', participantID);
+    }
+    if (from !== undefined && !isNaN(from.getTime())) {
+        queryParams.append('from', Math.floor(from.getTime() / 1000).toString());
+    }
+    if (until !== undefined && !isNaN(until.getTime())) {
+        queryParams.append('until', Math.floor(until.getTime() / 1000).toString());
+    }
+    if (type) {
+        queryParams.append('type', type);
+    }
+    const queryString = queryParams.toString();
+    const urlWithQuery = `${url}?${queryString}`;
+
+    const resp = await fetchCASEManagementAPI(
+        urlWithQuery,
+        session.CASEaccessToken,
+        {
+            method: 'POST',
+            revalidate: 0,
+        }
+    );
+    if (resp.status !== 200) {
+        return { error: `Failed to start export task: ${resp.status} - ${resp.body.error}` };
+    }
+    return resp.body;
 }

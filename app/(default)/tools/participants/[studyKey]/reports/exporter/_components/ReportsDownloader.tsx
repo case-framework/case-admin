@@ -52,7 +52,14 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
         startTransition(async () => {
             try {
                 // start export task
-                const resp = await startReportExport(props.studyKey, search);
+                const resp = await startReportExport(
+                    props.studyKey,
+                    search,
+                    undefined,
+                    undefined,
+                    undefined,
+                    'csv'
+                );
                 if (resp.error || !resp.task) {
                     toast.error('Failed to start export task', {
                         description: resp.error
