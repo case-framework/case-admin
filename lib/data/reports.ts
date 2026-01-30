@@ -112,8 +112,10 @@ export const getReports = async (
 
 export const getReportCount = async (
     studyKey: string,
-    filter?: string,
     reportKey?: string,
+    participantID?: string,
+    from?: Date,
+    until?: Date,
 ): Promise<{
     error?: string,
     count?: number
@@ -124,11 +126,17 @@ export const getReportCount = async (
     }
 
     const queryParams = new URLSearchParams();
-    if (filter) {
-        queryParams.append('filter', filter);
-    }
     if (reportKey) {
         queryParams.append('reportKey', reportKey);
+    }
+    if (participantID) {
+        queryParams.append('pid', participantID);
+    }
+    if (from !== undefined && !isNaN(from.getTime())) {
+        queryParams.append('from', Math.floor(from.getTime() / 1000).toString());
+    }
+    if (until !== undefined && !isNaN(until.getTime())) {
+        queryParams.append('until', Math.floor(until.getTime() / 1000).toString());
     }
     const queryString = queryParams.toString();
     const url = `/v1/studies/${studyKey}/data-exporter/reports/count?${queryString}`;
