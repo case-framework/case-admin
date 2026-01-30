@@ -25,9 +25,17 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
     const [isPending, startTransition] = React.useTransition();
     const [reportKeys, setReportKeys] = React.useState<Array<string>>([]);
     const [selectedReportKey, setSelectedReportKey] = React.useState<string>('');
-    const [participantID, setParticipantID] = React.useState<string>('');
-    const [from, setFrom] = React.useState<Date | undefined>(undefined);
-    const [until, setUntil] = React.useState<Date | undefined>(undefined);
+    
+    // Applied filters (used for fetching counts)
+    const [appliedParticipantID, setAppliedParticipantID] = React.useState<string>('');
+    const [appliedFrom, setAppliedFrom] = React.useState<Date | undefined>(undefined);
+    const [appliedUntil, setAppliedUntil] = React.useState<Date | undefined>(undefined);
+    
+    // Draft filters (shown in popover, not applied until "Apply" is clicked)
+    const [draftParticipantID, setDraftParticipantID] = React.useState<string>('');
+    const [draftFrom, setDraftFrom] = React.useState<Date | undefined>(undefined);
+    const [draftUntil, setDraftUntil] = React.useState<Date | undefined>(undefined);
+    
     const [type, setType] = React.useState<'csv' | 'raw'>('csv');
     const [fromOpen, setFromOpen] = React.useState(false);
     const [untilOpen, setUntilOpen] = React.useState(false);
@@ -66,12 +74,31 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // Initialize draft filters from applied filters when popover opens
+    useEffect(() => {
+        if (filtersOpen) {
+            setDraftParticipantID(appliedParticipantID);
+            setDraftFrom(appliedFrom);
+            setDraftUntil(appliedUntil);
+        }
+    }, [filtersOpen, appliedParticipantID, appliedFrom, appliedUntil]);
+
+    // Reset draft filters when popover closes without applying
+    useEffect(() => {
+        if (!filtersOpen) {
+            setDraftParticipantID(appliedParticipantID);
+            setDraftFrom(appliedFrom);
+            setDraftUntil(appliedUntil);
+        }
+    }, [filtersOpen, appliedParticipantID, appliedFrom, appliedUntil]);
+
+    // Fetch count when report key or applied filters change
     useEffect(() => {
         if (selectedReportKey) {
             onGetResultCount();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedReportKey, participantID, from, until]);
+    }, [selectedReportKey, appliedParticipantID, appliedFrom, appliedUntil]);
 
     const onGetResultCount = () => {
         if (!selectedReportKey) {
@@ -87,9 +114,9 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
                 const resp = await getReportCount(
                     props.studyKey,
                     reportKeyForAPI,
-                    participantID || undefined,
-                    from,
-                    until,
+                    appliedParticipantID || undefined,
+                    appliedFrom,
+                    appliedUntil,
                 );
                 if (resp.error) {
                     toast.error('Failed to get report count', {
@@ -115,9 +142,9 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
                 const resp = await startReportExport(
                     props.studyKey,
                     reportKeyForAPI,
-                    participantID || undefined,
-                    from,
-                    until,
+                    appliedParticipantID || undefined,
+                    appliedFrom,
+                    appliedUntil,
                     type,
                 );
                 if (resp.error || !resp.task) {
@@ -136,18 +163,25 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
     };
 
     const onApplyFilters = () => {
+        // Apply draft filters to applied filters (this will trigger count fetch via useEffect)
+        setAppliedParticipantID(draftParticipantID);
+        setAppliedFrom(draftFrom);
+        setAppliedUntil(draftUntil);
         setFiltersOpen(false);
-        loadReportKeys();
     };
 
     const onClearFilters = () => {
-        setParticipantID('');
-        setFrom(undefined);
-        setUntil(undefined);
+        // Clear both draft and applied filters
+        setDraftParticipantID('');
+        setDraftFrom(undefined);
+        setDraftUntil(undefined);
+        setAppliedParticipantID('');
+        setAppliedFrom(undefined);
+        setAppliedUntil(undefined);
         setFiltersOpen(false);
     };
 
-    const hasActiveFilters = Boolean(participantID || from || until);
+    const hasActiveFilters = Boolean(appliedParticipantID || appliedFrom || appliedUntil);
 
     return (
         <div className='space-y-4'>
@@ -183,8 +217,8 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
                                 <Label htmlFor="pid">Participant ID</Label>
                                 <Input
                                     id="pid"
-                                    value={participantID}
-                                    onChange={(e) => setParticipantID(e.target.value)}
+                                    value={draftParticipantID}
+                                    onChange={(e) => setDraftParticipantID(e.target.value)}
                                     placeholder="Optional"
                                 />
                             </div>
@@ -195,15 +229,15 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
                                         <PopoverTrigger asChild>
                                             <Button variant="outline" className="justify-start">
                                                 <CalendarDays className="size-4 mr-2" />
-                                                {from ? format(from, 'yyyy-MM-dd') : 'Select'}
+                                                {draftFrom ? format(draftFrom, 'yyyy-MM-dd') : 'Select'}
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent align="start" className="p-0 w-fit">
                                             <Calendar
                                                 mode="single"
-                                                selected={from}
+                                                selected={draftFrom}
                                                 onSelect={(date) => {
-                                                    setFrom(date);
+                                                    setDraftFrom(date);
                                                     if (date) {
                                                         setFromOpen(false);
                                                     }
@@ -220,15 +254,15 @@ const ReportDownloader: React.FC<ReportDownloaderProps> = (props) => {
                                         <PopoverTrigger asChild>
                                             <Button variant="outline" className="justify-start">
                                                 <CalendarDays className="size-4 mr-2" />
-                                                {until ? format(until, 'yyyy-MM-dd') : 'Select'}
+                                                {draftUntil ? format(draftUntil, 'yyyy-MM-dd') : 'Select'}
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent align="start" className="p-0 w-fit">
                                             <Calendar
                                                 mode="single"
-                                                selected={until}
+                                                selected={draftUntil}
                                                 onSelect={(date) => {
-                                                    setUntil(date);
+                                                    setDraftUntil(date);
                                                     if (date) {
                                                         setUntilOpen(false);
                                                     }
