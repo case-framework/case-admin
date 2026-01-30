@@ -48,7 +48,7 @@ export default function Page({
                                     Export Reports
                                 </CardTitle>
                                 <CardDescription>
-                                    Prepare a JSON file with all the reports for the given query and when ready download the file.
+                                    The file will be prepared based on your query and when ready it will be downloaded.
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
