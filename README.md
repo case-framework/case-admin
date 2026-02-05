@@ -1,44 +1,36 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Environment variables
+## Getting Started
 
-```
-# --> needs to be removed
-# NEXTAUTH_URL=<url-to-your-app>
+First, run the development server:
 
-
-# --> replaced by "AUTH_SECRET"
-# NEXTAUTH_SECRET=<supersecretvalue>
-AUTH_SECRET=<supersecretvalue>
-
-
-NEXT_PUBLIC_DEFAULT_LANGUAGE=nl
-NEXT_PUBLIC_APP_NAME=<app name>
-NEXT_PUBLIC_SUPPORTED_LOCALES=nl,en
-INSTANCE_ID=<instance id>
-MANAGEMENT_API_URL=<url-to-the-management-api-server>
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-### Git commands
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Update upstream branch from reference project
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-```
-git fetch reference-project
-git pull reference-project main:upstream
-git push origin upstream
-```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Rebase local branch onto upstream branch
+## Learn More
 
-```
-git rebase --onto <new-base-commit> <old-case-commit>
-```
+To learn more about Next.js, take a look at the following resources:
 
-Push local upstream branch to reference project main branch
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-```
-git push reference-project upstream:main
-```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-```
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
