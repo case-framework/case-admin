@@ -2,6 +2,7 @@
 
 import { LoadingButton } from "@/components/my-ui/loading-button";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 export default function Home() {
@@ -19,6 +20,31 @@ export default function Home() {
         >
           Click me
         </LoadingButton>
+
+        <div className="flex flex-col gap-4">
+          <div>
+
+          </div>
+          <div>
+
+          </div>
+        </div>
+
+        <div className="@container">
+          <div className={cn(
+            "bg-zinc-500 dark:bg-black  size-5",
+            "animate-pulse",
+            1 < 2 ? "bg-red-500" : "bg-blue-500",
+            {
+              "bg-red-500": true,
+            }
+          )}>
+
+          </div>
+          <div className="bg-zinc-50 dark:bg-black h-5">
+
+          </div>
+        </div>
       </main>
     </div>
   );
