@@ -7,6 +7,13 @@ import { admin } from "better-auth/plugins"
 
 const db = await getDb(DbKey.USER);
 
+export const UserRole = {
+    ADMIN: "admin",
+    USER: "user",
+} as const;
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+
 
 export const auth = betterAuth({
     database: mongodbAdapter(db, {
