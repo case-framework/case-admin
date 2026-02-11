@@ -111,8 +111,8 @@ class MessagingPermission extends PermissionBase {
         return new MessagingPermission(
             resourceKey,
             action,
-            doc.subjectId,
             id,
+            doc.subjectId,
             subjectType,
             doc.limiter,
         );

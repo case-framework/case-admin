@@ -6,7 +6,7 @@ export const paginationSchema = z.object({
 });
 
 export const limitCurrentPage = (page: number, totalPages: number) => {
-    return Math.min(Math.max(1, page), totalPages);
+    return Math.min(Math.max(1, page), Math.max(1, totalPages));
 }
 
 export const hasPreviousPage = (page: number) => {

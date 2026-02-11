@@ -50,7 +50,7 @@ const isAdminUser = t.middleware(async ({ ctx, next }) => {
 const withPermissions = t.middleware(async ({ ctx, next }) => {
   requireLogIn(ctx);
 
-  const id = '67ee8e1323353a397d3aa8c5';
+  const id = ctx.user!.id;
   const permissions = await userService.getPermissions(id, SubjectType.managementUser);
 
   return next({
