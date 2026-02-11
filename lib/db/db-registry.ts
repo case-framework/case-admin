@@ -3,11 +3,14 @@ import "server-only";
 import { Db, MongoClient, MongoClientOptions } from "mongodb";
 import { mustGetEnv } from "../utils/env-utils";
 
-export enum DbKey {
-    USER = "user",
-    STUDY = "study",
-    MESSAGE = "message",
-}
+export const DbKey = {
+    USER: "user",
+    STUDY: "study",
+    MESSAGE: "message",
+} as const;
+
+export type DbKey = (typeof DbKey)[keyof typeof DbKey];
+
 
 const options: MongoClientOptions = {
     // tune as needed
