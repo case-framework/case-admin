@@ -21,7 +21,6 @@ const PermissionItem = ({ permission }: PermissionItemProps) => {
 
 
     const handleDeletePermission = () => {
-        console.log('deleting permission', permission.id);
         deletePermission({ id: permission.id! }, {
             onSuccess: () => {
                 setOpen(false);
