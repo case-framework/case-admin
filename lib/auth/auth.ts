@@ -18,6 +18,7 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 export const auth = betterAuth({
     database: mongodbAdapter(db, {
         client: db.client,
+        transaction: false,
     }),
     user: {
         modelName: 'case_admin_users',
