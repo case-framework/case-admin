@@ -1,9 +1,11 @@
 "use client";
 
 import { LoadingButton } from "@/components/my-ui/loading-button";
-import { useCreatePermission, useDeletePermission, useGetPermissions } from "@/hooks/useUserManagementRouter";
+import { useCreatePermission, useGetPermissions } from "@/hooks/useUserManagementRouter";
 import { SubjectType, UserPermission, UserPermissionActions } from "@/lib/types/permission";
 import { toast } from "sonner";
+import PermissionItem from "./permission-item";
+import { Empty, EmptyContent, EmptyDescription, EmptyTitle } from "@/components/ui/empty";
 
 
 interface UserPermissionsProps {
@@ -22,13 +24,6 @@ const UserPermissions = ({ userId }: UserPermissionsProps) => {
         isPending: isCreatingPermission,
     } = useCreatePermission();
 
-    const {
-        mutate: deletePermission,
-        isPending: isDeletingPermission,
-    } = useDeletePermission({
-        subjectId: userId,
-        subjectType: 'management-user' as SubjectType
-    });
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
@@ -70,24 +65,22 @@ const UserPermissions = ({ userId }: UserPermissionsProps) => {
 
             {
                 data?.map((permission) => (
-                    <div key={permission.id} className="flex items-center gap-2 border border-border p-2">
-                        <p>{permission.resourceType}</p>
-                        <p>{permission.resourceKey}</p>
-                        <p>{permission.action}</p>
-                        <p>{permission.subjectId}</p>
-                        <p>{permission.subjectType}</p>
-                        <LoadingButton
-                            variant="ghost"
-                            className="ms-auto"
-                            isLoading={isDeletingPermission}
-                            onClick={() => {
-                                deletePermission({ id: permission.id! });
-                            }}>
-                            Delete Permission
-                        </LoadingButton>
-
-                    </div>
+                    <PermissionItem
+                        key={permission.id}
+                        permission={permission}
+                    />
                 ))
+            }
+
+            {
+                data?.length === 0 && (
+                    <Empty className="bg-muted">
+                        <EmptyContent>
+                            <EmptyTitle>No permissions found</EmptyTitle>
+                            <EmptyDescription>No permissions found for this user</EmptyDescription>
+                        </EmptyContent>
+                    </Empty>
+                )
             }
         </div>
     )
