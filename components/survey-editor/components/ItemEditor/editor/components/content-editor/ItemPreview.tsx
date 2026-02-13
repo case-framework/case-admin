@@ -148,6 +148,9 @@ const ItemPreview: React.FC<ItemPreviewProps> = (props) => {
 
             <div className='border border-neutral-200 p-4 bg-white shadow-md rounded-sm'>
                 <SurveyContextProvider
+                    translations={{
+                        helpBtnAriaLabel: "Help"
+                    }}
                     onRunExternalHandler={undefined}
                 >
                     <SurveySingleItemView

@@ -18,10 +18,13 @@ interface SurveyViewProps {
     onResponsesChanged?: (responses: SurveySingleItemResponse[], version: string, surveyEngine?: SurveyEngineCore) => void;
     prefills?: SurveySingleItemResponse[];
     context?: SurveyContext;
-    backBtnText: string;
-    nextBtnText: string;
-    submitBtnText: string;
-    invalidResponseText: string;
+    translations: {
+        helpBtnAriaLabel?: string;
+        backBtnText: string;
+        nextBtnText: string;
+        submitBtnText: string;
+        invalidResponseText: string;
+    };
     hideBackButton?: boolean;
     hideButtons?: boolean;
     showKeys?: boolean;
@@ -88,10 +91,10 @@ const SurveyView: React.FC<SurveyViewProps> = (props) => {
             surveyEngine={surveyEngine}
             surveyItems={surveyPages[currentPage]}
             localisedTexts={{
-                backBtn: props.backBtnText,
-                nextBtn: props.nextBtnText,
-                submitBtn: props.submitBtnText,
-                invalidResponse: props.invalidResponseText ? props.invalidResponseText : '',
+                backBtn: props.translations.backBtnText,
+                nextBtn: props.translations.nextBtnText,
+                submitBtn: props.translations.submitBtnText,
+                invalidResponse: props.translations.invalidResponseText,
             }}
             showBackButton={currentPage > 0 && !props.hideBackButton}
             onPreviousPage={() => {
@@ -120,6 +123,7 @@ const SurveyView: React.FC<SurveyViewProps> = (props) => {
 
     return (
         <SurveyContextProvider
+            translations={props.translations}
             onRunExternalHandler={props.onRunExternalHandler}
         >
             <div

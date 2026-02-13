@@ -8,6 +8,9 @@ export type HandlerFunction = (handlerId: string, args?: HandlerFuncArgType[]) =
 }>;
 
 interface SurveyContextValue {
+    translations: {
+        helpBtnAriaLabel?: string;
+    }
     runExternalHandler?: HandlerFunction;
 }
 
@@ -15,12 +18,20 @@ const SurveyContext = createContext<SurveyContextValue | null>(null);
 
 
 interface SurveyContextProviderProps {
+    translations: {
+        helpBtnAriaLabel?: string;
+    }
     children: React.ReactNode;
     onRunExternalHandler?: HandlerFunction;
 }
 
-export const SurveyContextProvider: React.FC<SurveyContextProviderProps> = ({ children, onRunExternalHandler }) => {
+export const SurveyContextProvider: React.FC<SurveyContextProviderProps> = ({
+    children,
+    translations,
+    onRunExternalHandler
+}) => {
     const contextValue: SurveyContextValue = {
+        translations,
         runExternalHandler: onRunExternalHandler,
     };
 

@@ -4,6 +4,7 @@ import MarkdownComponent from './MarkdownComponent';
 import { CircleHelp } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import { useSurveyCtx } from '../../survey-context';
 
 
 interface HelpGroupProps {
@@ -13,6 +14,8 @@ interface HelpGroupProps {
 }
 
 const HelpGroup: React.FC<HelpGroupProps> = (props) => {
+    const { translations } = useSurveyCtx();
+
     const renderContent = () => {
         if (props.componentGroup.items === undefined) {
             return <p className='text-[--survey-error-text-color]'> items is missing in the helpGroup component </p>
@@ -34,13 +37,17 @@ const HelpGroup: React.FC<HelpGroupProps> = (props) => {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="ghost" size='icon' >
+                <Button
+                    variant="ghost" size='icon'
+                    className='aspect-square size-7'
+                >
                     <CircleHelp className="h-6 w-6 text-primary" aria-hidden="true" />
+                    <span className="sr-only">{translations.helpBtnAriaLabel}</span>
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className='w-60 @md:w-96'
+            <PopoverContent
+                className='w-60 @md:w-96'
                 align='end'
-
             >
                 {renderContent()}
             </PopoverContent>

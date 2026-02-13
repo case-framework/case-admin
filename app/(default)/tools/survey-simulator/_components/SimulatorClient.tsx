@@ -95,10 +95,13 @@ const SimulatorClient: React.FC = () => {
                     instanceKey={counter.toString()}
                     survey={simulatorConfig.survey}
                     languageCode={simulatorConfig.language || 'en'}
-                    nextBtnText={simulatorConfig.texts?.nextBtnText || 'Next'}
-                    backBtnText={simulatorConfig.texts?.backBtnText || 'Back'}
-                    submitBtnText={simulatorConfig.texts?.submitBtnText || 'Submit'}
-                    invalidResponseText={simulatorConfig.texts?.invalidResponseText || 'Invalid response'}
+                    translations={{
+                        nextBtnText: simulatorConfig.texts?.nextBtnText || 'Next',
+                        backBtnText: simulatorConfig.texts?.backBtnText || 'Back',
+                        submitBtnText: simulatorConfig.texts?.submitBtnText || 'Submit',
+                        invalidResponseText: simulatorConfig.texts?.invalidResponseText || 'Invalid response',
+                        helpBtnAriaLabel: 'Help',
+                    }}
                     hideBackButton={false}
                     showKeys={simulatorConfig.showKeys}
                     showEngineDebugMsg={false}
