@@ -5,43 +5,47 @@ import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
+import { ConfirmDialogProvider } from "@/components/my-ui/confirm-provider";
+
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: process.env.NEXT_PUBLIC_APP_NAME || 'Case Admin',
-    template: `%s | ${process.env.NEXT_PUBLIC_APP_NAME || 'Case Admin'} `,
-  },
-  description: 'This is the CASE admin tool, to manage studies, surveys, messages and participants.'
+    title: {
+        default: process.env.NEXT_PUBLIC_APP_NAME || 'Case Admin',
+        template: `%s | ${process.env.NEXT_PUBLIC_APP_NAME || 'Case Admin'} `,
+    },
+    description: 'This is the CASE admin tool, to manage studies, surveys, messages and participants.'
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <TRPCReactProvider>
-          <NuqsAdapter>
-            {children}
-            <Toaster
-              position="bottom-center"
-            />
-          </NuqsAdapter>
-        </TRPCReactProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body
+                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            >
+                <TRPCReactProvider>
+                    <NuqsAdapter>
+                        <ConfirmDialogProvider>
+                            {children}
+                        </ConfirmDialogProvider>
+                        <Toaster
+                            position="bottom-center"
+                        />
+                    </NuqsAdapter>
+                </TRPCReactProvider>
+            </body>
+        </html>
+    );
 }

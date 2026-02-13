@@ -29,13 +29,19 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel
-                        onClick={props.onCancel}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            props.onCancel();
+                        }}
                     >
                         {props.cancelButtonText}
                     </AlertDialogCancel>
                     <AlertDialogAction
                         variant={props.variant}
-                        onClick={props.onConfirm}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            props.onConfirm();
+                        }}
                     >
                         {props.confirmButtonText}
                     </AlertDialogAction>

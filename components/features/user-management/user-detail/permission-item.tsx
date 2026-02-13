@@ -1,8 +1,7 @@
-import ConfirmDialog from "@/components/my-ui/confirm-dialog";
 import { LoadingButton } from "@/components/my-ui/loading-button";
+import { useConfirm } from "@/components/my-ui/confirm-provider";
 import { useDeletePermission } from "@/hooks/useUserManagementRouter";
 import { PermissionBase, SubjectType } from "@/lib/types/permission";
-import { useState } from "react";
 import { toast } from "sonner";
 
 interface PermissionItemProps {
@@ -10,7 +9,7 @@ interface PermissionItemProps {
 }
 
 const PermissionItem = ({ permission }: PermissionItemProps) => {
-    const [open, setOpen] = useState(false);
+    const confirm = useConfirm();
     const {
         mutate: deletePermission,
         isPending: isDeletingPermission,
@@ -20,16 +19,24 @@ const PermissionItem = ({ permission }: PermissionItemProps) => {
     });
 
 
-    const handleDeletePermission = () => {
-        deletePermission({ id: permission.id! }, {
-            onSuccess: () => {
-                setOpen(false);
-                toast.success('Permission deleted successfully');
-            },
-            onError: (error) => {
-                toast.error(error.message);
-            },
+    const handleDeletePermission = async () => {
+        const confirmed = await confirm({
+            title: "Delete Permission",
+            description: "Are you sure you want to delete this permission?",
+            confirmButtonText: "Delete",
+            variant: "destructive",
         });
+
+        if (confirmed) {
+            deletePermission({ id: permission.id! }, {
+                onSuccess: () => {
+                    toast.success('Permission deleted successfully');
+                },
+                onError: (error) => {
+                    toast.error(error.message);
+                },
+            });
+        }
     }
 
 
@@ -37,17 +44,6 @@ const PermissionItem = ({ permission }: PermissionItemProps) => {
         <div
             className="flex items-center gap-2 border border-border p-2"
         >
-            <ConfirmDialog
-                title="Delete Permission"
-                description="Are you sure you want to delete this permission?"
-                confirmButtonText="Delete"
-                cancelButtonText="Cancel"
-                isOpen={open}
-                onConfirm={handleDeletePermission}
-                variant="destructive"
-                onCancel={() => setOpen(false)}
-            />
-
             <p>{permission.resourceType}</p>
             <p>{permission.resourceKey}</p>
             <p>{permission.action}</p>
@@ -57,9 +53,7 @@ const PermissionItem = ({ permission }: PermissionItemProps) => {
                 variant="ghost"
                 className="ms-auto"
                 isLoading={isDeletingPermission}
-                onClick={() => {
-                    setOpen(true);
-                }}>
+                onClick={handleDeletePermission}>
                 Delete Permission
             </LoadingButton>
         </div>
