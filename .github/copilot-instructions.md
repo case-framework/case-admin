@@ -43,6 +43,7 @@ This document provides context for AI agents working on the `case-admin` codebas
 - **Async Actions:** Use `<LoadingButton />` (from `@/components/my-ui/loading-button`) for any button triggering a mutation/Promise. Pass `isLoading={isPending}`.
 - **Confirmations:** Use `useConfirm` hook (from `@/components/my-ui/confirm-provider`) for confirmation dialogs. Avoid rendering `<ConfirmDialog />` directly unless `useConfirm` is not suitable.
 - **Toasts:** Use `toast` from `sonner` for success/error notifications.
+- **Effects:** Use `useEffectEvent` for side effects within `useEffect` that should not be dependencies (e.g. logging, reading latest props without re-triggering).
 
 ### Database & Services
 - **structure:** Services (e.g. `UserService`) take a `Db` instance in constructor.
