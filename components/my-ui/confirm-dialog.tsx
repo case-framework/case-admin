@@ -39,6 +39,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
             open={props.isOpen}
             onOpenChange={(open) => {
                 if (!open) {
+                    setTypedValue("");
                     props.onCancel();
                 }
             }}
@@ -66,6 +67,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && canConfirm) {
                                     e.preventDefault();
+                                    setTypedValue("");
                                     props.onConfirm();
                                 }
                             }}
@@ -81,6 +83,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                     <AlertDialogCancel
                         onClick={(e) => {
                             e.preventDefault();
+                            setTypedValue("");
                             props.onCancel();
                         }}
                     >
@@ -91,6 +94,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                         disabled={!canConfirm}
                         onClick={(e) => {
                             e.preventDefault();
+                            setTypedValue("");
                             props.onConfirm();
                         }}
                     >

@@ -23,7 +23,6 @@ const ConfirmContext = createContext<ConfirmContextType | undefined>(undefined);
 export const ConfirmDialogProvider = ({ children }: { children: ReactNode }) => {
     const [options, setOptions] = useState<ConfirmOptions>({});
     const [isOpen, setIsOpen] = useState(false);
-    const [openKey, setOpenKey] = useState(0);
     const [resolver, setResolver] = useState<((value: boolean) => void) | null>(null);
 
     const confirm = useCallback((confirmOptions: ConfirmOptions) => {
@@ -35,7 +34,6 @@ export const ConfirmDialogProvider = ({ children }: { children: ReactNode }) => 
         });
 
         setOptions(confirmOptions);
-        setOpenKey((k) => k + 1);
         setIsOpen(true);
         return new Promise<boolean>((resolve) => {
             setResolver(() => resolve);
@@ -62,7 +60,6 @@ export const ConfirmDialogProvider = ({ children }: { children: ReactNode }) => 
         <ConfirmContext.Provider value={{ confirm }}>
             {children}
             <ConfirmDialog
-                key={openKey}
                 isOpen={isOpen}
                 title={options.title || "Confirm Action"}
                 description={options.description || "Are you sure you want to proceed?"}
