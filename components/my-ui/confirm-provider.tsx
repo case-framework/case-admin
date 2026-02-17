@@ -1,7 +1,9 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import ConfirmDialog from "./confirm-dialog";
+import ConfirmDialog, { type RequireConfirmationInput } from "./confirm-dialog";
+
+export type { RequireConfirmationInput };
 
 interface ConfirmOptions {
     title?: string;
@@ -9,6 +11,7 @@ interface ConfirmOptions {
     confirmButtonText?: string;
     cancelButtonText?: string;
     variant?: "default" | "destructive";
+    requireConfirmationInput?: RequireConfirmationInput;
 }
 
 interface ConfirmContextType {
@@ -20,6 +23,7 @@ const ConfirmContext = createContext<ConfirmContextType | undefined>(undefined);
 export const ConfirmDialogProvider = ({ children }: { children: ReactNode }) => {
     const [options, setOptions] = useState<ConfirmOptions>({});
     const [isOpen, setIsOpen] = useState(false);
+    const [openKey, setOpenKey] = useState(0);
     const [resolver, setResolver] = useState<((value: boolean) => void) | null>(null);
 
     const confirm = useCallback((confirmOptions: ConfirmOptions) => {
@@ -31,6 +35,7 @@ export const ConfirmDialogProvider = ({ children }: { children: ReactNode }) => 
         });
 
         setOptions(confirmOptions);
+        setOpenKey((k) => k + 1);
         setIsOpen(true);
         return new Promise<boolean>((resolve) => {
             setResolver(() => resolve);
@@ -57,12 +62,14 @@ export const ConfirmDialogProvider = ({ children }: { children: ReactNode }) => 
         <ConfirmContext.Provider value={{ confirm }}>
             {children}
             <ConfirmDialog
+                key={openKey}
                 isOpen={isOpen}
                 title={options.title || "Confirm Action"}
                 description={options.description || "Are you sure you want to proceed?"}
                 confirmButtonText={options.confirmButtonText || "Confirm"}
                 cancelButtonText={options.cancelButtonText || "Cancel"}
                 variant={options.variant || "default"}
+                requireConfirmationInput={options.requireConfirmationInput}
                 onConfirm={handleConfirm}
                 onCancel={handleCancel}
             />
