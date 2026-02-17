@@ -1,5 +1,16 @@
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog"
+"use client";
 
+import { useState } from "react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog"
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+
+export interface RequireConfirmationInput {
+    confirmTerm: string;
+    /** Custom label with {{confirmTerm}} placeholder for the required term (bold). Default: "Type {{confirmTerm}} to confirm" */
+    label?: string;
+    hint?: string;
+}
 
 interface ConfirmDialogProps {
     title: string;
@@ -10,14 +21,25 @@ interface ConfirmDialogProps {
     onCancel: () => void;
     variant: "default" | "destructive";
     isOpen: boolean;
+    requireConfirmationInput?: RequireConfirmationInput;
 }
 
 const ConfirmDialog = (props: ConfirmDialogProps) => {
+    const [typedValue, setTypedValue] = useState("");
+
+    const requireTyped = props.requireConfirmationInput;
+    const requiredTerm = requireTyped?.confirmTerm ?? "";
+    const canConfirm = !requireTyped || typedValue === requiredTerm;
+
+    const labelMessage = requireTyped?.label ?? "Type {{confirmTerm}} to confirm";
+    const labelParts = labelMessage.split("{{confirmTerm}}");
+
     return (
         <AlertDialog
             open={props.isOpen}
             onOpenChange={(open) => {
                 if (!open) {
+                    setTypedValue("");
                     props.onCancel();
                 }
             }}
@@ -27,10 +49,41 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                     <AlertDialogTitle>{props.title}</AlertDialogTitle>
                     <AlertDialogDescription>{props.description}</AlertDialogDescription>
                 </AlertDialogHeader>
+                {requireTyped && (
+                    <div className="grid gap-2">
+                        <Label htmlFor="confirm-type-input">
+                            {labelParts.map((part, i) =>
+                                i < labelParts.length - 1 ? (
+                                    <span key={i}>{part}<span className="font-bold">{requiredTerm}</span></span>
+                                ) : (
+                                    <span key={i}>{part}</span>
+                                )
+                            )}
+                        </Label>
+                        <Input
+                            id="confirm-type-input"
+                            value={typedValue}
+                            onChange={(e) => setTypedValue(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && canConfirm) {
+                                    e.preventDefault();
+                                    setTypedValue("");
+                                    props.onConfirm();
+                                }
+                            }}
+                            placeholder={requiredTerm}
+                            autoComplete="off"
+                        />
+                        {requireTyped.hint && (
+                            <p className="text-muted-foreground text-xs">{requireTyped.hint}</p>
+                        )}
+                    </div>
+                )}
                 <AlertDialogFooter>
                     <AlertDialogCancel
                         onClick={(e) => {
                             e.preventDefault();
+                            setTypedValue("");
                             props.onCancel();
                         }}
                     >
@@ -38,8 +91,10 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                     </AlertDialogCancel>
                     <AlertDialogAction
                         variant={props.variant}
+                        disabled={!canConfirm}
                         onClick={(e) => {
                             e.preventDefault();
+                            setTypedValue("");
                             props.onConfirm();
                         }}
                     >
@@ -48,7 +103,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    )
-}
+    );
+};
 
 export default ConfirmDialog;

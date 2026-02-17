@@ -1,7 +1,9 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import ConfirmDialog from "./confirm-dialog";
+import ConfirmDialog, { type RequireConfirmationInput } from "./confirm-dialog";
+
+export type { RequireConfirmationInput };
 
 interface ConfirmOptions {
     title?: string;
@@ -9,6 +11,7 @@ interface ConfirmOptions {
     confirmButtonText?: string;
     cancelButtonText?: string;
     variant?: "default" | "destructive";
+    requireConfirmationInput?: RequireConfirmationInput;
 }
 
 interface ConfirmContextType {
@@ -63,6 +66,7 @@ export const ConfirmDialogProvider = ({ children }: { children: ReactNode }) => 
                 confirmButtonText={options.confirmButtonText || "Confirm"}
                 cancelButtonText={options.cancelButtonText || "Cancel"}
                 variant={options.variant || "default"}
+                requireConfirmationInput={options.requireConfirmationInput}
                 onConfirm={handleConfirm}
                 onCancel={handleCancel}
             />
