@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-import { ConfirmDialogProvider } from "@/components/my-ui/confirm-provider";
+import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
