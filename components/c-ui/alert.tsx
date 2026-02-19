@@ -49,7 +49,7 @@ function AlertDialogContent_({
                     {description ? <AlertDialogDescription>{description}</AlertDialogDescription> : null}
                 </AlertDialogHeader>
                 {children != null ? <div className="py-2">{children}</div> : null}
-                <AlertDialogFooter>
+                <AlertDialogFooter className="justify-center sm:justify-center">
                     <AlertDialogAction
                         className="min-w-24"
                     >{buttonLabel}</AlertDialogAction>
@@ -70,6 +70,7 @@ export const AlertDialogProvider = ({ children }: { children: ReactNode }) => {
             return null;
         });
         setIsOpen(false);
+        setOptions({});
     }, []);
 
     const alertFn = useCallback((alertOptions: AlertOptions) => {

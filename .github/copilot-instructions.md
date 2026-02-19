@@ -5,6 +5,7 @@ This document provides context for AI agents working on the `case-admin` codebas
 ## 🏗 Project Architecture
 
 **Tech Stack**
+
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **State/Data:** tRPC v11 (Server) + TanStack Query v5 (Client) + MongoDB (Native Driver)
@@ -12,17 +13,18 @@ This document provides context for AI agents working on the `case-admin` codebas
 - **Auth:** Better Auth
 
 **Key Architectural Layers**
-1.  **UI Components** (`components/`)
+
+1. **UI Components** (`components/`)
     - `ui/`: Primitives (Shadcn-based). Do not modify unless changing design system.
-    - `my-ui/`: Custom shared components (e.g., `ConfirmDialog`, `LoadingButton`). Prefer these over raw `ui` components for common patterns.
+    - `c-ui/`: Custom shared components (e.g., `ConfirmDialog`, `LoadingButton`). Prefer these over raw `ui` components for common patterns.
     - `features/`: Domain-specific components grouped by feature (e.g., `features/user-management`).
-2.  **Data Access Hook Layer** (`hooks/`)
+2. **Data Access Hook Layer** (`hooks/`)
     - We wrap tRPC logic in custom hooks (e.g., `useUserManagementRouter`).
     - **Pattern:** Components should rarely use `trpc.useQuery` directly. Instead, import a named hook from `hooks/`.
-3.  **API Layer** (`trpc/`)
+3. **API Layer** (`trpc/`)
     - Routers located in `trpc/routers`.
     - Procedures defined using `adminProcedure` or `router` from `trpc/init`.
-4.  **Service Layer** (`lib/db/service`)
+4. **Service Layer** (`lib/db/service`)
     - Business logic and direct DB access live here.
     - Files must import `server-only`.
     - Services are instantiated classes (e.g., `userService`) that access `db` collections directly.
@@ -30,7 +32,9 @@ This document provides context for AI agents working on the `case-admin` codebas
 ## 🛠 Critical Conventions
 
 ### Data Fetching (tRPC v11 + React Query)
+
 - **Query Syntax:** We use the specific v11 `queryOptions` pattern for type-safety and query client integration.
+
   ```typescript
   // CORRECT
   const { data } = useQuery(trpc.userManagement.getUsers.queryOptions({ page: 1 }));
@@ -40,16 +44,19 @@ This document provides context for AI agents working on the `case-admin` codebas
   ```
 
 ### UI & Interaction
-- **Async Actions:** Use `<LoadingButton />` (from `@/components/my-ui/loading-button`) for any button triggering a mutation/Promise. Pass `isLoading={isPending}`.
-- **Confirmations:** Use `useConfirm` hook (from `@/components/my-ui/confirm-provider`) for confirmation dialogs. Avoid rendering `<ConfirmDialog />` directly unless `useConfirm` is not suitable.
+
+- **Async Actions:** Use `<LoadingButton />` (from `@/components/c-ui/loading-button`) for any button triggering a mutation/Promise. Pass `isLoading={isPending}`.
+- **Confirmations:** Use `useConfirm` hook (from `@/components/c-ui/confirm-provider`) for confirmation dialogs. Avoid rendering `<ConfirmDialog />` directly unless `useConfirm` is not suitable.
 - **Toasts:** Use `toast` from `sonner` for success/error notifications.
 - **Effects:** Use `useEffectEvent` for side effects within `useEffect` that should not be dependencies (e.g. logging, reading latest props without re-triggering).
 
 ### Database & Services
+
 - **structure:** Services (e.g. `UserService`) take a `Db` instance in constructor.
 - **collections:** Typed via `UserDoc`, `PermissionDoc` generic types in `collection<T>()`.
 
 ## 📂 File Structure Guide
+
 - `app/(auth)/` - Authentication pages (login, logic).
 - `components/features/[feature]/` - Feature-specific UI logic.
 - `lib/types/` - Shared Zod schemas and TypeScript interfaces.
