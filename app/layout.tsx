@@ -6,6 +6,7 @@ import { TRPCReactProvider } from "@/trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
+import { AlertDialogProvider } from "@/components/c-ui/alert";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -38,11 +39,13 @@ export default function RootLayout({
                 <TRPCReactProvider>
                     <NuqsAdapter>
                         <ConfirmDialogProvider>
-                            {children}
+                            <AlertDialogProvider>
+                                {children}
+                                <Toaster
+                                    position="bottom-center"
+                                />
+                            </AlertDialogProvider>
                         </ConfirmDialogProvider>
-                        <Toaster
-                            position="bottom-center"
-                        />
                     </NuqsAdapter>
                 </TRPCReactProvider>
             </body>
