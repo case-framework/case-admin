@@ -1,7 +1,7 @@
 export const LOCALES = {
     en: 'en',
     nl: 'nl',
-};
+} as const;
 export type LOCALES = (typeof LOCALES)[keyof typeof LOCALES];
 
 export const LOCALE_COOKIE = 'locale';
