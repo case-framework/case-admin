@@ -3,8 +3,8 @@
         "test": "Test i18n NL"
     },
     "LocaleSwitcher": {
-        "label": "Taal",
         "en": "English",
+        "label": "Taal",
         "nl": "Nederlands"
     }
 }
