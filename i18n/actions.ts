@@ -1,7 +1,8 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { DEFAULT_LOCALE, LOCALES, LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE } from './locales';
+import { LOCALES, LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE } from './locales';
+import { detectBrowserLocale, isSupportedLocale } from './utils';
 
 export async function setLocale(locale: LOCALES) {
     const store = await cookies();
@@ -13,9 +14,9 @@ export async function setLocale(locale: LOCALES) {
 
 export async function getLocale(): Promise<LOCALES> {
     const store = await cookies();
-    const locale = store.get(LOCALE_COOKIE)?.value as LOCALES;
-    if (locale && Object.values(LOCALES).includes(locale)) {
-        return locale;
+    const locale = store.get(LOCALE_COOKIE)?.value;
+    if (locale && isSupportedLocale(locale)) {
+        return locale as LOCALES;
     }
-    return DEFAULT_LOCALE;
+    return detectBrowserLocale();
 }
