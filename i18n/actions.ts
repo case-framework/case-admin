@@ -9,6 +9,7 @@ export async function setLocale(locale: LOCALES) {
     store.set(LOCALE_COOKIE, locale, {
         path: '/',
         maxAge: LOCALE_COOKIE_MAX_AGE,
+        sameSite: 'lax',
     });
 }
 
