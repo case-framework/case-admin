@@ -13,6 +13,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LOCALES } from '@/i18n/locales';
+import { toast } from 'sonner';
 
 
 
@@ -22,8 +23,13 @@ export function LocaleSwitcher() {
     const t = useTranslations('LocaleSwitcher');
 
     async function handleLocaleChange(newLocale: LOCALES) {
-        await setLocale(newLocale);
-        router.refresh();
+        try {
+            await setLocale(newLocale);
+            router.refresh();
+        } catch (error) {
+            console.error('Failed to change locale:', error);
+            toast.error(String(error));
+        }
     }
 
     return (
