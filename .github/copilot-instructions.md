@@ -11,10 +11,12 @@ This document provides context for AI agents working on the `case-admin` codebas
 - **State/Data:** tRPC v11 (Server) + TanStack Query v5 (Client) + MongoDB (Native Driver)
 - **Styling:** Tailwind CSS v4 + Shadcn UI
 - **Auth:** Better Auth
+- **Package Manager:** pnpm
 
 **Key Architectural Layers**
 
 1. **UI Components** (`components/`)
+    - **Installation:** Prefer installing components from the official shadcn registry or from custom registries (e.g. `c-ui`) instead of implementing them anew. Only implement custom components if no suitable option exists.
     - `ui/`: Primitives (Shadcn-based). Do not modify unless changing design system.
     - `c-ui/`: Custom shared components (e.g., `ConfirmDialog`, `LoadingButton`). Prefer these over raw `ui` components for common patterns.
     - `features/`: Domain-specific components grouped by feature (e.g., `features/user-management`).
@@ -61,3 +63,7 @@ This document provides context for AI agents working on the `case-admin` codebas
 - `components/features/[feature]/` - Feature-specific UI logic.
 - `lib/types/` - Shared Zod schemas and TypeScript interfaces.
 - `trpc/routers/` - Backend procedures.
+
+## 🔄 Instruction Maintenance
+
+- **Continuous Improvement:** Whenever an agent performs or discovers relevant architectural changes, updates to this `copilot-instructions.md` file should be proposed to ensure the context remains accurate.
