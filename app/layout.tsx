@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { NextIntlClientProvider } from 'next-intl';
 
 import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
 import { AlertDialogProvider } from "@/components/c-ui/alert";
@@ -38,14 +39,16 @@ export default function RootLayout({
             >
                 <TRPCReactProvider>
                     <NuqsAdapter>
-                        <ConfirmDialogProvider>
-                            <AlertDialogProvider>
-                                {children}
-                                <Toaster
-                                    position="bottom-center"
-                                />
-                            </AlertDialogProvider>
-                        </ConfirmDialogProvider>
+                        <NextIntlClientProvider>
+                            <ConfirmDialogProvider>
+                                <AlertDialogProvider>
+                                    {children}
+                                    <Toaster
+                                        position="bottom-center"
+                                    />
+                                </AlertDialogProvider>
+                            </ConfirmDialogProvider>
+                        </NextIntlClientProvider>
                     </NuqsAdapter>
                 </TRPCReactProvider>
             </body>
