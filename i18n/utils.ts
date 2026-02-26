@@ -19,10 +19,8 @@ export async function detectBrowserLocale(): Promise<LOCALES> {
         }
 
         // 2. Base match?
-        // Explicitly cast to string to avoid TypeScript narrowing issues if isSupportedLocale returns false
-        const currentTag = tag as string;
-        const baseTag = currentTag.split('-')[0];
-        if (baseTag !== currentTag && isSupportedLocale(baseTag)) {
+        const baseTag = tag.split('-')[0];
+        if (baseTag !== tag && isSupportedLocale(baseTag)) {
             return baseTag;
         }
     }
