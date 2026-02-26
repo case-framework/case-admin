@@ -1,9 +1,9 @@
 {
     "Index": {
-        "test": "Test i18n"
+        "test": "Test i18n NL"
     },
     "LocaleSwitcher": {
-        "label": "Language",
+        "label": "Taal",
         "en": "English",
         "nl": "Nederlands"
     }

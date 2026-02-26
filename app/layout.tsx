@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -8,6 +9,7 @@ import { NextIntlClientProvider } from 'next-intl';
 
 import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
 import { AlertDialogProvider } from "@/components/c-ui/alert";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -27,13 +29,18 @@ export const metadata: Metadata = {
     description: 'This is the CASE admin tool, to manage studies, surveys, messages and participants.'
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const store = await cookies();
+    const locale = store.get('locale')?.value || 'en';
+
     return (
-        <html lang="en">
+        <html
+            lang={locale}
+        >
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
@@ -42,6 +49,9 @@ export default function RootLayout({
                         <NextIntlClientProvider>
                             <ConfirmDialogProvider>
                                 <AlertDialogProvider>
+                                    <div className="fixed right-4 top-4 z-50">
+                                        <LocaleSwitcher />
+                                    </div>
                                     {children}
                                     <Toaster
                                         position="bottom-center"
