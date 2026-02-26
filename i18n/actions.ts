@@ -1,11 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { LOCALES } from './locales';
-
-const LOCALE_COOKIE = 'locale';
-const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
-
+import { DEFAULT_LOCALE, LOCALES, LOCALE_COOKIE, LOCALE_COOKIE_MAX_AGE } from './locales';
 
 export async function setLocale(locale: LOCALES) {
     const store = await cookies();
@@ -13,4 +9,13 @@ export async function setLocale(locale: LOCALES) {
         path: '/',
         maxAge: LOCALE_COOKIE_MAX_AGE,
     });
+}
+
+export async function getLocale(): Promise<LOCALES> {
+    const store = await cookies();
+    const locale = store.get(LOCALE_COOKIE)?.value as LOCALES;
+    if (locale && Object.values(LOCALES).includes(locale)) {
+        return locale;
+    }
+    return DEFAULT_LOCALE;
 }

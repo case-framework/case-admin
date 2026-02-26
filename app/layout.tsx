@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -10,6 +9,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
 import { AlertDialogProvider } from "@/components/c-ui/alert";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { getLocale } from "@/i18n/actions";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -34,8 +34,7 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const store = await cookies();
-    const locale = store.get('locale')?.value || 'en';
+    const locale = await getLocale();
 
     return (
         <html
