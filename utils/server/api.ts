@@ -14,6 +14,23 @@ export const getTokenHeader = (accessToken?: string): object | { Authorization: 
     }
 }
 
+export const getServiceAccountHeaders = (
+    apiKey?: string,
+    instanceId?: string
+): Record<string, string> => {
+    const headers: Record<string, string> = {};
+
+    if (apiKey) {
+        headers['X-API-Key'] = apiKey;
+    }
+
+    if (instanceId) {
+        headers['X-Instance-ID'] = instanceId;
+    }
+
+    return headers;
+}
+
 const postToCASEManagementAPI = async (path: string, data: object, accessToken?: string) => {
     const url = getCASEManagementAPIURL(path);
     const response = await fetch(url.toString(), {
@@ -123,4 +140,3 @@ export const renewTokenRequest = async (refreshToken: string, accessToken: strin
     const data = await response.json();
     return data as TokenResponse;
 }
-
