@@ -2,10 +2,13 @@ import "server-only";
 
 import { Db, MongoClient, MongoClientOptions } from "mongodb";
 import {
-    applyMongoConnectionStringCredentials,
     mustGetEnv,
 } from "@/lib/utils/env-utils";
-import { DbKey, buildDatabaseName } from "./utils";
+import {
+    DbKey,
+    applyMongoConnectionStringCredentials,
+    buildDatabaseName
+} from "./utils";
 
 
 const options: MongoClientOptions = {
@@ -107,15 +110,4 @@ export async function getDb(key: DbKey): Promise<Db> {
     });
 
     return client.db(dbName);
-}
-
-export async function getAllDbs(): Promise<Record<DbKey, Db>> {
-    const [study, message, global, users] = await Promise.all([
-        getDb(DbKey.STUDY),
-        getDb(DbKey.MESSAGE),
-        getDb(DbKey.GLOBAL),
-        getDb(DbKey.USERS),
-    ]);
-
-    return { study, message, global, users };
 }
