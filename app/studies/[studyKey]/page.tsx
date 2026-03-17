@@ -1,7 +1,8 @@
 import LogoutComponent from "@/components/features/auth/logout";
 import Module1Component from "@/components/features/module1";
 import { requiredAdminAuth } from "@/lib/auth/utils";
-import { getAllDbs } from "@/lib/db/db-registry";
+import { getDb } from "@/lib/db/db-registry";
+import { DbKey } from "@/lib/db/utils";
 
 interface StudyPageProps {
     params: Promise<{
@@ -16,8 +17,8 @@ const StudyPage = async ({ params }: StudyPageProps) => {
 
     await requiredAdminAuth("/login?redirect=/studies/" + studyKey);
 
-    const dbs = await getAllDbs();
-    const users = await dbs.user.collection("case_admin_users").find({}).toArray();
+    const db = await getDb(DbKey.STUDY);
+    const users = await db.collection("studies").find({}).toArray();
 
 
     /*  interface Study {
