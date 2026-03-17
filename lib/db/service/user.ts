@@ -1,6 +1,7 @@
 import "server-only";
 import { Collection, Db, DeleteResult, InsertOneResult, ObjectId } from "mongodb";
-import { DbKey, getDb } from "../db-registry";
+import { getDb } from "../db-registry";
+import { DbKey } from "../utils";
 import { User } from "@/lib/types/user";
 import { PermissionBase, SubjectType } from "@/lib/types/permission";
 import { PermissionDoc, UserDoc, toUser } from "./types";
@@ -51,7 +52,7 @@ export class UserService {
 }
 
 const initUserService = async () => {
-    const userDB = await getDb(DbKey.USER);
+    const userDB = await getDb(DbKey.USERS);
     return new UserService(userDB);
 }
 

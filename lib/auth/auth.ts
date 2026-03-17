@@ -1,11 +1,12 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
-import { DbKey, getDb } from "../db/db-registry";
+import { getDb } from "../db/db-registry";
+import { DbKey } from "../db/utils";
 import { mustGetEnv } from "../utils/env-utils";
 import { admin } from "better-auth/plugins"
 
 
-const db = await getDb(DbKey.USER);
+const db = await getDb(DbKey.USERS);
 
 export const UserRole = {
     ADMIN: "admin",
