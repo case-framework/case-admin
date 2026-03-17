@@ -1,11 +1,16 @@
 import '@/styles/globals.css'
-import { Open_Sans } from 'next/font/google'
-
-
-const open_sans = Open_Sans({
-    subsets: ['latin'],
-    variable: '--font-open-sans',
-})
+import '@fontsource/open-sans/latin-300.css'
+import '@fontsource/open-sans/latin-300-italic.css'
+import '@fontsource/open-sans/latin-400.css'
+import '@fontsource/open-sans/latin-400-italic.css'
+import '@fontsource/open-sans/latin-500.css'
+import '@fontsource/open-sans/latin-500-italic.css'
+import '@fontsource/open-sans/latin-600.css'
+import '@fontsource/open-sans/latin-600-italic.css'
+import '@fontsource/open-sans/latin-700.css'
+import '@fontsource/open-sans/latin-700-italic.css'
+import '@fontsource/open-sans/latin-800.css'
+import '@fontsource/open-sans/latin-800-italic.css'
 
 
 export const metadata = {
@@ -23,7 +28,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${open_sans.variable} font-sans`}>
+        <html lang="en" className="font-sans">
             <body>
                 {children}
             </body>

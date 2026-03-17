@@ -13,7 +13,7 @@ module.exports = {
     theme: {
         fontFamily: {
             sans: [
-                'var(--font-open-sans)',
+                '"Open Sans"',
                 ...fontFamily.sans
             ],
             mono: [
