@@ -51,6 +51,7 @@ This document provides context for AI agents working on the `case-admin` codebas
 - **Confirmations:** Use `useConfirm` hook (from `@/components/c-ui/confirm-provider`) for confirmation dialogs. Avoid rendering `<ConfirmDialog />` directly unless `useConfirm` is not suitable.
 - **Toasts:** Use `toast` from `sonner` for success/error notifications.
 - **Effects:** Use `useEffectEvent` for side effects within `useEffect` that should not be dependencies (e.g. logging, reading latest props without re-triggering).
+- **Visual Direction:** When creating or updating UI, aim for a clean, polished style similar to Linear or Notion: restrained color use, strong spacing rhythm, clear typography, subtle hierarchy, and minimal visual noise.
 
 ### Database & Services
 
