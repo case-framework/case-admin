@@ -8,8 +8,9 @@ import { NextIntlClientProvider } from 'next-intl';
 
 import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
 import { AlertDialogProvider } from "@/components/c-ui/alert";
-import { LocaleSwitcher } from "@/components/locale-switcher";
 import { getLocale } from "@/i18n/actions";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -48,13 +49,14 @@ export default async function RootLayout({
                         <NextIntlClientProvider>
                             <ConfirmDialogProvider>
                                 <AlertDialogProvider>
-                                    <div className="fixed right-4 top-4 z-50">
-                                        <LocaleSwitcher />
-                                    </div>
-                                    {children}
-                                    <Toaster
-                                        position="bottom-center"
-                                    />
+                                    <SidebarProvider>
+                                        <AppSidebar />
+                                        <main>
+                                            <SidebarTrigger />
+                                            {children}
+                                        </main>
+                                        <Toaster position="bottom-center" />
+                                    </SidebarProvider>
                                 </AlertDialogProvider>
                             </ConfirmDialogProvider>
                         </NextIntlClientProvider>
