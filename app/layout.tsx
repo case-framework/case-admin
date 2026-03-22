@@ -24,8 +24,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: {
-        default: process.env.NEXT_PUBLIC_APP_NAME || 'Case Admin',
-        template: `%s | ${process.env.NEXT_PUBLIC_APP_NAME || 'Case Admin'} `,
+        default: process.env.NEXT_PUBLIC_APP_NAME || 'CASE Admin',
+        template: `%s | ${process.env.NEXT_PUBLIC_APP_NAME || 'CASE Admin'} `,
     },
     description: 'This is the CASE admin tool, to manage studies, surveys, messages and participants.'
 };
