@@ -51,8 +51,12 @@ export default async function RootLayout({
                                 <AlertDialogProvider>
                                     <SidebarProvider>
                                         <AppSidebar />
-                                        <main>
-                                            <SidebarTrigger />
+                                        <main className="flex flex-col flex-1 min-w-0">
+                                            <header className="flex flex-row items-center border-b">
+                                                <section className="border-r p-4">
+                                                    <SidebarTrigger />
+                                                </section>
+                                            </header>
                                             {children}
                                         </main>
                                         <Toaster position="bottom-center" />
