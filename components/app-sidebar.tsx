@@ -1,5 +1,4 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { LocaleSwitcher } from "@/components/locale-switcher"
 import Image from "next/image"
 import { useTranslations } from "next-intl";
 
@@ -30,7 +29,6 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarContent></SidebarContent>
             <SidebarFooter>
-                <LocaleSwitcher />
             </SidebarFooter>
         </Sidebar>
     )
