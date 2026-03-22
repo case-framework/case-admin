@@ -1,4 +1,7 @@
 {
+    "Common": {
+        "AppName": "CASE Admin"
+    },
     "Index": {
         "test": "Test i18n NL"
     },

@@ -1,8 +1,11 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { LocaleSwitcher } from "@/components/locale-switcher"
 import Image from "next/image"
+import { useTranslations } from "next-intl";
 
 export function AppSidebar() {
+    const t = useTranslations('Common');
+
     return (
         <Sidebar
             side="left"
@@ -18,7 +21,7 @@ export function AppSidebar() {
                                     <Image src="/images/case_icon.svg" alt="CASE" className="size-8" width={32} height={32} />
                                 </div>
                                 <div className="text-left text-xl">
-                                    <span className="truncate font-medium">CASE Admin</span>
+                                    <span className="truncate font-medium">{t('AppName')}</span>
                                 </div>
                             </a>
                         </SidebarMenuButton>
