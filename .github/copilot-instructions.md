@@ -52,6 +52,8 @@ This document provides context for AI agents working on the `case-admin` codebas
 - **Toasts:** Use `toast` from `sonner` for success/error notifications.
 - **Effects:** Use `useEffectEvent` for side effects within `useEffect` that should not be dependencies (e.g. logging, reading latest props without re-triggering).
 - **Visual Direction:** When creating or updating UI, aim for a clean, polished style similar to Linear or Notion: restrained color use, strong spacing rhythm, clear typography, subtle hierarchy, and minimal visual noise.
+- **UI Cleanliness:** Keep markup and class lists minimal. Do not add wrapper `div`s, layout containers, or Tailwind classes unless they have a clear visible, structural, semantic, or interaction effect in the current implementation.
+- **No Inert Styling:** Avoid no-op or barely perceptible utilities such as redundant background layers, duplicate border utilities, inactive state selectors that are not used, or effect classes whose visual impact is negligible. If a class exists only for a future state, keep it only when that future state is a concrete near-term requirement and the intent is obvious.
 
 ### Database & Services
 
