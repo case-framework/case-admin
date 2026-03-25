@@ -303,7 +303,7 @@ function buildBubbleSpecs(theme: ResolvedSidebarBubbleTheme, layerKey: string) {
 }
 
 function useReducedMotion() {
-    const [reducedMotion, setReducedMotion] = useState(false);
+    const [reducedMotion, setReducedMotion] = useState<boolean>(false);
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -335,8 +335,14 @@ function BubbleLayer({
     const overlayTopOpacity = clamp(theme.overlayOpacity * 0.72, 0, 1);
     const overlayBottomOpacity = clamp(theme.overlayOpacity, 0, 1);
 
+    if (reducedMotion === null) {
+        return (
+            <div className={cn("absolute inset-0 overflow-hidden")} aria-hidden="true" />
+        );
+    }
+
     return (
-        <div className="absolute inset-0 overflow-hidden">
+        <div suppressHydrationWarning className={cn("absolute inset-0 overflow-hidden", reducedMotion === false && (mode === "enter" ? styles.animateLayerEnter : styles.animateLayerExit))}>
             <div
                 className="absolute inset-0"
                 style={{ background: buildThemeBackdrop(theme) }}
@@ -347,7 +353,7 @@ function BubbleLayer({
                         key={bubble.id}
                         className={cn(
                             "absolute will-change-[transform,opacity]",
-                            !reducedMotion && (mode === "enter" ? styles.animateEnter : styles.animateExit)
+                            reducedMotion === false && (mode === "enter" ? styles.animateEnter : styles.animateExit)
                         )}
                         style={{
                             left: `${bubble.left}%`,
@@ -366,7 +372,7 @@ function BubbleLayer({
                         <div
                             className={cn(
                                 "size-full rounded-full will-change-transform",
-                                !reducedMotion && styles.animateDrift
+                                reducedMotion === false && styles.animateDrift
                             )}
                             style={{
                                 background: `radial-gradient(circle at 30% 30%, ${bubble.highlightColor} 0%, ${bubble.color} 56%, transparent 88%)`,
@@ -437,7 +443,7 @@ export function SidebarBubbleBackground({
 
         const timeoutId = window.setTimeout(() => {
             setExitingTheme(null);
-        }, reducedMotion ? 0 : EXIT_DURATION_MS);
+        }, reducedMotion === true ? 0 : EXIT_DURATION_MS);
 
         return () => window.clearTimeout(timeoutId);
     }, [reducedMotion, resolvedTheme, themeSignature]);
@@ -445,10 +451,15 @@ export function SidebarBubbleBackground({
     const activeBubbles = buildBubbleSpecs(resolvedTheme, "active");
     const exitingBubbles = exitingTheme ? buildBubbleSpecs(exitingTheme, "exit") : [];
 
+    if (reducedMotion === null) {
+        return <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden="true" />;
+    }
+
     return (
         <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden="true">
             {exitingTheme ? (
                 <BubbleLayer
+                    key={`exit-${exitingTheme.key}`}
                     bubbles={exitingBubbles}
                     theme={exitingTheme}
                     mode="exit"
@@ -456,6 +467,7 @@ export function SidebarBubbleBackground({
                 />
             ) : null}
             <BubbleLayer
+                key={`enter-${resolvedTheme.key}`}
                 bubbles={activeBubbles}
                 theme={resolvedTheme}
                 mode="enter"

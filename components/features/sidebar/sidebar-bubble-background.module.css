@@ -40,3 +40,38 @@
 .animateDrift {
     animation: drift 10s ease-in-out infinite;
 }
+
+@keyframes layerEnter {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes layerExit {
+    to { opacity: 0; }
+}
+
+.animateLayerEnter {
+    animation: layerEnter 0.9s ease-out both;
+}
+
+.animateLayerExit {
+    animation: layerExit 0.8s ease-out both;
+}
+
+
+@keyframes layerEnter {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes layerExit {
+    to { opacity: 0; }
+}
+
+.animateLayerEnter {
+    animation: layerEnter 0.9s ease-out both;
+}
+
+.animateLayerExit {
+    animation: layerExit 0.8s ease-out both;
+}
