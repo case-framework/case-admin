@@ -10,7 +10,7 @@ import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
 import { AlertDialogProvider } from "@/components/c-ui/alert";
 import { getLocale } from "@/i18n/actions";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/features/sidebar/app-sidebar";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 
 const geistSans = Geist({
