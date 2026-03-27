@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import styles from "./sidebar-bubble-background.module.css";
@@ -110,6 +110,13 @@ type ResolvedSidebarBubbleTheme = {
     overlayOpacity: number;
 };
 
+type BubbleLayerState = {
+    id: string;
+    seed: number;
+    theme: ResolvedSidebarBubbleTheme;
+    mode: "enter" | "exit";
+};
+
 type BubbleSpec = {
     id: string;
     width: number;
@@ -133,16 +140,16 @@ type BubbleSpec = {
 };
 
 const EXIT_DURATION_MS = 900;
-const BUBBLE_COUNT = 24;
+const BUBBLE_COUNT = 16;
 
 const DRIFT_DURATION_SECONDS = {
-    min: 30,
-    max: 45,
+    min: 20,
+    max: 40,
 } as const;
 
 const DRIFT_DISTANCE_PIXELS = {
-    min: 150,
-    max: 600,
+    min: 40,
+    max: 160,
 } as const;
 
 function clamp(value: number, min: number, max: number) {
@@ -241,8 +248,8 @@ function resolveTheme(theme?: SidebarBubbleTheme): ResolvedSidebarBubbleTheme {
     };
 }
 
-function buildBubbleSpecs(theme: ResolvedSidebarBubbleTheme, layerKey: string) {
-    const rng = createRng(hashString(`${theme.key}:${layerKey}`));
+function buildBubbleSpecs(theme: ResolvedSidebarBubbleTheme, layerKey: string, seed: number) {
+    const rng = createRng(hashString(`${seed}:${layerKey}`));
 
     return Array.from({ length: BUBBLE_COUNT }, (_, index): BubbleSpec => {
         const hue = normalizeHue(
@@ -265,18 +272,30 @@ function buildBubbleSpecs(theme: ResolvedSidebarBubbleTheme, layerKey: string) {
         );
         const width = pickBetween(rng, 180, 360);
         const height = width * pickBetween(rng, 0.82, 1.22);
-        const left = pickBetween(rng, -32, 58);
-        const top = pickBetween(rng, -15, 110);
+        // Spread the initial positions out much wider so they immediately cover
+        // the regular area, including partially off-screen which looks more natural.
+        const left = pickBetween(rng, -50, 150); // range: -50% to 150%
+        const top = pickBetween(rng, -30, 130);  // range: -30% to 130%
+
+        const centerX = left - 50;
+        const centerY = top - 50;
+        const magnitude = Math.sqrt(centerX * centerX + centerY * centerY) || 1;
+
+        // Fly dramatically outward from the center
+        const escapeDistance = pickBetween(rng, 400, 700);
+        const exitX = `${(centerX / magnitude) * escapeDistance}px`;
+        const exitY = `${(centerY / magnitude) * escapeDistance}px`;
+
+        // Fly dramatically inward from the outside
+        const enterDistance = pickBetween(rng, 300, 600);
+        const enterX = `${(centerX / magnitude) * enterDistance}px`;
+        const enterY = `${(centerY / magnitude) * enterDistance}px`;
 
         // Use polar coordinates to guarantee every bubble has a minimum drift distance
         const driftAngle = pickBetween(rng, 0, Math.PI * 2);
         const driftDistance = pickBetween(rng, DRIFT_DISTANCE_PIXELS.min, DRIFT_DISTANCE_PIXELS.max);
         const driftX = `${(Math.cos(driftAngle) * driftDistance).toFixed(1)}px`;
         const driftY = `${(Math.sin(driftAngle) * driftDistance).toFixed(1)}px`;
-        const exitX = `${pickBetween(rng, -170, 170).toFixed(1)}px`;
-        const exitY = `${pickBetween(rng, -200, 200).toFixed(1)}px`;
-        const enterX = `${pickBetween(rng, -42, 42).toFixed(1)}px`;
-        const enterY = `${pickBetween(rng, -56, 56).toFixed(1)}px`;
 
         return {
             id: `${layerKey}-${index}`,
@@ -292,7 +311,7 @@ function buildBubbleSpecs(theme: ResolvedSidebarBubbleTheme, layerKey: string) {
             enterY,
             exitX,
             exitY,
-            exitScale: pickBetween(rng, 0.56, 1.34),
+            exitScale: pickBetween(rng, 0.2, 0.5),
             driftX,
             driftY,
             driftScale: pickBetween(rng, 0.9, 1.14),
@@ -303,7 +322,7 @@ function buildBubbleSpecs(theme: ResolvedSidebarBubbleTheme, layerKey: string) {
 }
 
 function useReducedMotion() {
-    const [reducedMotion, setReducedMotion] = useState<boolean>(false);
+    const [reducedMotion, setReducedMotion] = useState<boolean | null>(null);
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -318,17 +337,106 @@ function useReducedMotion() {
     return reducedMotion;
 }
 
-function BubbleLayer({
-    bubbles,
-    theme,
+function AnimatedBubble({
+    bubble,
+    reducedMotion,
     mode,
+}: {
+    bubble: BubbleSpec;
+    reducedMotion: boolean;
+    mode: "enter" | "exit";
+}) {
+    const [pos, setPos] = useState(() => {
+        // Start the bubble exactly at its seeded initial position,
+        // distributed natively across the sidebar via the spec's percentages.
+        return {
+            left: bubble.left,
+            top: bubble.top,
+            scale: bubble.driftScale,
+            duration: 0,
+        };
+    });
+
+    useEffect(() => {
+        if (reducedMotion || mode === "exit") return;
+        let timeout: ReturnType<typeof setTimeout>;
+
+        function nextPos(currentDuration: number) {
+            timeout = setTimeout(() => {
+                // Pick a completely new random destination bounded roughly by the container,
+                // freeing them from any anchor points so they roam completely everywhere.
+                const nextDuration = (30 + Math.random() * 30) * 1000;
+                setPos({
+                    left: -50 + Math.random() * 200, // range: -50% to 150% (symmetric)
+                    top: -30 + Math.random() * 160,  // range: -30% to 130% (symmetric)
+                    scale: 0.85 + Math.random() * 0.3,
+                    duration: nextDuration,
+                });
+                nextPos(nextDuration);
+            }, currentDuration);
+        }
+
+        const currentTimer = setTimeout(() => {
+            const initialDuration = (30 + Math.random() * 30) * 1000;
+            // Initiate the very first drift to a brand new random spot
+            setPos({
+                left: -50 + Math.random() * 200, // range: -50% to 150% (symmetric)
+                top: -30 + Math.random() * 160,  // range: -30% to 130% (symmetric)
+                scale: 0.85 + Math.random() * 0.3,
+                duration: initialDuration,
+            });
+            nextPos(initialDuration);
+        }, 50);
+
+        return () => {
+            clearTimeout(timeout);
+            clearTimeout(currentTimer);
+        };
+    }, [reducedMotion, mode]);
+
+    return (
+        <div
+            className={cn(
+                "absolute will-change-[transform,opacity]",
+                reducedMotion === false && (mode === "enter" ? styles.animateEnter : styles.animateExit)
+            )}
+            style={{
+                left: `${pos.left}%`,
+                top: `${pos.top}%`,
+                width: `${bubble.width}px`,
+                height: `${bubble.height}px`,
+                opacity: bubble.opacity,
+                transition: reducedMotion ? undefined : `left ${pos.duration}ms ease-in-out, top ${pos.duration}ms ease-in-out`,
+                ["--bubble-opacity" as string]: String(bubble.opacity),
+                ["--bubble-enter-x" as string]: bubble.enterX,
+                ["--bubble-enter-y" as string]: bubble.enterY,
+                ["--bubble-exit-x" as string]: bubble.exitX,
+                ["--bubble-exit-y" as string]: bubble.exitY,
+                ["--bubble-exit-scale" as string]: String(bubble.exitScale),
+            }}
+        >
+            <div
+                className="size-full rounded-full will-change-transform"
+                style={{
+                    background: `radial-gradient(circle at 30% 30%, ${bubble.highlightColor} 0%, ${bubble.color} 56%, transparent 88%)`,
+                    transform: reducedMotion ? undefined : `translate3d(0, 0, 0) scale(${pos.scale})`,
+                    transition: reducedMotion ? undefined : `transform ${pos.duration}ms ease-in-out`,
+                }}
+            />
+        </div>
+    );
+}
+
+function BubbleLayer({
+    layer,
     reducedMotion,
 }: {
-    bubbles: BubbleSpec[];
-    theme: ResolvedSidebarBubbleTheme;
-    mode: "enter" | "exit";
+    layer: BubbleLayerState;
     reducedMotion: boolean;
 }) {
+    const bubbles = useMemo(() => buildBubbleSpecs(layer.theme, layer.id, layer.seed), [layer.theme, layer.id, layer.seed]);
+    const { theme, mode } = layer;
+
     const isDark = theme.lightness.value < 50;
     const overlayL1 = isDark ? 8 : 99;
     const overlayL2 = isDark ? 4 : 98;
@@ -349,41 +457,12 @@ function BubbleLayer({
             />
             <div className="absolute -inset-25" style={{ filter: "blur(50px)", transform: "translateZ(0)" }}>
                 {bubbles.map((bubble) => (
-                    <div
+                    <AnimatedBubble
                         key={bubble.id}
-                        className={cn(
-                            "absolute will-change-[transform,opacity]",
-                            reducedMotion === false && (mode === "enter" ? styles.animateEnter : styles.animateExit)
-                        )}
-                        style={{
-                            left: `${bubble.left}%`,
-                            top: `${bubble.top}%`,
-                            width: `${bubble.width}px`,
-                            height: `${bubble.height}px`,
-                            opacity: bubble.opacity,
-                            ["--bubble-opacity" as string]: String(bubble.opacity),
-                            ["--bubble-enter-x" as string]: bubble.enterX,
-                            ["--bubble-enter-y" as string]: bubble.enterY,
-                            ["--bubble-exit-x" as string]: bubble.exitX,
-                            ["--bubble-exit-y" as string]: bubble.exitY,
-                            ["--bubble-exit-scale" as string]: String(bubble.exitScale),
-                        }}
-                    >
-                        <div
-                            className={cn(
-                                "size-full rounded-full will-change-transform",
-                                reducedMotion === false && styles.animateDrift
-                            )}
-                            style={{
-                                background: `radial-gradient(circle at 30% 30%, ${bubble.highlightColor} 0%, ${bubble.color} 56%, transparent 88%)`,
-                                animationDuration: bubble.duration,
-                                animationDelay: bubble.delay,
-                                ["--bubble-drift-x" as string]: bubble.driftX,
-                                ["--bubble-drift-y" as string]: bubble.driftY,
-                                ["--bubble-drift-scale" as string]: String(bubble.driftScale),
-                            }}
-                        />
-                    </div>
+                        bubble={bubble}
+                        reducedMotion={reducedMotion}
+                        mode={mode}
+                    />
                 ))}
             </div>
             {theme.overlayOpacity > 0 ? (
@@ -412,44 +491,51 @@ export function SidebarBubbleBackground({
     className?: string;
 }) {
     const reducedMotion = useReducedMotion();
-    const resolvedTheme = resolveTheme(theme);
+    const resolvedThemeBase = resolveTheme(theme);
     const themeSignature = [
-        resolvedTheme.key,
-        resolvedTheme.hue.value,
-        resolvedTheme.hue.spread,
-        resolvedTheme.saturation.value,
-        resolvedTheme.saturation.spread,
-        resolvedTheme.lightness.value,
-        resolvedTheme.lightness.spread,
-        resolvedTheme.alpha.value,
-        resolvedTheme.alpha.spread,
-        resolvedTheme.backgroundFrom,
-        resolvedTheme.backgroundTo,
-        resolvedTheme.overlayOpacity,
+        resolvedThemeBase.key,
+        resolvedThemeBase.hue.value,
+        resolvedThemeBase.hue.spread,
+        resolvedThemeBase.saturation.value,
+        resolvedThemeBase.saturation.spread,
+        resolvedThemeBase.lightness.value,
+        resolvedThemeBase.lightness.spread,
+        resolvedThemeBase.alpha.value,
+        resolvedThemeBase.alpha.spread,
+        resolvedThemeBase.backgroundFrom,
+        resolvedThemeBase.backgroundTo,
+        resolvedThemeBase.overlayOpacity,
     ].join(":");
-    const [exitingTheme, setExitingTheme] = useState<ResolvedSidebarBubbleTheme | null>(null);
-    const previousThemeRef = useRef(resolvedTheme);
-    const previousThemeSignatureRef = useRef(themeSignature);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const resolvedTheme = useMemo(() => resolvedThemeBase, [themeSignature]);
+
+    const [layers, setLayers] = useState<BubbleLayerState[]>(() => [{
+        id: Math.random().toString(36).substring(2),
+        seed: Math.random() * 0xffffffff >>> 0,
+        theme: resolvedTheme,
+        mode: "enter"
+    }]);
+
+    const prevSignatureRef = useRef(themeSignature);
 
     useEffect(() => {
-        if (themeSignature === previousThemeSignatureRef.current) {
-            previousThemeRef.current = resolvedTheme;
-            return;
-        }
+        if (themeSignature === prevSignatureRef.current) return;
+        prevSignatureRef.current = themeSignature;
 
-        setExitingTheme(previousThemeRef.current);
-        previousThemeRef.current = resolvedTheme;
-        previousThemeSignatureRef.current = themeSignature;
+        const newId = Math.random().toString(36).substring(2);
+
+        setLayers(prev => [
+            ...prev.map(l => ({ ...l, mode: "exit" as const })),
+            { id: newId, seed: Math.random() * 0xffffffff >>> 0, theme: resolvedTheme, mode: "enter" }
+        ]);
 
         const timeoutId = window.setTimeout(() => {
-            setExitingTheme(null);
+            setLayers(prev => prev.filter(l => l.id === newId || l.mode === "enter"));
         }, reducedMotion === true ? 0 : EXIT_DURATION_MS);
 
         return () => window.clearTimeout(timeoutId);
-    }, [reducedMotion, resolvedTheme, themeSignature]);
-
-    const activeBubbles = buildBubbleSpecs(resolvedTheme, "active");
-    const exitingBubbles = exitingTheme ? buildBubbleSpecs(exitingTheme, "exit") : [];
+    }, [themeSignature, resolvedTheme, reducedMotion]);
 
     if (reducedMotion === null) {
         return <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden="true" />;
@@ -457,22 +543,13 @@ export function SidebarBubbleBackground({
 
     return (
         <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden="true">
-            {exitingTheme ? (
+            {layers.map(layer => (
                 <BubbleLayer
-                    key={`exit-${exitingTheme.key}`}
-                    bubbles={exitingBubbles}
-                    theme={exitingTheme}
-                    mode="exit"
+                    key={layer.id}
+                    layer={layer}
                     reducedMotion={reducedMotion}
                 />
-            ) : null}
-            <BubbleLayer
-                key={`enter-${resolvedTheme.key}`}
-                bubbles={activeBubbles}
-                theme={resolvedTheme}
-                mode="enter"
-                reducedMotion={reducedMotion}
-            />
+            ))}
         </div>
     );
 }

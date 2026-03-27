@@ -1,7 +1,7 @@
 @keyframes enter {
     from {
         opacity: 0;
-        transform: translate3d(var(--bubble-enter-x, 0px), var(--bubble-enter-y, 0px), 0) scale(0.82);
+        transform: translate3d(var(--bubble-enter-x, 0px), var(--bubble-enter-y, 0px), 0) scale(0.4);
     }
 
     to {
@@ -17,37 +17,28 @@
     }
 }
 
-@keyframes drift {
-
-    0%,
-    100% {
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-
-    50% {
-        transform: translate3d(var(--bubble-drift-x, 0px), var(--bubble-drift-y, 0px), 0) scale(var(--bubble-drift-scale, 1.08));
-    }
-}
-
 .animateEnter {
-    animation: enter 0.9s cubic-bezier(0.2, 1, 0.22, 1) both;
+    animation: enter 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animateExit {
-    animation: exit 0.8s cubic-bezier(0.4, 0, 1, 1) both;
-}
-
-.animateDrift {
-    animation: drift 10s ease-in-out infinite;
+    animation: exit 0.9s cubic-bezier(0.5, 0, 0.2, 1) both;
 }
 
 @keyframes layerEnter {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes layerExit {
-    to { opacity: 0; }
+    to {
+        opacity: 0;
+    }
 }
 
 .animateLayerEnter {
@@ -60,12 +51,19 @@
 
 
 @keyframes layerEnter {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes layerExit {
-    to { opacity: 0; }
+    to {
+        opacity: 0;
+    }
 }
 
 .animateLayerEnter {
