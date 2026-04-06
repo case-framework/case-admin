@@ -1,7 +1,80 @@
+# Agent Instructions for case-admin
+
+This document provides context for AI agents working on the `case-admin` codebase.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
-# Next.js: ALWAYS read docs before coding
+## Next.js: ALWAYS read docs before coding
 
 Before any Next.js work, find and read the relevant doc in `node_modules/next/dist/docs/`. Your training data is outdated — the docs are the source of truth.
 
 <!-- END:nextjs-agent-rules -->
+
+## 🏗 Project Architecture
+
+**Tech Stack**
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **State/Data:** tRPC v11 (Server) + TanStack Query v5 (Client) + MongoDB (Native Driver)
+- **Styling:** Tailwind CSS v4 + Shadcn UI
+- **Auth:** Better Auth
+- **Package Manager:** pnpm
+
+**Key Architectural Layers**
+
+1. **UI Components** (`components/`)
+    - **Installation:** Prefer installing components from the official shadcn registry or from custom registries (e.g. `c-ui`) instead of implementing them anew. Only implement custom components if no suitable option exists.
+    - `ui/`: Primitives (Shadcn-based). Do not modify unless changing design system.
+    - `c-ui/`: Custom shared components (e.g., `ConfirmDialog`, `LoadingButton`). Prefer these over raw `ui` components for common patterns.
+    - `features/`: Domain-specific components grouped by feature (e.g., `features/user-management`).
+2. **Data Access Hook Layer** (`hooks/`)
+    - We wrap tRPC logic in custom hooks (e.g., `useUserManagementRouter`).
+    - **Pattern:** Components should rarely use `trpc.useQuery` directly. Instead, import a named hook from `hooks/`.
+3. **API Layer** (`trpc/`)
+    - Routers located in `trpc/routers`.
+    - Procedures defined using `adminProcedure` or `router` from `trpc/init`.
+4. **Service Layer** (`lib/db/service`)
+    - Business logic and direct DB access live here.
+    - Files must import `server-only`.
+    - Services are instantiated classes (e.g., `userService`) that access `db` collections directly.
+
+## 🛠 Critical Conventions
+
+### Data Fetching (tRPC v11 + React Query)
+
+- **Query Syntax:** We use the specific v11 `queryOptions` pattern for type-safety and query client integration.
+
+  ```typescript
+  // CORRECT
+  const { data } = useQuery(trpc.userManagement.getUsers.queryOptions({ page: 1 }));
+
+  // WRONG (Older tRPC style)
+  const { data } = trpc.userManagement.getUsers.useQuery({ page: 1 });
+  ```
+
+### UI & Interaction
+
+- **Async Actions:** Use `<LoadingButton />` (from `@/components/c-ui/loading-button`) for any button triggering a mutation/Promise. Pass `isLoading={isPending}`.
+- **Confirmations:** Use `useConfirm` hook (from `@/components/c-ui/confirm-provider`) for confirmation dialogs. Avoid rendering `<ConfirmDialog />` directly unless `useConfirm` is not suitable.
+- **Toasts:** Use `toast` from `sonner` for success/error notifications.
+- **Effects:** Use `useEffectEvent` for side effects within `useEffect` that should not be dependencies (e.g. logging, reading latest props without re-triggering).
+- **Visual Direction:** When creating or updating UI, aim for a clean, polished style similar to Linear or Notion: restrained color use, strong spacing rhythm, clear typography, subtle hierarchy, and minimal visual noise.
+- **UI Cleanliness:** Keep markup and class lists minimal. Do not add wrapper `div`s, layout containers, or Tailwind classes unless they have a clear visible, structural, semantic, or interaction effect in the current implementation.
+- **No Inert Styling:** Avoid no-op or barely perceptible utilities such as redundant background layers, duplicate border utilities, inactive state selectors that are not used, or effect classes whose visual impact is negligible. If a class exists only for a future state, keep it only when that future state is a concrete near-term requirement and the intent is obvious.
+
+### Database & Services
+
+- **structure:** Services (e.g. `UserService`) take a `Db` instance in constructor.
+- **collections:** Typed via `UserDoc`, `PermissionDoc` generic types in `collection<T>()`.
+
+## 📂 File Structure Guide
+
+- `app/(auth)/` - Authentication pages (login, logic).
+- `components/features/[feature]/` - Feature-specific UI logic.
+- `lib/types/` - Shared Zod schemas and TypeScript interfaces.
+- `trpc/routers/` - Backend procedures.
+
+## 🔄 Instruction Maintenance
+
+- **Continuous Improvement:** Whenever an agent performs or discovers relevant architectural changes, updates to this `AGENTS.md` file should be proposed to ensure the context remains accurate.
