@@ -1,44 +1,17 @@
 "use client";
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarGroup, SidebarGroupContent } from "@/components/ui/sidebar"
-import { SidebarBubbleBackground, type SidebarBubbleTheme } from "@/components/features/sidebar/sidebar-bubble-background"
+import { SidebarBubbleBackground } from "@/components/features/sidebar/sidebar-bubble-background"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { Home, Users, BookOpen } from "lucide-react"
 
-const overviewSidebarTheme: SidebarBubbleTheme = {
-    key: "overview",
-    hue: { value: 42, spread: 15 },
-    saturation: { value: 80, spread: 10 },
-    lightness: { value: 70, spread: 15 },
-    alpha: { value: 0.38, spread: 0.08 },
-    overlayOpacity: 0.2,
-};
-
-const studiesSidebarTheme: SidebarBubbleTheme = {
-    key: "studies",
-    hue: { value: 200, spread: 15 },
-    saturation: { value: 80, spread: 10 },
-    lightness: { value: 70, spread: 10 },
-    alpha: { value: 0.38, spread: 0.08 },
-    overlayOpacity: 0.20,
-};
-
-const userManagementSidebarTheme: SidebarBubbleTheme = {
-    key: "user-management",
-    hue: { value: 120, spread: 15 },
-    saturation: { value: 80, spread: 15 },
-    lightness: { value: 70, spread: 10 },
-    alpha: { value: 0.38, spread: 0.08 },
-    overlayOpacity: 0.20,
-};
-
 const navigation = [
-    { name: "Overview", href: "/", icon: Home, theme: overviewSidebarTheme },
-    { name: "Studies", href: "/studies", icon: BookOpen, theme: studiesSidebarTheme },
-    { name: "User Management", href: "/user-management", icon: Users, theme: userManagementSidebarTheme },
+    { name: "Overview", href: "/", icon: Home, theme: { key: "overview", hue: 42 } },
+    { name: "Studies", href: "/studies", icon: BookOpen, theme: { key: "studies", hue: 200 } },
+    { name: "User Management", href: "/user-management", icon: Users, theme: { key: "user-management", hue: 120 } },
 ];
 
 export function AppSidebar() {

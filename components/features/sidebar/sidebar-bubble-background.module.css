@@ -1,31 +1,4 @@
-@keyframes enter {
-    from {
-        opacity: 0;
-        transform: translate3d(var(--bubble-enter-x, 0px), var(--bubble-enter-y, 0px), 0) scale(0.4);
-    }
-
-    to {
-        opacity: var(--bubble-opacity, 0.24);
-        transform: translate3d(0, 0, 0) scale(1);
-    }
-}
-
-@keyframes exit {
-    to {
-        opacity: 0;
-        transform: translate3d(var(--bubble-exit-x, 0px), var(--bubble-exit-y, 0px), 0) scale(var(--bubble-exit-scale, 0.72));
-    }
-}
-
-.animateEnter {
-    animation: enter 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animateExit {
-    animation: exit 0.9s cubic-bezier(0.5, 0, 0.2, 1) both;
-}
-
-@keyframes layerEnter {
+@keyframes layer-enter {
     from {
         opacity: 0;
     }
@@ -35,41 +8,16 @@
     }
 }
 
-@keyframes layerExit {
+@keyframes layer-exit {
     to {
         opacity: 0;
     }
 }
 
-.animateLayerEnter {
-    animation: layerEnter 0.9s ease-out both;
+.layerEnter {
+    animation: layer-enter 0.9s ease-out both;
 }
 
-.animateLayerExit {
-    animation: layerExit 0.8s ease-out both;
-}
-
-
-@keyframes layerEnter {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes layerExit {
-    to {
-        opacity: 0;
-    }
-}
-
-.animateLayerEnter {
-    animation: layerEnter 0.9s ease-out both;
-}
-
-.animateLayerExit {
-    animation: layerExit 0.8s ease-out both;
+.layerExit {
+    animation: layer-exit 0.8s ease-out both;
 }

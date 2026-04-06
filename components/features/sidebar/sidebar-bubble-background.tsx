@@ -1,188 +1,104 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import styles from "./sidebar-bubble-background.module.css";
 
-export type SidebarBubbleValue = {
-    /**
-     * Center value used as the base for this bubble color property.
-     */
-    value: number;
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
 
-    /**
-     * Maximum random deviation on either side of `value`.
-     *
-     * The final generated value is chosen from
-     * `value - spread` to `value + spread`.
-     */
-    spread?: number;
-};
-
-export type SidebarBubbleTheme = {
-    /**
-     * Stable identifier for this visual theme.
-     *
-     * Change this when the sidebar enters a distinctly different state
-     * such as overview, study detail, or participant detail.
-     * It is also used as part of the deterministic random seed so each
-     * theme keeps a stable bubble layout between renders.
-     */
+export type BubbleTheme = {
+    /** Stable key — changing it triggers a crossfade to a new layout. */
     key: string;
-
-    /**
-     * Bubble hue in degrees.
-     *
-     * Example center values: 28 for orange, 140 for green, 220 for blue.
-     * Use `spread` to control how much hue variation exists across bubbles.
-     */
-    hue: SidebarBubbleValue;
-
-    /**
-     * Bubble saturation in percent.
-     *
-     * Lower values feel softer and more muted. Higher values feel richer and
-     * more colorful. Use `spread` to allow variation between bubbles.
-     */
-    saturation?: SidebarBubbleValue;
-
-    /**
-     * Bubble lightness in percent.
-     *
-     * Lower values make the background feel denser and bolder. Higher values
-     * create a lighter, airier look. Use `spread` to allow variation between
-     * bubbles.
-     */
-    lightness?: SidebarBubbleValue;
-
-    /**
-     * Bubble alpha / opacity.
-     *
-     * `value` controls the baseline bubble strength and `spread` controls how
-     * much individual bubbles vary around that strength.
-     * Expected range is `0` to `1`.
-     */
-    alpha?: SidebarBubbleValue;
-
-    /**
-     * Explicit start color for the static backdrop gradient behind the bubbles.
-     *
-     * This does not control the bubble colors themselves. It only controls the
-     * base surface underneath the animated bubbles.
-     *
-     * Provide this when you want tighter art direction than the generated
-     * defaults.
-     */
-    backgroundFrom?: string;
-
-    /**
-     * Explicit end color for the static backdrop gradient behind the bubbles.
-     *
-     * This does not control the bubble colors themselves. It only controls the
-     * base surface underneath the animated bubbles.
-     */
-    backgroundTo?: string;
-
-    /**
-     * Strength of the soft surface wash above the bubbles.
-     *
-     * `0` means no overlay and therefore the boldest bubbles.
-     * Higher values increasingly unify and soften the background.
-     * Expected range is `0` to `1`.
-     */
-    overlayOpacity?: number;
+    /** Base hue in degrees (0–360). */
+    hue: number;
+    /** Hue variation across bubbles in degrees. @default 20 */
+    hueSpread?: number;
+    /** Saturation percentage (0–100). @default 80 */
+    saturation?: number;
+    /** Lightness percentage (0–100). @default 70 */
+    lightness?: number;
+    /** Bubble opacity (0–1). @default 0.38 */
+    opacity?: number;
+    /** Softening overlay strength (0–1). @default 0.2 */
+    overlay?: number;
 };
 
-type ResolvedBubbleValue = {
-    value: number;
-    spread: number;
-};
+// ---------------------------------------------------------------------------
+// Internal types
+// ---------------------------------------------------------------------------
 
-type ResolvedSidebarBubbleTheme = {
+type ResolvedTheme = {
     key: string;
-    hue: ResolvedBubbleValue;
-    saturation: ResolvedBubbleValue;
-    lightness: ResolvedBubbleValue;
-    alpha: ResolvedBubbleValue;
-    backgroundFrom: string;
-    backgroundTo: string;
-    overlayOpacity: number;
-};
-
-type BubbleLayerState = {
-    id: string;
-    seed: number;
-    theme: ResolvedSidebarBubbleTheme;
-    mode: "enter" | "exit";
+    hue: number;
+    hueSpread: number;
+    saturation: number;
+    lightness: number;
+    opacity: number;
+    overlay: number;
 };
 
 type BubbleSpec = {
     id: string;
+    /** Initial horizontal position as a fraction of the container width (-0.5 to 1.5). */
+    initFx: number;
+    /** Initial vertical position as a fraction of the container height (-0.3 to 1.3). */
+    initFy: number;
     width: number;
     height: number;
-    left: number;
-    top: number;
-    opacity: number;
-    blur: number;
     highlightColor: string;
     color: string;
-    enterX: string;
-    enterY: string;
-    exitX: string;
-    exitY: string;
-    exitScale: number;
-    driftX: string;
-    driftY: string;
-    driftScale: number;
-    duration: string;
-    delay: string;
+    opacity: number;
 };
 
-const EXIT_DURATION_MS = 900;
-const BUBBLE_COUNT = 16;
+type LayerState = {
+    id: string;
+    theme: ResolvedTheme;
+    seed: number;
+    mode: "enter" | "exit";
+};
 
-const DRIFT_DURATION_SECONDS = {
-    min: 20,
-    max: 40,
-} as const;
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
 
-const DRIFT_DISTANCE_PIXELS = {
-    min: 40,
-    max: 160,
-} as const;
+const BUBBLE_COUNT = 12;
+const EXIT_MS = 900;
+const DRIFT_MIN_MS = 35_000;
+const DRIFT_MAX_MS = 60_000;
+const WAYPOINTS_PER_SEGMENT = 4;
+/** Fraction of the container dimension that bubbles may overshoot beyond each edge. */
+const DRIFT_OVERSHOOT = 0.3;
 
-function clamp(value: number, min: number, max: number) {
-    return Math.min(Math.max(value, min), max);
+// ---------------------------------------------------------------------------
+// Math utilities
+// ---------------------------------------------------------------------------
+
+function clamp(v: number, min: number, max: number) {
+    return Math.min(Math.max(v, min), max);
 }
 
-function normalizeHue(value: number) {
-    const normalized = value % 360;
-
-    return normalized < 0 ? normalized + 360 : normalized;
+function normalizeHue(h: number) {
+    return ((h % 360) + 360) % 360;
 }
 
-function hashString(value: string) {
-    let hash = 2166136261;
-
-    for (let index = 0; index < value.length; index += 1) {
-        hash ^= value.charCodeAt(index);
-        hash = Math.imul(hash, 16777619);
+function hashString(s: string) {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619);
     }
-
-    return hash >>> 0;
+    return h >>> 0;
 }
 
 function createRng(seed: number) {
-    let state = seed || 1;
-
+    let s = seed || 1;
     return () => {
-        state = (state + 0x6d2b79f5) | 0;
-        let next = Math.imul(state ^ (state >>> 15), 1 | state);
-
-        next ^= next + Math.imul(next ^ (next >>> 7), 61 | next);
-
-        return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
+        s = (s + 0x6d2b79f5) | 0;
+        let t = Math.imul(s ^ (s >>> 15), 1 | s);
+        t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
 }
 
@@ -190,365 +106,311 @@ function pickBetween(rng: () => number, min: number, max: number) {
     return min + (max - min) * rng();
 }
 
-function resolveBubbleValue(
-    value: SidebarBubbleValue | undefined,
-    defaults: ResolvedBubbleValue,
-    min: number,
-    max: number
-): ResolvedBubbleValue {
+// ---------------------------------------------------------------------------
+// Theme resolution
+// ---------------------------------------------------------------------------
+
+function resolveTheme(theme?: BubbleTheme): ResolvedTheme {
     return {
-        value: clamp(value?.value ?? defaults.value, min, max),
-        spread: clamp(value?.spread ?? defaults.spread, 0, max - min),
+        key: theme?.key ?? "default",
+        hue: normalizeHue(theme?.hue ?? 28),
+        hueSpread: clamp(theme?.hueSpread ?? 20, 0, 180),
+        saturation: clamp(theme?.saturation ?? 80, 0, 100),
+        lightness: clamp(theme?.lightness ?? 70, 0, 100),
+        opacity: clamp(theme?.opacity ?? 0.38, 0, 1),
+        overlay: clamp(theme?.overlay ?? 0.2, 0, 1),
     };
 }
 
-function resolveHueValue(
-    value: SidebarBubbleValue | undefined,
-    defaults: ResolvedBubbleValue
-): ResolvedBubbleValue {
-    return {
-        value: normalizeHue(value?.value ?? defaults.value),
-        spread: clamp(value?.spread ?? defaults.spread, 0, 180),
-    };
+function themeSignature(t: ResolvedTheme) {
+    return `${t.key}:${t.hue}:${t.hueSpread}:${t.saturation}:${t.lightness}:${t.opacity}:${t.overlay}`;
 }
 
-function buildThemeBackdrop(theme: ResolvedSidebarBubbleTheme) {
-    const isDark = theme.lightness.value < 50;
-    const accentHue = normalizeHue(theme.hue.value + Math.max(theme.hue.spread, 18));
+// ---------------------------------------------------------------------------
+// Bubble generation
+// ---------------------------------------------------------------------------
 
-    const l1 = isDark ? clamp(theme.lightness.value - 4, 4, 30) : 97;
-    const l2 = isDark ? clamp(theme.lightness.value - 8, 2, 26) : 92;
+function buildBubbles(theme: ResolvedTheme, layerId: string, seed: number): BubbleSpec[] {
+    const rng = createRng(hashString(`${seed}:${layerId}`));
 
-    return [
-        `radial-gradient(circle at 18% 14%, hsla(${theme.hue.value}, ${clamp(theme.saturation.value - theme.saturation.spread * 0.4, 0, 100)}%, ${l1}%, 0.9) 0%, transparent 42%)`,
-        `radial-gradient(circle at 82% 78%, hsla(${accentHue}, ${clamp(theme.saturation.value - theme.saturation.spread * 0.8, 0, 100)}%, ${l2}%, 0.72) 0%, transparent 46%)`,
-        `linear-gradient(180deg, ${theme.backgroundFrom} 0%, ${theme.backgroundTo} 100%)`,
-    ].join(", ");
-}
-
-function resolveTheme(theme?: SidebarBubbleTheme): ResolvedSidebarBubbleTheme {
-    const hue = resolveHueValue(theme?.hue, { value: 28, spread: 12 });
-    const saturation = resolveBubbleValue(theme?.saturation, { value: 74, spread: 10 }, 0, 100);
-    const lightness = resolveBubbleValue(theme?.lightness, { value: 73, spread: 8 }, 0, 100);
-    const alpha = resolveBubbleValue(theme?.alpha, { value: 0.32, spread: 0.08 }, 0, 1);
-
-    return {
-        key: theme?.key ?? "sidebar-default",
-        hue,
-        saturation,
-        lightness,
-        alpha,
-        backgroundFrom:
-            theme?.backgroundFrom ??
-            `hsla(${hue.value}, ${clamp(saturation.value - 24, 10, 80)}%, ${lightness.value < 50 ? clamp(lightness.value + 10, 10, 30) : 98}%, 0.96)`,
-        backgroundTo:
-            theme?.backgroundTo ??
-            `hsla(${normalizeHue(hue.value + Math.max(hue.spread, 18))}, ${clamp(saturation.value - 32, 8, 72)}%, ${lightness.value < 50 ? clamp(lightness.value + 4, 5, 25) : 94}%, 0.92)`,
-        overlayOpacity: clamp(theme?.overlayOpacity ?? 0.32, 0, 1),
-    };
-}
-
-function buildBubbleSpecs(theme: ResolvedSidebarBubbleTheme, layerKey: string, seed: number) {
-    const rng = createRng(hashString(`${seed}:${layerKey}`));
-
-    return Array.from({ length: BUBBLE_COUNT }, (_, index): BubbleSpec => {
-        const hue = normalizeHue(
-            theme.hue.value + pickBetween(rng, -theme.hue.spread, theme.hue.spread)
-        );
-        const saturation = clamp(
-            theme.saturation.value + pickBetween(rng, -theme.saturation.spread, theme.saturation.spread),
-            0,
-            100
-        );
-        const lightness = clamp(
-            theme.lightness.value + pickBetween(rng, -theme.lightness.spread, theme.lightness.spread),
-            0,
-            100
-        );
-        const alpha = clamp(
-            theme.alpha.value + pickBetween(rng, -theme.alpha.spread, theme.alpha.spread),
-            0,
-            1
-        );
+    return Array.from({ length: BUBBLE_COUNT }, (_, i) => {
+        const hue = normalizeHue(theme.hue + pickBetween(rng, -theme.hueSpread, theme.hueSpread));
+        const sat = clamp(theme.saturation + pickBetween(rng, -12, 12), 0, 100);
+        const lit = clamp(theme.lightness + pickBetween(rng, -12, 12), 0, 100);
+        const alpha = clamp(theme.opacity + pickBetween(rng, -0.08, 0.08), 0.05, 1);
         const width = pickBetween(rng, 180, 360);
-        const height = width * pickBetween(rng, 0.82, 1.22);
-        // Spread the initial positions out much wider so they immediately cover
-        // the regular area, including partially off-screen which looks more natural.
-        const left = pickBetween(rng, -50, 150); // range: -50% to 150%
-        const top = pickBetween(rng, -30, 130);  // range: -30% to 130%
-
-        const centerX = left - 50;
-        const centerY = top - 50;
-        const magnitude = Math.sqrt(centerX * centerX + centerY * centerY) || 1;
-
-        // Fly dramatically outward from the center
-        const escapeDistance = pickBetween(rng, 400, 700);
-        const exitX = `${(centerX / magnitude) * escapeDistance}px`;
-        const exitY = `${(centerY / magnitude) * escapeDistance}px`;
-
-        // Fly dramatically inward from the outside
-        const enterDistance = pickBetween(rng, 300, 600);
-        const enterX = `${(centerX / magnitude) * enterDistance}px`;
-        const enterY = `${(centerY / magnitude) * enterDistance}px`;
-
-        // Use polar coordinates to guarantee every bubble has a minimum drift distance
-        const driftAngle = pickBetween(rng, 0, Math.PI * 2);
-        const driftDistance = pickBetween(rng, DRIFT_DISTANCE_PIXELS.min, DRIFT_DISTANCE_PIXELS.max);
-        const driftX = `${(Math.cos(driftAngle) * driftDistance).toFixed(1)}px`;
-        const driftY = `${(Math.sin(driftAngle) * driftDistance).toFixed(1)}px`;
 
         return {
-            id: `${layerKey}-${index}`,
+            id: `${layerId}-${i}`,
+            initFx: pickBetween(rng, -0.5, 1.5),
+            initFy: pickBetween(rng, -0.3, 1.3),
             width,
-            height,
-            left,
-            top,
+            height: width * pickBetween(rng, 0.82, 1.22),
+            highlightColor: `hsl(${hue.toFixed(0)} ${clamp(sat + 8, 0, 100).toFixed(0)}% ${clamp(lit + 18, 0, 100).toFixed(0)}%)`,
+            color: `hsl(${hue.toFixed(0)} ${sat.toFixed(0)}% ${lit.toFixed(0)}%)`,
             opacity: alpha,
-            blur: pickBetween(rng, 42, 74),
-            highlightColor: `hsla(${hue.toFixed(1)}, ${clamp(saturation + 8, 0, 100).toFixed(1)}%, ${clamp(lightness + 18, 0, 100).toFixed(1)}%, 0.92)`,
-            color: `hsla(${hue.toFixed(1)}, ${saturation.toFixed(1)}%, ${lightness.toFixed(1)}%, 1)`,
-            enterX,
-            enterY,
-            exitX,
-            exitY,
-            exitScale: pickBetween(rng, 0.2, 0.5),
-            driftX,
-            driftY,
-            driftScale: pickBetween(rng, 0.9, 1.14),
-            duration: `${pickBetween(rng, DRIFT_DURATION_SECONDS.min, DRIFT_DURATION_SECONDS.max).toFixed(1)}s`,
-            delay: `${pickBetween(rng, -DRIFT_DURATION_SECONDS.max, 0).toFixed(1)}s`,
         };
     });
 }
 
-function useReducedMotion() {
-    const [reducedMotion, setReducedMotion] = useState<boolean | null>(null);
+// ---------------------------------------------------------------------------
+// Static gradients
+// ---------------------------------------------------------------------------
 
-    useEffect(() => {
-        const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-        const update = () => setReducedMotion(mediaQuery.matches);
-
-        update();
-        mediaQuery.addEventListener("change", update);
-
-        return () => mediaQuery.removeEventListener("change", update);
-    }, []);
-
-    return reducedMotion;
+function buildBackdrop(theme: ResolvedTheme): string {
+    const s = clamp(theme.saturation - 24, 10, 80);
+    const h2 = normalizeHue(theme.hue + Math.max(theme.hueSpread, 18));
+    return [
+        `radial-gradient(circle at 18% 14%, hsl(${theme.hue} ${clamp(s - theme.hueSpread * 0.4, 0, 100).toFixed(0)}% 97% / 0.9), transparent 42%)`,
+        `radial-gradient(circle at 82% 78%, hsl(${h2} ${clamp(s - theme.hueSpread * 0.8, 0, 100).toFixed(0)}% 93% / 0.72), transparent 46%)`,
+        `linear-gradient(180deg, hsl(${theme.hue} ${clamp(s - 10, 5, 80)}% 98%), hsl(${h2} ${clamp(s - 15, 5, 72)}% 94%))`,
+    ].join(",");
 }
 
-function AnimatedBubble({
-    bubble,
+// ---------------------------------------------------------------------------
+// Hooks
+// ---------------------------------------------------------------------------
+
+function useReducedMotion() {
+    const [reduced, setReduced] = useState<boolean | null>(null);
+
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const update = () => setReduced(mq.matches);
+        update();
+        mq.addEventListener("change", update);
+        return () => mq.removeEventListener("change", update);
+    }, []);
+
+    return reduced;
+}
+
+// ---------------------------------------------------------------------------
+// Bubble (Web Animations API — non-repeating, GPU-composited drift)
+// ---------------------------------------------------------------------------
+
+function Bubble({
+    spec,
+    containerSize,
     reducedMotion,
     mode,
 }: {
-    bubble: BubbleSpec;
+    spec: BubbleSpec;
+    containerSize: { width: number; height: number };
     reducedMotion: boolean;
     mode: "enter" | "exit";
 }) {
-    const [pos, setPos] = useState(() => {
-        // Start the bubble exactly at its seeded initial position,
-        // distributed natively across the sidebar via the spec's percentages.
-        return {
-            left: bubble.left,
-            top: bubble.top,
-            scale: bubble.driftScale,
-            duration: 0,
-        };
-    });
+    const ref = useRef<HTMLDivElement>(null);
+    const sizeRef = useRef(containerSize);
 
     useEffect(() => {
-        if (reducedMotion || mode === "exit") return;
-        let timeout: ReturnType<typeof setTimeout>;
+        sizeRef.current = containerSize;
+    }, [containerSize]);
 
-        function nextPos(currentDuration: number) {
-            timeout = setTimeout(() => {
-                // Pick a completely new random destination bounded roughly by the container,
-                // freeing them from any anchor points so they roam completely everywhere.
-                const nextDuration = (30 + Math.random() * 30) * 1000;
-                setPos({
-                    left: -50 + Math.random() * 200, // range: -50% to 150% (symmetric)
-                    top: -30 + Math.random() * 160,  // range: -30% to 130% (symmetric)
-                    scale: 0.85 + Math.random() * 0.3,
-                    duration: nextDuration,
-                });
-                nextPos(nextDuration);
-            }, currentDuration);
+    useEffect(() => {
+        if (reducedMotion || mode === "exit" || !ref.current) return;
+
+        let animation: Animation | null = null;
+        let cancelled = false;
+        let cx = 0;
+        let cy = 0;
+        let initialized = false;
+
+        function drift() {
+            if (cancelled || !ref.current) return;
+
+            const { width, height } = sizeRef.current;
+
+            // On first call, seed the starting position from the spec's initial fraction.
+            // After that, continue from wherever the last segment ended.
+            const startX = initialized ? cx : spec.initFx * width;
+            const startY = initialized ? cy : spec.initFy * height;
+            initialized = true;
+
+            const keyframes: Keyframe[] = [
+                { transform: `translate3d(${startX.toFixed(0)}px, ${startY.toFixed(0)}px, 0)` },
+            ];
+
+            for (let i = 0; i < WAYPOINTS_PER_SEGMENT; i++) {
+                // Pick anywhere within the container + overshoot margin on each side.
+                cx = (-DRIFT_OVERSHOOT + Math.random() * (1 + 2 * DRIFT_OVERSHOOT)) * width;
+                cy = (-DRIFT_OVERSHOOT + Math.random() * (1 + 2 * DRIFT_OVERSHOOT)) * height;
+                keyframes.push({ transform: `translate3d(${cx.toFixed(0)}px, ${cy.toFixed(0)}px, 0)` });
+            }
+
+            animation = ref.current.animate(keyframes, {
+                duration: DRIFT_MIN_MS + Math.random() * (DRIFT_MAX_MS - DRIFT_MIN_MS),
+                easing: "ease-in-out",
+                // "both" applies the first keyframe before playback starts,
+                // so the bubble appears at its seeded position on first render.
+                fill: "both",
+            });
+
+            animation.onfinish = drift;
         }
 
-        const currentTimer = setTimeout(() => {
-            const initialDuration = (30 + Math.random() * 30) * 1000;
-            // Initiate the very first drift to a brand new random spot
-            setPos({
-                left: -50 + Math.random() * 200, // range: -50% to 150% (symmetric)
-                top: -30 + Math.random() * 160,  // range: -30% to 130% (symmetric)
-                scale: 0.85 + Math.random() * 0.3,
-                duration: initialDuration,
-            });
-            nextPos(initialDuration);
-        }, 50);
+        drift();
 
         return () => {
-            clearTimeout(timeout);
-            clearTimeout(currentTimer);
+            cancelled = true;
+            animation?.cancel();
         };
-    }, [reducedMotion, mode]);
+    }, [reducedMotion, mode, spec]);
+
+    return (
+        <div
+            ref={ref}
+            className="absolute rounded-full will-change-transform"
+            style={{
+                // Provides correct initial placement for both cases:
+                // - Reduced motion: this is the final static position.
+                // - Animated: WAAPI overrides this, but it prevents a 0,0 flash.
+                transform: `translate3d(${(spec.initFx * containerSize.width).toFixed(0)}px, ${(spec.initFy * containerSize.height).toFixed(0)}px, 0)`,
+                width: spec.width,
+                height: spec.height,
+                background: `radial-gradient(circle at 30% 30%, ${spec.highlightColor}, ${spec.color} 56%, transparent 88%)`,
+                opacity: spec.opacity,
+            }}
+        />
+    );
+}
+
+// ---------------------------------------------------------------------------
+// BubbleLayer
+// ---------------------------------------------------------------------------
+
+function BubbleLayer({ layer, reducedMotion }: { layer: LayerState; reducedMotion: boolean }) {
+    const bubbles = useMemo(
+        () => buildBubbles(layer.theme, layer.id, layer.seed),
+        [layer.theme, layer.id, layer.seed],
+    );
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [containerSize, setContainerSize] = useState({ width: 400, height: 800 });
+
+    // useLayoutEffect so the initial size is measured synchronously before paint.
+    // This means children receive correct dimensions before their own effects fire,
+    // and reduced-motion users see correctly positioned bubbles from the first frame.
+    useLayoutEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+
+        // Seed with the real size immediately rather than waiting for the first
+        // ResizeObserver callback, which would fire after children's useEffects.
+        const rect = el.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+            setContainerSize({ width: rect.width, height: rect.height });
+        }
+
+        const observer = new ResizeObserver(([entry]) => {
+            const { width, height } = entry.contentRect;
+            if (width > 0 && height > 0) setContainerSize({ width, height });
+        });
+
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
+    const { theme, mode } = layer;
+    const backdrop = useMemo(() => buildBackdrop(theme), [theme]);
+
+    const overlayBg =
+        theme.overlay > 0
+            ? `linear-gradient(180deg, hsl(${theme.hue} 26% 99% / ${(theme.overlay * 0.72).toFixed(2)}), hsl(${normalizeHue(theme.hue + Math.max(theme.hueSpread, 18))} 18% 98% / ${theme.overlay.toFixed(2)}))`
+            : null;
 
     return (
         <div
             className={cn(
-                "absolute will-change-[transform,opacity]",
-                reducedMotion === false && (mode === "enter" ? styles.animateEnter : styles.animateExit)
+                "absolute inset-0 overflow-hidden",
+                !reducedMotion && (mode === "enter" ? styles.layerEnter : styles.layerExit),
             )}
-            style={{
-                left: `${pos.left}%`,
-                top: `${pos.top}%`,
-                width: `${bubble.width}px`,
-                height: `${bubble.height}px`,
-                opacity: bubble.opacity,
-                transition: reducedMotion ? undefined : `left ${pos.duration}ms ease-in-out, top ${pos.duration}ms ease-in-out`,
-                ["--bubble-opacity" as string]: String(bubble.opacity),
-                ["--bubble-enter-x" as string]: bubble.enterX,
-                ["--bubble-enter-y" as string]: bubble.enterY,
-                ["--bubble-exit-x" as string]: bubble.exitX,
-                ["--bubble-exit-y" as string]: bubble.exitY,
-                ["--bubble-exit-scale" as string]: String(bubble.exitScale),
-            }}
         >
+            <div className="absolute inset-0" style={{ background: backdrop }} />
             <div
-                className="size-full rounded-full will-change-transform"
-                style={{
-                    background: `radial-gradient(circle at 30% 30%, ${bubble.highlightColor} 0%, ${bubble.color} 56%, transparent 88%)`,
-                    transform: reducedMotion ? undefined : `translate3d(0, 0, 0) scale(${pos.scale})`,
-                    transition: reducedMotion ? undefined : `transform ${pos.duration}ms ease-in-out`,
-                }}
-            />
-        </div>
-    );
-}
-
-function BubbleLayer({
-    layer,
-    reducedMotion,
-}: {
-    layer: BubbleLayerState;
-    reducedMotion: boolean;
-}) {
-    const bubbles = useMemo(() => buildBubbleSpecs(layer.theme, layer.id, layer.seed), [layer.theme, layer.id, layer.seed]);
-    const { theme, mode } = layer;
-
-    const isDark = theme.lightness.value < 50;
-    const overlayL1 = isDark ? 8 : 99;
-    const overlayL2 = isDark ? 4 : 98;
-    const overlayTopOpacity = clamp(theme.overlayOpacity * 0.72, 0, 1);
-    const overlayBottomOpacity = clamp(theme.overlayOpacity, 0, 1);
-
-    if (reducedMotion === null) {
-        return (
-            <div className={cn("absolute inset-0 overflow-hidden")} aria-hidden="true" />
-        );
-    }
-
-    return (
-        <div suppressHydrationWarning className={cn("absolute inset-0 overflow-hidden", reducedMotion === false && (mode === "enter" ? styles.animateLayerEnter : styles.animateLayerExit))}>
-            <div
-                className="absolute inset-0"
-                style={{ background: buildThemeBackdrop(theme) }}
-            />
-            <div className="absolute -inset-25" style={{ filter: "blur(50px)", transform: "translateZ(0)" }}>
-                {bubbles.map((bubble) => (
-                    <AnimatedBubble
-                        key={bubble.id}
-                        bubble={bubble}
-                        reducedMotion={reducedMotion}
-                        mode={mode}
-                    />
+                ref={containerRef}
+                className="absolute -inset-25"
+                style={{ filter: "blur(50px)", transform: "translateZ(0)" }}
+            >
+                {bubbles.map((b) => (
+                    <Bubble key={b.id} spec={b} containerSize={containerSize} reducedMotion={reducedMotion} mode={mode} />
                 ))}
             </div>
-            {theme.overlayOpacity > 0 ? (
-                <div
-                    className="absolute inset-0"
-                    style={{
-                        background: `linear-gradient(180deg, hsla(${theme.hue.value}, 26%, ${overlayL1}%, ${overlayTopOpacity}) 0%, hsla(${normalizeHue(theme.hue.value + Math.max(theme.hue.spread, 18))}, 18%, ${overlayL2}%, ${overlayBottomOpacity}) 100%)`,
-                    }}
-                />
-            ) : null}
+            {overlayBg && <div className="absolute inset-0" style={{ background: overlayBg }} />}
             <div
                 className="absolute inset-0"
                 style={{
-                    background: `radial-gradient(circle at center, transparent 26%, rgba(${isDark ? '0,0,0' : '255,255,255'}, 0.14) 100%)`
+                    background: "radial-gradient(circle at center, transparent 26%, rgba(255,255,255,0.14) 100%)",
                 }}
             />
         </div>
     );
 }
+
+// ---------------------------------------------------------------------------
+// SidebarBubbleBackground (main export)
+// ---------------------------------------------------------------------------
 
 export function SidebarBubbleBackground({
     theme,
     className,
 }: {
-    theme?: SidebarBubbleTheme;
+    theme?: BubbleTheme;
     className?: string;
 }) {
     const reducedMotion = useReducedMotion();
-    const resolvedThemeBase = resolveTheme(theme);
-    const themeSignature = [
-        resolvedThemeBase.key,
-        resolvedThemeBase.hue.value,
-        resolvedThemeBase.hue.spread,
-        resolvedThemeBase.saturation.value,
-        resolvedThemeBase.saturation.spread,
-        resolvedThemeBase.lightness.value,
-        resolvedThemeBase.lightness.spread,
-        resolvedThemeBase.alpha.value,
-        resolvedThemeBase.alpha.spread,
-        resolvedThemeBase.backgroundFrom,
-        resolvedThemeBase.backgroundTo,
-        resolvedThemeBase.overlayOpacity,
-    ].join(":");
 
+    const resolvedBase = resolveTheme(theme);
+    const sig = themeSignature(resolvedBase);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const resolvedTheme = useMemo(() => resolvedThemeBase, [themeSignature]);
+    const resolved = useMemo(() => resolvedBase, [sig]);
 
-    const [layers, setLayers] = useState<BubbleLayerState[]>(() => [{
-        id: Math.random().toString(36).substring(2),
-        seed: Math.random() * 0xffffffff >>> 0,
-        theme: resolvedTheme,
-        mode: "enter"
-    }]);
+    const [layers, setLayers] = useState<LayerState[]>(() => [
+        {
+            id: Math.random().toString(36).substring(2),
+            seed: (Math.random() * 0xffffffff) >>> 0,
+            theme: resolved,
+            mode: "enter",
+        },
+    ]);
 
-    const prevSignatureRef = useRef(themeSignature);
+    const prevSigRef = useRef(sig);
 
     useEffect(() => {
-        if (themeSignature === prevSignatureRef.current) return;
-        prevSignatureRef.current = themeSignature;
+        if (sig === prevSigRef.current) return;
+        prevSigRef.current = sig;
 
         const newId = Math.random().toString(36).substring(2);
 
-        setLayers(prev => [
-            ...prev.map(l => ({ ...l, mode: "exit" as const })),
-            { id: newId, seed: Math.random() * 0xffffffff >>> 0, theme: resolvedTheme, mode: "enter" }
+        setLayers((prev) => [
+            ...prev.map((l) => ({ ...l, mode: "exit" as const })),
+            { id: newId, seed: (Math.random() * 0xffffffff) >>> 0, theme: resolved, mode: "enter" },
         ]);
 
-        const timeoutId = window.setTimeout(() => {
-            setLayers(prev => prev.filter(l => l.id === newId || l.mode === "enter"));
-        }, reducedMotion === true ? 0 : EXIT_DURATION_MS);
+        const timeout = window.setTimeout(
+            () => setLayers((prev) => prev.filter((l) => l.mode === "enter")),
+            reducedMotion ? 0 : EXIT_MS,
+        );
 
-        return () => window.clearTimeout(timeoutId);
-    }, [themeSignature, resolvedTheme, reducedMotion]);
+        return () => window.clearTimeout(timeout);
+    }, [sig, resolved, reducedMotion]);
 
     if (reducedMotion === null) {
-        return <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden="true" />;
+        return (
+            <div
+                className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
+                aria-hidden="true"
+            />
+        );
     }
 
     return (
-        <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} aria-hidden="true">
-            {layers.map(layer => (
-                <BubbleLayer
-                    key={layer.id}
-                    layer={layer}
-                    reducedMotion={reducedMotion}
-                />
+        <div
+            className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
+            aria-hidden="true"
+        >
+            {layers.map((layer) => (
+                <BubbleLayer key={layer.id} layer={layer} reducedMotion={reducedMotion} />
             ))}
         </div>
     );
