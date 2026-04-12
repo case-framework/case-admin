@@ -3,31 +3,26 @@
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 
+interface LoginComponentProps {
+    redirectTo: string;
+}
 
-const LoginComponent = () => {
-    // read url query params to get the redirect url
-
-
+const LoginComponent = ({ redirectTo }: LoginComponentProps) => {
     const signIn = async () => {
         const data = await authClient.signIn.social({
             provider: "microsoft",
-            callbackURL: "/studies/123",
-        },
-            {
-                onRequest: (ctx) => {
-                    //show loading
-                },
-                onSuccess: (ctx) => {
-                    //redirect to the dashboard or sign in page
-
-                },
-
-                onError: (ctx) => {
-                    // display the error message
-                    alert(ctx.error.message);
-                },
-            }
-        );
+            callbackURL: redirectTo,
+        }, {
+            onRequest: (ctx) => {
+                //show loading
+            },
+            onSuccess: (ctx) => {
+                //redirect to the dashboard or sign in page
+            },
+            onError: (ctx) => {
+                alert(ctx.error.message);
+            },
+        });
         console.log(data);
     };
 
@@ -36,7 +31,7 @@ const LoginComponent = () => {
             <h1>Login</h1>
             <Button onClick={signIn}>Login</Button>
         </div>
-    )
-}
+    );
+};
 
 export default LoginComponent;

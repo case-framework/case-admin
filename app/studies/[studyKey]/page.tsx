@@ -15,7 +15,7 @@ interface StudyPageProps {
 const StudyPage = async ({ params }: StudyPageProps) => {
     const { studyKey } = await params;
 
-    await requiredAdminAuth("/login?redirect=/studies/" + studyKey);
+    await requiredAdminAuth();
 
     const db = await getDb(DbKey.STUDY);
     const users = await db.collection("studies").find({}).toArray();

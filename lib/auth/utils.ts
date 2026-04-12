@@ -3,13 +3,13 @@ import { redirect } from "next/navigation";
 import { auth } from "./auth";
 
 
-export const requiredAdminAuth = async (redirectTo: string = "/login") => {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    })
+export const requiredAdminAuth = async () => {
+    const headersList = await headers();
+    const pathname = headersList.get('x-pathname') ?? '/';
+    const session = await auth.api.getSession({ headers: headersList });
 
     if (!session) {
-        redirect(redirectTo)
+        redirect(`/login?redirect=${encodeURIComponent(pathname)}`);
     }
     return session;
 }

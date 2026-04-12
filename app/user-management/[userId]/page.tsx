@@ -10,7 +10,7 @@ interface UserManagementPageProps {
 
 const UserManagementPage = async ({ params }: UserManagementPageProps) => {
     const { userId } = await params;
-    await requiredAdminAuth("/login?redirect=/user-management");
+    await requiredAdminAuth();
 
     return (
         <div className="p-4">
