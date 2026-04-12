@@ -3,17 +3,14 @@
 import { LoadingButton } from "@/components/c-ui/loading-button";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 export default function Home() {
-    const t = useTranslations('Index');
-
     return (
         <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
             <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
                 <Button
-                    onClick={() => toast.success(t('test'))}
+                    onClick={() => toast.success("Test")}
                 >Click me</Button>
 
                 <LoadingButton
@@ -23,15 +20,6 @@ export default function Home() {
                 >
                     Click me
                 </LoadingButton>
-
-                <div className="flex flex-col gap-4">
-                    <div>
-                        {t('test')}
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
 
                 <div className="@container">
                     <div className={cn(
