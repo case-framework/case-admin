@@ -9,5 +9,9 @@
         "en": "English",
         "label": "Taal",
         "nl": "Nederlands"
+    },
+    "Sidebar": {
+        "sessionExpiresIn": "Sessie verloopt over",
+        "signOut": "Uitloggen"
     }
 }

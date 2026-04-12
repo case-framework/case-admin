@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth/auth-client";
+import { useTranslations } from "next-intl";
 
 function formatCountdown(ms: number): string {
     if (ms <= 0) return "Expired";
@@ -25,6 +26,7 @@ function formatCountdown(ms: number): string {
 
 export function SidebarUserButton() {
     const { data: session, isPending: sessionPending } = authClient.useSession();
+    const t = useTranslations("Sidebar");
     const [remaining, setRemaining] = useState<string | null>(null);
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
@@ -111,7 +113,7 @@ export function SidebarUserButton() {
                             <p className="text-sm font-medium leading-tight">{user.name}</p>
                             <p className="text-xs text-muted-foreground">{user.email}</p>
                             <div className="pt-2">
-                                <p className="text-xs text-muted-foreground">Session expires in</p>
+                                <p className="text-xs text-muted-foreground">{t("sessionExpiresIn")}</p>
                                 {remaining ? (
                                     <p className="text-xs font-medium tabular-nums">{remaining}</p>
                                 ) : (
@@ -134,7 +136,7 @@ export function SidebarUserButton() {
                                 }}
                             >
                                 <LogOut className="size-3.5" />
-                                Sign out
+                                {t("signOut")}
                             </Button>
                         </div>
                     </PopoverContent>

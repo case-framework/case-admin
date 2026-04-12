@@ -9,5 +9,9 @@
         "en": "English",
         "label": "Language",
         "nl": "Nederlands"
+    },
+    "Sidebar": {
+        "sessionExpiresIn": "Session expires in",
+        "signOut": "Sign out"
     }
 }
