@@ -7,6 +7,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { Home, Users, BookOpen } from "lucide-react"
+import { SidebarUserButton } from "@/components/features/sidebar/sidebar-user-button"
 
 const navigation = [
     { name: "Overview", href: "/", icon: Home, theme: { key: "overview", hue: 42 } },
@@ -77,6 +78,7 @@ export function AppSidebar() {
                         </SidebarGroup>
                     </SidebarContent>
                     <SidebarFooter>
+                        <SidebarUserButton />
                     </SidebarFooter>
                 </div>
             </div>
