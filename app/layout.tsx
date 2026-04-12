@@ -9,9 +9,6 @@ import { NextIntlClientProvider } from 'next-intl';
 import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
 import { AlertDialogProvider } from "@/components/c-ui/alert";
 import { getLocale } from "@/i18n/actions";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/features/sidebar/app-sidebar";
-import { LocaleSwitcher } from "@/components/locale-switcher";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -39,32 +36,15 @@ export default async function RootLayout({
     const locale = await getLocale();
 
     return (
-        <html
-            lang={locale}
-        >
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
+        <html lang={locale}>
+            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 <TRPCReactProvider>
                     <NuqsAdapter>
                         <NextIntlClientProvider>
                             <ConfirmDialogProvider>
                                 <AlertDialogProvider>
-                                    <SidebarProvider>
-                                        <AppSidebar />
-                                        <main className="flex flex-col flex-1 min-w-0">
-                                            <header className="flex flex-row items-center border-b">
-                                                <section className="border-r p-4">
-                                                    <SidebarTrigger />
-                                                </section>
-                                                <section className="ml-auto p-3 pr-4">
-                                                    <LocaleSwitcher />
-                                                </section>
-                                            </header>
-                                            {children}
-                                        </main>
-                                        <Toaster position="bottom-center" />
-                                    </SidebarProvider>
+                                    {children}
+                                    <Toaster position="bottom-center" />
                                 </AlertDialogProvider>
                             </ConfirmDialogProvider>
                         </NextIntlClientProvider>
