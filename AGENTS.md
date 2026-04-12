@@ -62,6 +62,7 @@ Before any Next.js work, find and read the relevant doc in `node_modules/next/di
 - **Visual Direction:** When creating or updating UI, aim for a clean, polished style similar to Linear or Notion: restrained color use, strong spacing rhythm, clear typography, subtle hierarchy, and minimal visual noise.
 - **UI Cleanliness:** Keep markup and class lists minimal. Do not add wrapper `div`s, layout containers, or Tailwind classes unless they have a clear visible, structural, semantic, or interaction effect in the current implementation.
 - **No Inert Styling:** Avoid no-op or barely perceptible utilities such as redundant background layers, duplicate border utilities, inactive state selectors that are not used, or effect classes whose visual impact is negligible. If a class exists only for a future state, keep it only when that future state is a concrete near-term requirement and the intent is obvious.
+- **Localization:** Every user-facing string in the UI **must** be localized. Never hard-code English (or any other language) text in components. Use `useTranslations` (client components) or `getTranslations` (server components) from `next-intl`. When adding or updating strings, always update both `i18n/messages/en.json` and `i18n/messages/nl.json`, and keep `case-admin.babel` in sync. See `.agents/skills/localization.md` for the full workflow.
 
 ### Database & Services
 
