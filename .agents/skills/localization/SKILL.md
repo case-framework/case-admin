@@ -19,7 +19,7 @@ description: >
 ## Message file structure
 
 Messages are organized as a **namespaced JSON** object. Each top-level key is
-a namespace (e.g. `"SidebarUserButton"`), and its value is a flat map of
+a namespace (e.g. `"Sidebar"`), and its value is a flat map of
 translation keys to strings.
 
 ```jsonc
