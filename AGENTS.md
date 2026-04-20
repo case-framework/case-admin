@@ -24,7 +24,7 @@ Before any Next.js work, find and read the relevant doc in `node_modules/next/di
 **Key Architectural Layers**
 
 1. **UI Components** (`components/`)
-    - **Installation:** Prefer installing components from the official shadcn registry or from custom registries (e.g. `c-ui`) instead of implementing them anew. Only implement custom components if no suitable option exists.
+    - **Installation:** ALWAYS install UI primitives via the shadcn CLI (`pnpm dlx shadcn@latest add <component>`) before considering a manual implementation. Check whether a component already exists in `components/ui/` before writing any code. Only implement a component from scratch if it is genuinely unavailable in the shadcn registry or from custom registries (e.g. `c-ui`) and no suitable alternative exists.
     - `ui/`: Primitives (Shadcn-based). Do not modify unless changing design system.
     - `c-ui/`: Custom shared components (e.g., `ConfirmDialog`, `LoadingButton`). Prefer these over raw `ui` components for common patterns.
     - `features/`: Domain-specific components grouped by feature (e.g., `features/user-management`).
