@@ -1,6 +1,6 @@
 {
     "Common": {
-        "AppName": "CASE Admin"
+        "appName": "CASE Admin"
     },
     "LocaleSwitcher": {
         "en": "English",
@@ -8,7 +8,45 @@
         "nl": "Nederlands"
     },
     "Sidebar": {
-        "sessionExpiresIn": "Session expires in",
-        "signOut": "Sign out"
+        "Global": {
+            "appRoleTemplates": "App Role Templates",
+            "dashboard": "Dashboard",
+            "databaseIndexes": "Database Indexes",
+            "documentation": "Documentation",
+            "externalServices": "External Services",
+            "globalSection": "Global",
+            "managementUsers": "Management Users",
+            "messages": "Messages",
+            "noStudies": "No studies found",
+            "participants": "Participants",
+            "recentStudies": "Recent Studies",
+            "settings": "Settings",
+            "studiesSection": "Studies",
+            "systemSection": "System",
+            "userManagementSection": "User Management"
+        },
+        "Header": {},
+        "Study": {
+            "accessControl": "Access Control",
+            "actions": "Actions",
+            "advanced": "Advanced",
+            "codeLists": "Code Lists",
+            "configurationSection": "Configuration",
+            "dataParticipantsSection": "Data & Participants",
+            "files": "Files",
+            "general": "General",
+            "notifications": "Notifications",
+            "overview": "Overview",
+            "participants": "Participants",
+            "reports": "Reports",
+            "responses": "Responses",
+            "rules": "Rules",
+            "surveys": "Surveys",
+            "variables": "Variables"
+        },
+        "User": {
+            "sessionExpiresIn": "Session expires in",
+            "signOut": "Sign out"
+        }
     }
 }

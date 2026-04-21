@@ -1,5 +1,7 @@
 import { ResourceType } from "@/lib/types/permission";
 import { User } from "@/lib/types/user";
+import { Study } from "@/lib/types/study";
+import { LocalisedObject } from "@/lib/types/localization";
 import { ObjectId } from "mongodb";
 
 export type UserDoc = Omit<User, "id"> & {
@@ -26,4 +28,26 @@ export type PermissionDoc = {
     resourceKey: string;
     action: string;
     limiter?: Record<string, string>[];
+}
+
+export interface StudyProps {
+    name: LocalisedObject[];
+    description: LocalisedObject[];
+}
+
+export interface StudyDoc {
+    _id: ObjectId;
+    key: string;
+    status: string;
+    props: StudyProps;
+}
+
+export function toStudy(doc: StudyDoc): Study {
+    return {
+        id: doc._id.toHexString(),
+        key: doc.key,
+        status: doc.status,
+        name: doc.props?.name ?? [],
+        description: doc.props?.description ?? [],
+    };
 }

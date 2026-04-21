@@ -26,7 +26,7 @@ function formatCountdown(ms: number): string {
 
 export function SidebarUserButton() {
     const { data: session, isPending: sessionPending } = authClient.useSession();
-    const t = useTranslations("Sidebar");
+    const t = useTranslations("Sidebar.User");
     const [remaining, setRemaining] = useState<string | null>(null);
     const [isPending, startTransition] = useTransition();
     const router = useRouter();

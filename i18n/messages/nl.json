@@ -1,6 +1,6 @@
 {
     "Common": {
-        "AppName": "CASE Admin"
+        "appName": "CASE Admin"
     },
     "LocaleSwitcher": {
         "en": "English",
@@ -8,7 +8,45 @@
         "nl": "Nederlands"
     },
     "Sidebar": {
-        "sessionExpiresIn": "Sessie verloopt over",
-        "signOut": "Uitloggen"
+        "Global": {
+            "appRoleTemplates": "App rol-sjablonen",
+            "dashboard": "Dashboard",
+            "databaseIndexes": "Database-indexen",
+            "documentation": "Documentatie",
+            "externalServices": "Externe diensten",
+            "globalSection": "Globaal",
+            "managementUsers": "Beheerders",
+            "messages": "Berichten",
+            "noStudies": "Geen studies gevonden",
+            "participants": "Deelnemers",
+            "recentStudies": "Recente studies",
+            "settings": "Instellingen",
+            "studiesSection": "Studies",
+            "systemSection": "Systeem",
+            "userManagementSection": "Gebruikersbeheer"
+        },
+        "Header": {},
+        "Study": {
+            "accessControl": "Toegangsbeheer",
+            "actions": "Acties",
+            "advanced": "Geavanceerd",
+            "codeLists": "Codelijsten",
+            "configurationSection": "Configuratie",
+            "dataParticipantsSection": "Data & deelnemers",
+            "files": "Bestanden",
+            "general": "Algemeen",
+            "notifications": "Meldingen",
+            "overview": "Overzicht",
+            "participants": "Deelnemers",
+            "reports": "Rapporten",
+            "responses": "Antwoorden",
+            "rules": "Regels",
+            "surveys": "Enquêtes",
+            "variables": "Variabelen"
+        },
+        "User": {
+            "sessionExpiresIn": "Sessie verloopt over",
+            "signOut": "Uitloggen"
+        }
     }
 }
