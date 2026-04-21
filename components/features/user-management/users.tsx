@@ -2,7 +2,7 @@
 
 import { LoadingButton } from "@/components/c-ui/loading-button";
 import { Button } from "@/components/ui/button";
-import { useGetUsers } from "@/hooks/useUserManagementRouter";
+import { useGetUsers } from "@/hooks/use-user-management-router";
 import { useUsersPagination } from "@/lib/search-params/users-pagination";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";

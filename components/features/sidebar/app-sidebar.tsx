@@ -14,7 +14,7 @@ import { StudyNav } from "@/components/features/sidebar/study-nav";
 
 import { usePathname } from "next/navigation";
 import { SidebarUserButton } from "@/components/features/sidebar/sidebar-user-button";
-import { useGetRecentStudies, useGetStudyByKey } from "@/hooks/useStudiesRouter";
+import { useGetRecentStudies, useGetStudyByKey } from "@/hooks/use-studies-router";
 import { useLocalizedText } from "@/hooks/use-localized-text";
 import { cn } from "@/lib/utils";
 import type { BubbleTheme } from "@/components/features/sidebar/sidebar-bubble-background";

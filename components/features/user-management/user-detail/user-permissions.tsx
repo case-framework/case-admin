@@ -1,7 +1,7 @@
 "use client";
 
 import { LoadingButton } from "@/components/c-ui/loading-button";
-import { useCreatePermission, useGetPermissions } from "@/hooks/useUserManagementRouter";
+import { useCreatePermission, useGetPermissions } from "@/hooks/use-user-management-router";
 import { SubjectType, UserPermission, UserPermissionActions } from "@/lib/types/permission";
 import { toast } from "sonner";
 import PermissionItem from "./permission-item";

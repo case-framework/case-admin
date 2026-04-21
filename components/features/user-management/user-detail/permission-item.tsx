@@ -1,6 +1,6 @@
 import { LoadingButton } from "@/components/c-ui/loading-button";
 import { useConfirm } from "@/components/c-ui/confirm-provider";
-import { useDeletePermission } from "@/hooks/useUserManagementRouter";
+import { useDeletePermission } from "@/hooks/use-user-management-router";
 import { PermissionBase, SubjectType } from "@/lib/types/permission";
 import { toast } from "sonner";
 
