@@ -2,6 +2,27 @@
     "Common": {
         "appName": "CASE Admin"
     },
+    "DatabaseIndexes": {
+        "allPresent": "All present",
+        "createError": "Failed to create indexes",
+        "createMissing": "Create missing",
+        "createMissingShort": "Fix",
+        "createSuccess": "Created {count} indexes",
+        "description": "Review and manage recommended MongoDB indexes for each database.",
+        "labelGlobal": "Global Infos DB",
+        "labelMessage": "Message DB",
+        "labelStudy": "Study DB",
+        "labelUsers": "Users DB",
+        "loadError": "Failed to load index status",
+        "loading": "Loading...",
+        "missingBadge": "{count} missing",
+        "missingCount": "{count} missing",
+        "noCollections": "No collections found",
+        "noRecommended": "No recommended indexes",
+        "stats": "{existing} / {recommended} indexes",
+        "title": "Database Indexes",
+        "unique": "unique"
+    },
     "LocaleSwitcher": {
         "en": "English",
         "label": "Language",
@@ -25,7 +46,6 @@
             "systemSection": "System",
             "userManagementSection": "User Management"
         },
-        "Header": {},
         "Study": {
             "accessControl": "Access Control",
             "actions": "Actions",

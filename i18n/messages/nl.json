@@ -2,6 +2,27 @@
     "Common": {
         "appName": "CASE Admin"
     },
+    "DatabaseIndexes": {
+        "allPresent": "Alle aanwezig",
+        "createError": "Aanmaken van indexen mislukt",
+        "createMissing": "Ontbrekende aanmaken",
+        "createMissingShort": "Herstel",
+        "createSuccess": "{count} indexen aangemaakt",
+        "description": "Bekijk en beheer aanbevolen MongoDB-indexen per database.",
+        "labelGlobal": "Global Infos DB",
+        "labelMessage": "Message DB",
+        "labelStudy": "Study DB",
+        "labelUsers": "Users DB",
+        "loadError": "Laden van indexstatus mislukt",
+        "loading": "Laden...",
+        "missingBadge": "{count} ontbreekt",
+        "missingCount": "{count} ontbreekt",
+        "noCollections": "Geen collecties gevonden",
+        "noRecommended": "Geen aanbevolen indexen",
+        "stats": "{existing} / {recommended} indexen",
+        "title": "Database-indexen",
+        "unique": "uniek"
+    },
     "LocaleSwitcher": {
         "en": "English",
         "label": "Taal",
@@ -25,7 +46,6 @@
             "systemSection": "Systeem",
             "userManagementSection": "Gebruikersbeheer"
         },
-        "Header": {},
         "Study": {
             "accessControl": "Toegangsbeheer",
             "actions": "Acties",

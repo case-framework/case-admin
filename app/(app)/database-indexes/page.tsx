@@ -1,5 +1,7 @@
-import { PageHeader } from "@/components/common/page-header";
+import { DatabaseIndexesView } from "@/components/features/database-indexes/database-indexes-view";
+import { requiredAdminAuth } from "@/lib/auth/utils";
 
-export default function DatabaseIndexesPage() {
-    return <PageHeader title="Database Indexes" />;
+export default async function DatabaseIndexesPage() {
+    await requiredAdminAuth();
+    return <DatabaseIndexesView />;
 }

@@ -1,59 +1,44 @@
 import "server-only";
-import { Collection, Db, DeleteResult, InsertOneResult, ObjectId } from "mongodb";
-import { getDb } from "../db-registry";
-import { DbKey } from "../utils";
+import { DeleteResult, InsertOneResult, ObjectId } from "mongodb";
+import { UsersDb, getUsersDb } from "../databases/users-db";
 import { User } from "@/lib/types/user";
 import { PermissionBase, SubjectType } from "@/lib/types/permission";
-import { PermissionDoc, UserDoc, toUser } from "./types";
+import { PermissionDoc, toUser } from "./types";
 
 export class UserService {
-    private readonly collectionManagementUsers: Collection<UserDoc>;
-    private readonly collectionPermissions: Collection<PermissionDoc>;
-
-
-    constructor(private readonly db: Db) {
-        this.collectionManagementUsers = db.collection<UserDoc>("case_admin_users");
-        this.collectionPermissions = db.collection<PermissionDoc>("permissions");
-    }
+    constructor(private readonly db: UsersDb) { }
 
     async getUsersCount(): Promise<number> {
-        const count = await this.collectionManagementUsers.countDocuments();
-        return count;
+        return this.db.caseAdminUsers.countDocuments();
     }
 
     async getUsers(page: number, limit: number): Promise<User[]> {
-        const users = await this.collectionManagementUsers.find({}).skip((page - 1) * limit).limit(limit).toArray();
+        const users = await this.db.caseAdminUsers.find({}).skip((page - 1) * limit).limit(limit).toArray();
         return users.map(toUser);
     }
 
-
     async getUserById(id: string): Promise<User | null> {
         const _id = new ObjectId(id);
-        const doc = await this.collectionManagementUsers.findOne({ _id });
+        const doc = await this.db.caseAdminUsers.findOne({ _id });
         return doc ? toUser(doc) : null;
     }
 
     async getPermissions(subjectId: string, subjectType: SubjectType): Promise<PermissionBase[]> {
-        const permissions = await this.collectionPermissions.find({ subjectId, subjectType }).toArray();
+        const permissions = await this.db.permissions.find({ subjectId, subjectType }).toArray();
         return permissions.map(PermissionBase.fromDoc);
     }
 
     async createPermission(permission: PermissionDoc): Promise<InsertOneResult<PermissionDoc>> {
-        return await this.collectionPermissions.insertOne(permission);
+        return this.db.permissions.insertOne(permission);
     }
 
     async updatePermission(permission: PermissionBase): Promise<void> {
-        await this.collectionPermissions.updateOne({ _id: new ObjectId(permission.id!) }, { $set: permission.toDoc() });
+        await this.db.permissions.updateOne({ _id: new ObjectId(permission.id!) }, { $set: permission.toDoc() });
     }
 
     async deletePermission(id: string): Promise<DeleteResult> {
-        return await this.collectionPermissions.deleteOne({ _id: new ObjectId(id) });
+        return this.db.permissions.deleteOne({ _id: new ObjectId(id) });
     }
 }
 
-const initUserService = async () => {
-    const userDB = await getDb(DbKey.USERS);
-    return new UserService(userDB);
-}
-
-export const userService = await initUserService();
+export const userService = new UserService(await getUsersDb());
