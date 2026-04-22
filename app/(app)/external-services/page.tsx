@@ -1,5 +1,5 @@
-import { PageHeader } from "@/components/common/page-header";
+import { PageLayout } from "@/components/common/page-layout";
 
 export default function ExternalServicesPage() {
-	return <PageHeader title="External Services" />;
+	return <PageLayout title="External Services" />;
 }

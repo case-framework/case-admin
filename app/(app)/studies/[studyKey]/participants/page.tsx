@@ -1,7 +1,7 @@
-import { PageHeader } from "@/components/common/page-header";
+import { PageLayout } from "@/components/common/page-layout";
 
 interface PageProps { params: Promise<{ studyKey: string }> }
 export default async function StudyParticipantsPage({ params }: PageProps) {
     const { studyKey } = await params;
-    return <PageHeader title={`Participants — ${studyKey}`} />;
+    return <PageLayout title={`Participants — ${studyKey}`} />;
 }

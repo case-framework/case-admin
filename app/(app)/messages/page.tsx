@@ -1,5 +1,5 @@
-import { PageHeader } from "@/components/common/page-header";
+import { PageLayout } from "@/components/common/page-layout";
 
 export default function MessagesPage() {
-    return <PageHeader title="Messages" />;
+    return <PageLayout title="Messages" />;
 }

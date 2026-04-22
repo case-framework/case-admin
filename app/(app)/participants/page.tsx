@@ -1,5 +1,5 @@
-import { PageHeader } from "@/components/common/page-header";
+import { PageLayout } from "@/components/common/page-layout";
 
 export default function ParticipantsPage() {
-    return <PageHeader title="Participants" />;
+    return <PageLayout title="Participants" />;
 }

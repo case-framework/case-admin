@@ -1,5 +1,5 @@
-import { PageHeader } from "@/components/common/page-header";
+import { PageLayout } from "@/components/common/page-layout";
 
 export default function AppRoleTemplatesPage() {
-    return <PageHeader title="App Role Templates" />;
+    return <PageLayout title="App Role Templates" />;
 }
