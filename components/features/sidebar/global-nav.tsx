@@ -33,6 +33,7 @@ import { Study } from "@/lib/types/study";
 import { useLocalizedText } from "@/hooks/use-localized-text";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NavGroup, NavItem } from "./nav-group";
+import { UserRole } from "@/lib/types/user";
 
 interface GlobalNavProps {
     recentStudies: Study[];
@@ -60,7 +61,7 @@ export function GlobalNav({ recentStudies, studiesLoading }: GlobalNavProps) {
 
     const systemItems: NavItem[] = [
         { href: "/documentation", label: t("documentation"), icon: BookText },
-        { href: "/database-indexes", label: t("databaseIndexes"), icon: Database },
+        { href: "/database-indexes", label: t("databaseIndexes"), icon: Database, roles: [UserRole.ADMIN] },
         { href: "/settings", label: t("settings"), icon: Settings },
     ];
 

@@ -11,11 +11,14 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth/auth-client";
+import { UserRole } from "@/lib/types/user";
 
 export interface NavItem {
     href: string;
     label: string;
     icon: LucideIcon;
+    roles?: UserRole[];
 }
 
 interface NavGroupProps {
@@ -25,12 +28,19 @@ interface NavGroupProps {
 }
 
 export function NavGroup({ label, items, isActive }: NavGroupProps) {
+    const { data: session } = authClient.useSession();
+    const userRole = session?.user?.role as UserRole | undefined;
+
+    const visibleItems = items.filter(
+        ({ roles }) => !roles || (userRole !== undefined && roles.includes(userRole))
+    );
+
     return (
         <SidebarGroup>
             {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {items.map(({ href, label: itemLabel, icon: Icon }) => (
+                    {visibleItems.map(({ href, label: itemLabel, icon: Icon }) => (
                         <SidebarMenuItem key={href}>
                             <SidebarMenuButton
                                 asChild
