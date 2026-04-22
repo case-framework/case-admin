@@ -15,6 +15,7 @@ export const UserRole = {
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
+const recoveryModeEmail = process.env.RECOVERY_MODE_EMAIL?.trim().toLowerCase();
 
 export const auth = betterAuth({
     database: mongodbAdapter(db, {
@@ -42,6 +43,35 @@ export const auth = betterAuth({
     },
     advanced: {
         cookiePrefix: "case-admin-auth",
+    },
+    databaseHooks: {
+        session: {
+            create: {
+                async before(session, ctx) {
+                    if (!ctx || !recoveryModeEmail) {
+                        return;
+                    }
+
+                    const user = await ctx.context.internalAdapter.findUserById(session.userId);
+
+                    if (!user) {
+                        return;
+                    }
+
+                    const normalizedUserEmail = user.email.trim().toLowerCase();
+                    const currentRole = (user as typeof user & { role?: string }).role;
+
+                    if (
+                        normalizedUserEmail === recoveryModeEmail &&
+                        currentRole !== UserRole.ADMIN
+                    ) {
+                        await ctx.context.internalAdapter.updateUser(session.userId, {
+                            role: UserRole.ADMIN,
+                        });
+                    }
+                },
+            },
+        },
     },
     plugins: [
         admin()
