@@ -122,22 +122,25 @@ export function GlobalNav({ recentStudies, studiesLoading }: GlobalNavProps) {
                                                 </span>
                                             </SidebarMenuSubItem>
                                         ) : (
-                                            recentStudies.map((study) => (
-                                                <SidebarMenuSubItem key={study.id}>
-                                                    <SidebarMenuSubButton
-                                                        asChild
-                                                        isActive={pathname.startsWith(`/studies/${study.key}`)}
-                                                        className={cn(
-                                                            "hover:bg-black/4 active:bg-black/10 data-[active=true]:bg-black/8 data-[active=true]:font-medium transition-all",
-                                                            !pathname.startsWith(`/studies/${study.key}`) && "opacity-75 hover:opacity-100"
-                                                        )}
-                                                    >
-                                                        <Link href={`/studies/${study.key}`}>
-                                                            <span>{localizedText(study.name)}</span>
-                                                        </Link>
-                                                    </SidebarMenuSubButton>
-                                                </SidebarMenuSubItem>
-                                            ))
+                                            recentStudies.map((study) => {
+                                                const studyName = localizedText(study.name) || study.key;
+                                                return (
+                                                    <SidebarMenuSubItem key={study.id}>
+                                                        <SidebarMenuSubButton
+                                                            asChild
+                                                            isActive={pathname.startsWith(`/studies/${study.key}`)}
+                                                            className={cn(
+                                                                "hover:bg-black/4 active:bg-black/10 data-[active=true]:bg-black/8 data-[active=true]:font-medium transition-all",
+                                                                !pathname.startsWith(`/studies/${study.key}`) && "opacity-75 hover:opacity-100"
+                                                            )}
+                                                        >
+                                                            <Link href={`/studies/${study.key}`}>
+                                                                <span>{studyName}</span>
+                                                            </Link>
+                                                        </SidebarMenuSubButton>
+                                                    </SidebarMenuSubItem>
+                                                );
+                                            })
                                         )}
                                     </SidebarMenuSub>
                                 </CollapsibleContent>
