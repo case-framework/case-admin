@@ -118,8 +118,8 @@ export function DbIndexCard({ dbKey }: DbIndexCardProps) {
     return (
         <div className="rounded-xl border bg-card shadow-sm">
             {/* Header */}
-            <div className="flex items-start gap-3 px-5 py-4 border-b">
-                <DatabaseIcon className="size-4 text-muted-foreground shrink-0 mt-0.5" />
+            <div className="flex items-center gap-3 px-5 py-4 border-b">
+                <DatabaseIcon className="size-4 text-muted-foreground shrink-0" />
                 <button
                     className="flex flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-left"
                     onClick={() => setOpen((v) => !v)}
