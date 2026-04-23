@@ -6,37 +6,37 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 export default function Home() {
-    return (
-        <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-            <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-                <Button
-                    onClick={() => toast.success("Test")}
-                >Click me</Button>
+	return (
+		<div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+			<main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+				<Button
+					onClick={() => toast.success("Test")}
+				>Click me</Button>
 
-                <LoadingButton
-                    onClick={() => toast.success("Hello")}
-                    isLoading={true}
-                    variant="outline"
-                >
-                    Click me
-                </LoadingButton>
+				<LoadingButton
+					onClick={() => toast.success("Hello")}
+					isLoading={true}
+					variant="outline"
+				>
+					Click me
+				</LoadingButton>
 
-                <div className="@container">
-                    <div className={cn(
-                        "bg-zinc-500 dark:bg-black  size-5",
-                        "animate-pulse",
-                        1 < 2 ? "bg-red-500" : "bg-blue-500",
-                        {
-                            "bg-red-500": true,
-                        }
-                    )}>
+				<div className="@container">
+					<div className={cn(
+						"bg-zinc-500 dark:bg-black  size-5",
+						"animate-pulse",
+						1 < 2 ? "bg-red-500" : "bg-blue-500",
+						{
+							"bg-red-500": true,
+						}
+					)}>
 
-                    </div>
-                    <div className="bg-zinc-50 dark:bg-black h-5">
+					</div>
+					<div className="bg-zinc-50 dark:bg-black h-5">
 
-                    </div>
-                </div>
-            </main>
-        </div>
-    );
+					</div>
+				</div>
+			</main>
+		</div>
+	);
 }

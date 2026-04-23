@@ -10,6 +10,8 @@ import { ConfirmDialogProvider } from "@/components/c-ui/confirm-provider";
 import { AlertDialogProvider } from "@/components/c-ui/alert";
 import { getLocale } from "@/i18n/actions";
 
+import { appName } from "@/lib/config/page-metadata";
+
 const geistSans = Geist({
     variable: "--font-geist-sans",
     subsets: ["latin"],
@@ -22,8 +24,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: {
-        default: process.env.NEXT_PUBLIC_APP_NAME || 'CASE Admin',
-        template: `%s | ${process.env.NEXT_PUBLIC_APP_NAME || 'CASE Admin'} `,
+        default: appName,
+        template: `%s | ${appName}`,
     },
     description: 'This is the CASE admin tool, to manage studies, surveys, messages and participants.'
 };
