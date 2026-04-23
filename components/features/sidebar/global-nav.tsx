@@ -3,19 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import {
-    Home,
-    BookOpen,
-    MessageSquare,
-    Settings,
-    Database,
-    BookText,
-    ChevronRight,
-    UserCog,
-    Link2,
-    LayoutTemplate,
-    UserRound,
-} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -32,8 +20,12 @@ import { cn } from "@/lib/utils";
 import { Study } from "@/lib/types/study";
 import { useLocalizedText } from "@/hooks/use-localized-text";
 import { Skeleton } from "@/components/ui/skeleton";
-import { NavGroup, NavItem } from "./nav-group";
-import { UserRole } from "@/lib/types/user";
+import { NavGroup } from "./nav-group";
+import {
+    globalNavSection,
+    pageDashboard,
+    pageStudies,
+} from "@/lib/config/pages";
 
 interface GlobalNavProps {
     recentStudies: Study[];
@@ -41,50 +33,34 @@ interface GlobalNavProps {
 }
 
 export function GlobalNav({ recentStudies, studiesLoading }: GlobalNavProps) {
-    const t = useTranslations("Sidebar.Global");
+    const tSidebar = useTranslations("Sidebar");
+    const tPages = useTranslations("Pages");
     const pathname = usePathname() || "/";
     const localizedText = useLocalizedText();
 
     const isActive = (href: string) =>
         href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-    const globalItems: NavItem[] = [
-        { href: "/participants", label: t("participants"), icon: UserRound },
-        { href: "/messages", label: t("messages"), icon: MessageSquare },
-    ];
-
-    const userManagementItems: NavItem[] = [
-        { href: "/management-users", label: t("managementUsers"), icon: UserCog },
-        { href: "/external-services", label: t("externalServices"), icon: Link2 },
-        { href: "/app-role-templates", label: t("appRoleTemplates"), icon: LayoutTemplate },
-    ];
-
-    const systemItems: NavItem[] = [
-        { href: "/documentation", label: t("documentation"), icon: BookText },
-        { href: "/database-indexes", label: t("databaseIndexes"), icon: Database, roles: [UserRole.ADMIN] },
-        { href: "/settings", label: t("settings"), icon: Settings },
-    ];
-
     return (
         <>
             {/* Studies */}
             <SidebarGroup>
-                <SidebarGroupLabel>{t("studiesSection")}</SidebarGroupLabel>
+                <SidebarGroupLabel>{tSidebar("studiesSection")}</SidebarGroupLabel>
                 <SidebarGroupContent>
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <SidebarMenuButton
                                 asChild
                                 isActive={isActive("/")}
-                                tooltip={t("dashboard")}
+                                tooltip={tPages(pageDashboard.labelKey)}
                                 className={cn(
                                     "hover:bg-black/4 active:bg-black/10 data-[active=true]:bg-black/8 data-[active=true]:font-medium transition-all",
                                     !isActive("/") && "opacity-75 hover:opacity-100"
                                 )}
                             >
                                 <Link href="/">
-                                    <Home className="size-4" />
-                                    <span>{t("dashboard")}</span>
+                                    <pageDashboard.icon className="size-4" />
+                                    <span>{tPages(pageDashboard.labelKey)}</span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -94,14 +70,14 @@ export function GlobalNav({ recentStudies, studiesLoading }: GlobalNavProps) {
                                 <CollapsibleTrigger asChild>
                                     <SidebarMenuButton
                                         isActive={isActive("/studies")}
-                                        tooltip={t("recentStudies")}
+                                        tooltip={tSidebar("recentStudies")}
                                         className={cn(
                                             "hover:bg-black/4 active:bg-black/10 data-[active=true]:bg-black/8 data-[active=true]:font-medium data-[state=open]:hover:bg-black/4 transition-all",
                                             !isActive("/studies") && "opacity-75 hover:opacity-100"
                                         )}
                                     >
-                                        <BookOpen className="size-4" />
-                                        <span>{t("recentStudies")}</span>
+                                        <pageStudies.icon className="size-4" />
+                                        <span>{tSidebar("recentStudies")}</span>
                                         <ChevronRight className="ml-auto size-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                     </SidebarMenuButton>
                                 </CollapsibleTrigger>
@@ -119,7 +95,7 @@ export function GlobalNav({ recentStudies, studiesLoading }: GlobalNavProps) {
                                         ) : recentStudies.length === 0 ? (
                                             <SidebarMenuSubItem>
                                                 <span className="px-2 py-1 text-xs text-muted-foreground">
-                                                    {t("noStudies")}
+                                                    {tSidebar("noStudies")}
                                                 </span>
                                             </SidebarMenuSubItem>
                                         ) : (
@@ -151,9 +127,10 @@ export function GlobalNav({ recentStudies, studiesLoading }: GlobalNavProps) {
                 </SidebarGroupContent>
             </SidebarGroup>
 
-            <NavGroup label={t("globalSection")} items={globalItems} isActive={isActive} />
-            <NavGroup label={t("userManagementSection")} items={userManagementItems} isActive={isActive} />
-            <NavGroup label={t("systemSection")} items={systemItems} isActive={isActive} />
+            <NavGroup label={tSidebar("globalSection")} items={globalNavSection("global")} isActive={isActive} />
+            <NavGroup label={tSidebar("userManagementSection")} items={globalNavSection("userManagement")} isActive={isActive} />
+            <NavGroup label={tSidebar("systemSection")} items={globalNavSection("system")} isActive={isActive} />
         </>
     );
 }
+

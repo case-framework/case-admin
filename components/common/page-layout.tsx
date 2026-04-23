@@ -1,18 +1,20 @@
+import { getTranslations } from "next-intl/server";
 import { ReactNode } from "react";
+import { type PageDef } from "@/lib/config/pages";
 
 interface PageLayoutProps {
-    title: string;
-    description?: string;
+    page: PageDef;
     children?: ReactNode;
 }
 
-export function PageLayout({ title, description, children }: PageLayoutProps) {
+export async function PageLayout({ page, children }: PageLayoutProps) {
+    const t = await getTranslations("Pages");
     return (
         <div className="p-4 sm:p-6 space-y-4">
             <div>
-                <h1 className="text-xl font-semibold">{title}</h1>
-                {description && (
-                    <p className="text-sm text-muted-foreground mt-1">{description}</p>
+                <h1 className="text-xl font-semibold">{t(page.labelKey)}</h1>
+                {page.descriptionKey && (
+                    <p className="text-sm text-muted-foreground mt-1">{t(page.descriptionKey)}</p>
                 )}
             </div>
             {children}

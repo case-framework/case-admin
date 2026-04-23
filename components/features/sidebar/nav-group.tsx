@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
     SidebarGroup,
     SidebarGroupContent,
@@ -13,22 +13,17 @@ import {
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth/auth-client";
 import { UserRole } from "@/lib/types/user";
-
-export interface NavItem {
-    href: string;
-    label: string;
-    icon: LucideIcon;
-    roles?: UserRole[];
-}
+import { type NavPageDef } from "@/lib/config/pages";
 
 interface NavGroupProps {
     label?: string;
-    items: NavItem[];
+    items: NavPageDef[];
     isActive: (href: string) => boolean;
 }
 
 export function NavGroup({ label, items, isActive }: NavGroupProps) {
     const { data: session } = authClient.useSession();
+    const t = useTranslations("Pages");
     const userRole = session?.user?.role as UserRole | undefined;
 
     const visibleItems = items.filter(
@@ -40,20 +35,20 @@ export function NavGroup({ label, items, isActive }: NavGroupProps) {
             {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {visibleItems.map(({ href, label: itemLabel, icon: Icon }) => (
-                        <SidebarMenuItem key={href}>
+                    {visibleItems.map(({ path, labelKey, icon: Icon }) => (
+                        <SidebarMenuItem key={path}>
                             <SidebarMenuButton
                                 asChild
-                                isActive={isActive(href)}
-                                tooltip={itemLabel}
+                                isActive={isActive(path)}
+                                tooltip={t(labelKey)}
                                 className={cn(
                                     "hover:bg-black/4 active:bg-black/10 data-[active=true]:bg-black/8 data-[active=true]:font-medium transition-all",
-                                    !isActive(href) && "opacity-75 hover:opacity-100"
+                                    !isActive(path) && "opacity-75 hover:opacity-100"
                                 )}
                             >
-                                <Link href={href}>
+                                <Link href={path}>
                                     <Icon className="size-4" />
-                                    <span>{itemLabel}</span>
+                                    <span>{t(labelKey)}</span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

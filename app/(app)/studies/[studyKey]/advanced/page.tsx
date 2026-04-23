@@ -1,7 +1,11 @@
 import { PageLayout } from "@/components/common/page-layout";
+import { generatePageMetadata } from "@/lib/config/page-metadata";
+import { studyPagesBySegment } from "@/lib/config/pages";
 
-interface PageProps { params: Promise<{ studyKey: string }> }
-export default async function StudyAdvancedPage({ params }: PageProps) {
-    const { studyKey } = await params;
-    return <PageLayout title={`Advanced — ${studyKey}`} />;
+const pageDef = studyPagesBySegment["advanced"]!;
+
+export const generateMetadata = () => generatePageMetadata(pageDef);
+
+export default function StudyAdvancedPage() {
+    return <PageLayout page={pageDef} />;
 }
