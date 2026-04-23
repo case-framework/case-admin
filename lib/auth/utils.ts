@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "./auth";
 
 
-export const requiredAdminAuth = async () => {
+export const requireAuth = async () => {
     const headersList = await headers();
     const pathname = headersList.get('x-pathname') ?? '/';
     const session = await auth.api.getSession({ headers: headersList });
