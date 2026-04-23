@@ -1,11 +1,13 @@
 export const DbKey = {
     STUDY: "study",
+    USERS: "users",
     MESSAGE: "message",
     GLOBAL: "global",
-    USERS: "users",
 } as const;
 
 export type DbKey = (typeof DbKey)[keyof typeof DbKey];
+
+export const DB_KEYS = Object.values(DbKey) as [DbKey, ...DbKey[]];
 
 export function buildDatabaseName({
     dbNamePrefix,

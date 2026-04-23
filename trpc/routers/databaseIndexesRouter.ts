@@ -4,11 +4,11 @@ import { TRPCError } from "@trpc/server";
 import { TRPCErrorCodes } from "../utils";
 import { logger } from "@/lib/utils/logger";
 import { createMissingIndexes, getDbIndexStatus } from "@/lib/db/service/database-indexes";
-import { DbKey } from "@/lib/db/utils";
+import { DB_KEYS } from "@/lib/db/utils";
 
 const dbIndexesLogger = logger("Database Indexes Router");
 
-const dbKeySchema = z.enum([DbKey.GLOBAL, DbKey.MESSAGE, DbKey.STUDY, DbKey.USERS]);
+const dbKeySchema = z.enum(DB_KEYS);
 
 export const databaseIndexesRouter = router({
     getIndexStatus: adminProcedure
