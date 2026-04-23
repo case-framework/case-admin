@@ -29,7 +29,17 @@ export function AppBreadcrumb() {
         ? localizedText(currentStudy.name)
         : (studyKey ?? "");
 
-    if (segments.length === 0) return null;
+    if (segments.length === 0) {
+        return (
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>{t("dashboard")}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
+        );
+    }
 
     function getLabelForSegment(segment: string, index: number): string {
         if (segments[0] === "studies" && index === 1) {
