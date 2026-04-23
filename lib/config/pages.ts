@@ -36,6 +36,8 @@ export interface PageDef {
     icon?: LucideIcon;
     /** If set, only users with one of these roles can see/access this page. */
     roles?: UserRole[];
+    /** If true, the page requires NO authentication. */
+    skipAuth?: boolean;
 }
 
 /** A page renderable in navigation — has a resolved path and required icon. */

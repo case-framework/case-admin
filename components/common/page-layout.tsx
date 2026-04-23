@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { ReactNode } from "react";
 import { type PageDef } from "@/lib/config/pages";
+import { requiredAdminAuth } from "@/lib/auth/utils";
 
 interface PageLayoutProps {
     page: PageDef;
@@ -8,6 +9,9 @@ interface PageLayoutProps {
 }
 
 export async function PageLayout({ page, children }: PageLayoutProps) {
+    if (!page.skipAuth) {
+        await requiredAdminAuth();
+    }
     const t = await getTranslations("Pages");
     return (
         <div className="p-4 sm:p-6 space-y-4">
