@@ -1,77 +1,79 @@
 {
-    "Common": {
-        "appName": "CASE Admin"
-    },
-    "DatabaseIndexes": {
-        "allPresent": "Alle aanwezig",
-        "createError": "Aanmaken van indexen mislukt",
-        "createMissing": "Ontbrekende aanmaken",
-        "createMissingShort": "Herstel",
-        "createSuccess": "{count} indexen aangemaakt",
-        "description": "Bekijk en beheer aanbevolen MongoDB-indexen per database.",
-        "labelGlobal": "Global Infos DB",
-        "labelMessage": "Message DB",
-        "labelStudy": "Study DB",
-        "labelUsers": "Users DB",
-        "loadError": "Laden van indexstatus mislukt",
-        "loading": "Laden...",
-        "missingBadge": "{count} ontbreekt",
-        "missingCount": "{count} ontbreekt",
-        "noCollections": "Geen collecties gevonden",
-        "noRecommended": "Geen aanbevolen indexen",
-        "stats": "{existing} / {recommended} indexen",
-        "title": "Database-indexen",
-        "unique": "uniek"
-    },
-    "LocaleSwitcher": {
-        "en": "English",
-        "label": "Taal",
-        "nl": "Nederlands"
-    },
-    "Login": {
-        "description": "Log in op uw werkruimte",
-        "signingIn": "Bezig met inloggen…",
-        "signInWithMicrosoft": "Verdergaan met Microsoft"
-    },
-    "Pages": {
-        "accessControl": "Toegangsbeheer",
-        "actions": "Acties",
-        "advanced": "Geavanceerd",
-        "appRoleTemplates": "App rol-sjablonen",
-        "codeLists": "Codelijsten",
-        "dashboard": "Dashboard",
-        "databaseIndexes": "Database-indexen",
-        "databaseIndexesDescription": "Bekijk en beheer aanbevolen MongoDB-indexen per database.",
-        "documentation": "Documentatie",
-        "externalServices": "Externe diensten",
-        "files": "Bestanden",
-        "general": "Algemeen",
-        "managementUsers": "Beheerders",
-        "messages": "Berichten",
-        "newStudy": "Nieuwe studie",
-        "notifications": "Meldingen",
-        "participants": "Deelnemers",
-        "reports": "Rapporten",
-        "responses": "Antwoorden",
-        "rules": "Regels",
-        "settings": "Instellingen",
-        "studies": "Studies",
-        "studyOverview": "Overzicht",
-        "surveys": "Enquêtes",
-        "variables": "Variabelen"
-    },
-    "Sidebar": {
-        "configurationSection": "Configuratie",
-        "dataParticipantsSection": "Data & deelnemers",
-        "globalSection": "Globaal",
-        "noStudies": "Geen studies gevonden",
-        "recentStudies": "Recente studies",
-        "studiesSection": "Studies",
-        "systemSection": "Systeem",
-        "User": {
-            "sessionExpiresIn": "Sessie verloopt over",
-            "signOut": "Uitloggen"
-        },
-        "userManagementSection": "Gebruikersbeheer"
-    }
+	"Common": {
+		"appName": "CASE Admin"
+	},
+	"DatabaseIndexes": {
+		"allPresent": "Alle aanwezig",
+		"createError": "Aanmaken van indexen mislukt",
+		"createMissing": "Ontbrekende aanmaken",
+		"createMissingShort": "Herstel",
+		"createSuccess": "{count} indexen aangemaakt",
+		"description": "Bekijk en beheer aanbevolen MongoDB-indexen per database.",
+		"labelGlobal": "Global Infos DB",
+		"labelMessage": "Message DB",
+		"labelStudy": "Study DB",
+		"labelUsers": "Users DB",
+		"loadError": "Laden van indexstatus mislukt",
+		"loading": "Laden...",
+		"missingBadge": "{count} ontbreekt",
+		"missingCount": "{count} ontbreekt",
+		"noCollections": "Geen collecties gevonden",
+		"noRecommended": "Geen aanbevolen indexen",
+		"stats": "{existing} / {recommended} indexen",
+		"title": "Database-indexen",
+		"unique": "uniek"
+	},
+	"LocaleSwitcher": {
+		"en": "English",
+		"label": "Taal",
+		"nl": "Nederlands"
+	},
+	"Login": {
+		"description": "Log in op uw werkruimte",
+		"signingIn": "Bezig met inloggen…",
+		"signInWithMicrosoft": "Verdergaan met Microsoft"
+	},
+	"Pages": {
+		"accessControl": "Toegangsbeheer",
+		"actions": "Acties",
+		"advanced": "Geavanceerd",
+		"appRoleTemplates": "App rol-sjablonen",
+		"codeLists": "Codelijsten",
+		"dashboard": "Dashboard",
+		"databaseIndexes": "Database-indexen",
+		"databaseIndexesDescription": "Bekijk en beheer aanbevolen MongoDB-indexen per database.",
+		"documentation": "Documentatie",
+		"expressionEditor": "Expressie-editor",
+		"expressionEditorDescription": "Visuele editor voor het opbouwen van studieregels en enquêtecondities.",
+		"externalServices": "Externe diensten",
+		"files": "Bestanden",
+		"general": "Algemeen",
+		"managementUsers": "Beheerders",
+		"messages": "Berichten",
+		"newStudy": "Nieuwe studie",
+		"notifications": "Meldingen",
+		"participants": "Deelnemers",
+		"reports": "Rapporten",
+		"responses": "Antwoorden",
+		"rules": "Regels",
+		"settings": "Instellingen",
+		"studies": "Studies",
+		"studyOverview": "Overzicht",
+		"surveys": "Enquêtes",
+		"variables": "Variabelen"
+	},
+	"Sidebar": {
+		"configurationSection": "Configuratie",
+		"dataParticipantsSection": "Data & deelnemers",
+		"globalSection": "Globaal",
+		"noStudies": "Geen studies gevonden",
+		"recentStudies": "Recente studies",
+		"studiesSection": "Studies",
+		"systemSection": "Systeem",
+		"User": {
+			"sessionExpiresIn": "Sessie verloopt over",
+			"signOut": "Uitloggen"
+		},
+		"userManagementSection": "Gebruikersbeheer"
+	}
 }

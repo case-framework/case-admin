@@ -1,77 +1,79 @@
 {
-    "Common": {
-        "appName": "CASE Admin"
-    },
-    "DatabaseIndexes": {
-        "allPresent": "All present",
-        "createError": "Failed to create indexes",
-        "createMissing": "Create missing",
-        "createMissingShort": "Fix",
-        "createSuccess": "Created {count} indexes",
-        "description": "Review and manage recommended MongoDB indexes for each database.",
-        "labelGlobal": "Global Infos DB",
-        "labelMessage": "Message DB",
-        "labelStudy": "Study DB",
-        "labelUsers": "Users DB",
-        "loadError": "Failed to load index status",
-        "loading": "Loading...",
-        "missingBadge": "{count} missing",
-        "missingCount": "{count} missing",
-        "noCollections": "No collections found",
-        "noRecommended": "No recommended indexes",
-        "stats": "{existing} / {recommended} indexes",
-        "title": "Database Indexes",
-        "unique": "unique"
-    },
-    "LocaleSwitcher": {
-        "en": "English",
-        "label": "Language",
-        "nl": "Nederlands"
-    },
-    "Login": {
-        "description": "Sign in to your workspace",
-        "signingIn": "Signing in…",
-        "signInWithMicrosoft": "Continue with Microsoft"
-    },
-    "Pages": {
-        "accessControl": "Access Control",
-        "actions": "Actions",
-        "advanced": "Advanced",
-        "appRoleTemplates": "App Role Templates",
-        "codeLists": "Code Lists",
-        "dashboard": "Dashboard",
-        "databaseIndexes": "Database Indexes",
-        "databaseIndexesDescription": "Review and manage recommended MongoDB indexes for each database.",
-        "documentation": "Documentation",
-        "externalServices": "External Services",
-        "files": "Files",
-        "general": "General",
-        "managementUsers": "Management Users",
-        "messages": "Messages",
-        "newStudy": "New Study",
-        "notifications": "Notifications",
-        "participants": "Participants",
-        "reports": "Reports",
-        "responses": "Responses",
-        "rules": "Rules",
-        "settings": "Settings",
-        "studies": "Studies",
-        "studyOverview": "Overview",
-        "surveys": "Surveys",
-        "variables": "Variables"
-    },
-    "Sidebar": {
-        "configurationSection": "Configuration",
-        "dataParticipantsSection": "Data & Participants",
-        "globalSection": "Global",
-        "noStudies": "No studies found",
-        "recentStudies": "Recent Studies",
-        "studiesSection": "Studies",
-        "systemSection": "System",
-        "User": {
-            "sessionExpiresIn": "Session expires in",
-            "signOut": "Sign out"
-        },
-        "userManagementSection": "User Management"
-    }
+	"Common": {
+		"appName": "CASE Admin"
+	},
+	"DatabaseIndexes": {
+		"allPresent": "All present",
+		"createError": "Failed to create indexes",
+		"createMissing": "Create missing",
+		"createMissingShort": "Fix",
+		"createSuccess": "Created {count} indexes",
+		"description": "Review and manage recommended MongoDB indexes for each database.",
+		"labelGlobal": "Global Infos DB",
+		"labelMessage": "Message DB",
+		"labelStudy": "Study DB",
+		"labelUsers": "Users DB",
+		"loadError": "Failed to load index status",
+		"loading": "Loading...",
+		"missingBadge": "{count} missing",
+		"missingCount": "{count} missing",
+		"noCollections": "No collections found",
+		"noRecommended": "No recommended indexes",
+		"stats": "{existing} / {recommended} indexes",
+		"title": "Database Indexes",
+		"unique": "unique"
+	},
+	"LocaleSwitcher": {
+		"en": "English",
+		"label": "Language",
+		"nl": "Nederlands"
+	},
+	"Login": {
+		"description": "Sign in to your workspace",
+		"signingIn": "Signing in…",
+		"signInWithMicrosoft": "Continue with Microsoft"
+	},
+	"Pages": {
+		"accessControl": "Access Control",
+		"actions": "Actions",
+		"advanced": "Advanced",
+		"appRoleTemplates": "App Role Templates",
+		"codeLists": "Code Lists",
+		"dashboard": "Dashboard",
+		"databaseIndexes": "Database Indexes",
+		"databaseIndexesDescription": "Review and manage recommended MongoDB indexes for each database.",
+		"documentation": "Documentation",
+		"expressionEditor": "Expression Editor",
+		"expressionEditorDescription": "Visual editor for building study rules and survey conditions.",
+		"externalServices": "External Services",
+		"files": "Files",
+		"general": "General",
+		"managementUsers": "Management Users",
+		"messages": "Messages",
+		"newStudy": "New Study",
+		"notifications": "Notifications",
+		"participants": "Participants",
+		"reports": "Reports",
+		"responses": "Responses",
+		"rules": "Rules",
+		"settings": "Settings",
+		"studies": "Studies",
+		"studyOverview": "Overview",
+		"surveys": "Surveys",
+		"variables": "Variables"
+	},
+	"Sidebar": {
+		"configurationSection": "Configuration",
+		"dataParticipantsSection": "Data & Participants",
+		"globalSection": "Global",
+		"noStudies": "No studies found",
+		"recentStudies": "Recent Studies",
+		"studiesSection": "Studies",
+		"systemSection": "System",
+		"User": {
+			"sessionExpiresIn": "Session expires in",
+			"signOut": "Sign out"
+		},
+		"userManagementSection": "User Management"
+	}
 }
