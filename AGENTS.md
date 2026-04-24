@@ -69,6 +69,48 @@ Before any Next.js work, find and read the relevant doc in `node_modules/next/di
 - **structure:** Services (e.g. `UserService`) take a `Db` instance in constructor.
 - **collections:** Typed via `UserDoc`, `PermissionDoc` generic types in `collection<T>()`.
 
+## 🗂 Page Definition System
+
+All application pages are defined in a central registry at `lib/config/pages.ts`. This drives sidebar navigation, breadcrumbs, page titles/descriptions, and tab metadata from a single source of truth. **When adding a new page, register it here first.**
+
+The registry distinguishes between global (top-level) pages and study sub-pages. Each entry carries a translation key (from the `Pages` i18n namespace), an icon, and an optional role restriction. Study sub-pages are identified by their URL segment; global pages by their full path.
+
+Helper functions (`globalNavSection`, `studyNavSection`) return resolved nav items for a given sidebar section. Lookup maps (`globalPagesBySegment`, `studyPagesBySegment`) let page files and the breadcrumb component resolve a `PageDef` from the current URL without duplicating data.
+
+### Page patterns
+
+**Global page** (`app/(app)/[segment]/page.tsx`):
+```tsx
+import { PageLayout } from "@/components/common/page-layout";
+import { generatePageMetadata } from "@/lib/config/page-metadata";
+import { globalPagesBySegment } from "@/lib/config/pages";
+
+const pageDef = globalPagesBySegment["participants"]!;
+
+export const generateMetadata = () => generatePageMetadata(pageDef);
+
+export default function ParticipantsPage() {
+    return <PageLayout page={pageDef} />;
+}
+```
+
+**Study sub-page** (`app/(app)/studies/[studyKey]/[segment]/page.tsx`):
+```tsx
+import { PageLayout } from "@/components/common/page-layout";
+import { generatePageMetadata } from "@/lib/config/page-metadata";
+import { studyPagesBySegment } from "@/lib/config/pages";
+
+const pageDef = studyPagesBySegment["rules"]!;
+
+export const generateMetadata = () => generatePageMetadata(pageDef);
+
+export default function StudyRulesPage() {
+    return <PageLayout page={pageDef} />;
+}
+```
+
+`PageLayout` (`components/common/page-layout.tsx`) is an async Server Component that renders the page title and optional description. Pass `children` for page content below the header. `generatePageMetadata` builds Next.js `Metadata` from the same `PageDef`. Translation keys live in the `Pages` namespace in both locale files.
+
 ## 📂 File Structure Guide
 
 - `app/(auth)/` - Authentication pages (login, logic).
