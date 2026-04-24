@@ -56,6 +56,7 @@ Before any Next.js work, find and read the relevant doc in `node_modules/next/di
 
 ### UI & Interaction
 
+- **Client-side Navigation:** Always use `next/link` for internal navigation (not anchors or plain URLs) to enable client-side routing, prefetching, and preserve shared layout state (e.g., sidebar, layout components). This provides a smoother user experience by avoiding full page reloads. For shadcn components that accept `asChild`, wrap the `Link` with the component's link slot (e.g., `<BreadcrumbLink asChild><Link href={...}>label</Link></BreadcrumbLink>`).
 - **Async Actions:** Use `<LoadingButton />` (from `@/components/c-ui/loading-button`) for any button triggering a mutation/Promise. Pass `isLoading={isPending}`.
 - **Confirmations:** Use `useConfirm` hook (from `@/components/c-ui/confirm-provider`) for confirmation dialogs. Avoid rendering `<ConfirmDialog />` directly unless `useConfirm` is not suitable.
 - **Toasts:** Use `toast` from `sonner` for success/error notifications.
