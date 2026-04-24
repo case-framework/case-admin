@@ -1,6 +1,5 @@
 import LogoutComponent from "@/components/features/auth/logout";
 import Module1Component from "@/components/features/module1";
-import { requireAuth } from "@/lib/auth/utils";
 import { getDb } from "@/lib/db/db-registry";
 import { DbKey } from "@/lib/db/utils";
 
@@ -14,8 +13,6 @@ interface StudyPageProps {
 
 const StudyPage = async ({ params }: StudyPageProps) => {
 	const { studyKey } = await params;
-
-	await requireAuth();
 
 	const db = await getDb(DbKey.STUDY);
 	const users = await db.collection("studies").find({}).toArray();

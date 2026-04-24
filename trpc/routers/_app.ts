@@ -1,16 +1,16 @@
 import { router, procedure } from '../init';
-import { testRouter } from './testRouter';
 
+import { accessRouter } from './accessRouter';
 import { userManagementRouter } from './userManagementRouter';
 import { studiesRouter } from './studiesRouter';
 import { databaseIndexesRouter } from './databaseIndexesRouter';
 
 
 export const appRouter = router({
+    access: accessRouter,
     userManagement: userManagementRouter,
     studies: studiesRouter,
     databaseIndexes: databaseIndexesRouter,
-    test: testRouter,
 
     // Example health check
     health: procedure.query(async () => {

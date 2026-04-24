@@ -2,8 +2,7 @@ import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { type Context } from './context'
 import { TRPCErrorCodes } from './utils'
-import { userService } from '@/lib/db/service/user';
-import { SubjectType } from '@/lib/types/permission';
+import { getAccessSnapshotForUser } from '@/lib/auth/access';
 import { UserRole } from '@/lib/types/user';
 
 
@@ -47,14 +46,13 @@ const isAdminUser = t.middleware(async ({ ctx, next }) => {
     })
 })
 
-const withPermissions = t.middleware(async ({ ctx, next }) => {
+const withAccess = t.middleware(async ({ ctx, next }) => {
     requireLogIn(ctx);
 
-    const id = ctx.user!.id;
-    const permissions = await userService.getPermissions(id, SubjectType.managementUser);
+    const access = await getAccessSnapshotForUser(ctx.user!);
 
     return next({
-        ctx: { ...ctx, permissions },
+        ctx: { ...ctx, user: ctx.user!, access, permissions: access.permissions },
     })
 })
 
@@ -80,4 +78,4 @@ const withPermissions = t.middleware(async ({ ctx, next }) => {
 export const authenticatedProcedure = procedure.use(isAuthUser)
 export const adminProcedure = procedure.use(isAdminUser)
 
-export const withPermissionsProcedure = procedure.use(withPermissions)
+export const accessProcedure = procedure.use(withAccess)

@@ -11,9 +11,9 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { authClient } from "@/lib/auth/auth-client";
-import { UserRole } from "@/lib/types/user";
 import { type NavPageDef } from "@/lib/config/pages";
+import { useGetCurrentAccess } from "@/hooks/use-access-router";
+import { hasAccess } from "@/lib/types/access";
 
 interface NavGroupProps {
     label?: string;
@@ -22,13 +22,16 @@ interface NavGroupProps {
 }
 
 export function NavGroup({ label, items, isActive }: NavGroupProps) {
-    const { data: session } = authClient.useSession();
+    const { data: currentAccess } = useGetCurrentAccess();
     const t = useTranslations("Pages");
-    const userRole = session?.user?.role as UserRole | undefined;
 
     const visibleItems = items.filter(
-        ({ roles }) => !roles || (userRole !== undefined && roles.includes(userRole))
+        ({ access }) => !access || hasAccess(currentAccess, access)
     );
+
+    if (visibleItems.length === 0) {
+        return null;
+    }
 
     return (
         <SidebarGroup>

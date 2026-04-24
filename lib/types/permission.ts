@@ -11,9 +11,25 @@ export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType];
 
 export const SubjectType = {
     managementUser: "management-user",
-    serviceUser: "service-user",
+    serviceAccount: "service-account",
 } as const;
 export type SubjectType = (typeof SubjectType)[keyof typeof SubjectType];
+
+export interface PermissionActionInfo {
+    hideLimiter?: boolean;
+    limiterHint?: string;
+}
+
+export interface ResourcePermissionInfo {
+    actions: Record<string, PermissionActionInfo>;
+}
+
+export type PermissionDefinitions = Record<
+    ResourceType,
+    {
+        resources: Record<string, ResourcePermissionInfo>;
+    }
+>;
 
 
 export const permissionSchema = z.object({
@@ -75,6 +91,166 @@ export const MessagingAction = {
 } as const;
 export type MessagingAction = (typeof MessagingAction)[keyof typeof MessagingAction];
 
+export const StudyAction = {
+    all: "*",
+    createStudy: "create-study",
+    readStudyConfig: "read-study-config",
+    updateStudyProps: "update-study-props",
+    updateStudyStatus: "update-study-status",
+    updateNotificationSubscriptions: "update-notification-subscriptions",
+    updateStudyRules: "update-study-rules",
+    runStudyAction: "run-study-action",
+    deleteStudy: "delete-study",
+    manageStudyCodeLists: "manage-study-code-lists",
+    manageStudyCounters: "manage-study-counters",
+    manageStudyVariables: "manage-study-variables",
+    manageStudyPermissions: "manage-study-permissions",
+    createSurvey: "create-survey",
+    updateSurvey: "update-survey",
+    unpublishSurvey: "unpublish-survey",
+    deleteSurveyVersion: "delete-survey-version",
+    getResponses: "get-responses",
+    deleteResponses: "delete-responses",
+    getConfidentialResponses: "get-confidential-responses",
+    getFiles: "get-files",
+    deleteFiles: "delete-files",
+    createVirtualParticipant: "create-virtual-participant",
+    editParticipantData: "edit-participant-data",
+    getParticipantStates: "get-participant-states",
+    mergeParticipants: "merge-participants",
+    getReports: "get-reports",
+    deleteReports: "delete-reports",
+} as const;
+export type StudyAction = (typeof StudyAction)[keyof typeof StudyAction];
+
+export const StudyVisibilityActions: StudyAction[] = [
+    StudyAction.readStudyConfig,
+    StudyAction.updateStudyProps,
+    StudyAction.updateStudyStatus,
+    StudyAction.updateNotificationSubscriptions,
+    StudyAction.updateStudyRules,
+    StudyAction.runStudyAction,
+    StudyAction.deleteStudy,
+    StudyAction.manageStudyCodeLists,
+    StudyAction.manageStudyCounters,
+    StudyAction.manageStudyVariables,
+    StudyAction.manageStudyPermissions,
+    StudyAction.createSurvey,
+    StudyAction.updateSurvey,
+    StudyAction.unpublishSurvey,
+    StudyAction.deleteSurveyVersion,
+    StudyAction.getResponses,
+    StudyAction.deleteResponses,
+    StudyAction.getConfidentialResponses,
+    StudyAction.getFiles,
+    StudyAction.deleteFiles,
+    StudyAction.createVirtualParticipant,
+    StudyAction.editParticipantData,
+    StudyAction.getParticipantStates,
+    StudyAction.mergeParticipants,
+    StudyAction.getReports,
+    StudyAction.deleteReports,
+];
+
+export const permissionDefinitions: PermissionDefinitions = {
+    [ResourceType.messaging]: {
+        resources: {
+            [MessagingPermissionResourceKey.globalEmailTemplates]: {
+                actions: {
+                    [MessagingAction.all]: { hideLimiter: true },
+                },
+            },
+            [MessagingPermissionResourceKey.studyEmailTemplates]: {
+                actions: {
+                    [MessagingAction.all]: { hideLimiter: true },
+                },
+            },
+            [MessagingPermissionResourceKey.scheduledEmails]: {
+                actions: {
+                    [MessagingAction.all]: { hideLimiter: true },
+                },
+            },
+            [MessagingPermissionResourceKey.smsTemplates]: {
+                actions: {
+                    [MessagingAction.all]: { hideLimiter: true },
+                },
+            },
+        },
+    },
+    [ResourceType.study]: {
+        resources: {
+            "*": {
+                actions: {
+                    [StudyAction.all]: { hideLimiter: true },
+                    [StudyAction.createStudy]: { hideLimiter: true },
+                    [StudyAction.manageStudyPermissions]: { hideLimiter: true },
+                    [StudyAction.readStudyConfig]: { hideLimiter: true },
+                    [StudyAction.updateStudyProps]: { hideLimiter: true },
+                    [StudyAction.updateStudyStatus]: { hideLimiter: true },
+                    [StudyAction.manageStudyCodeLists]: { hideLimiter: true },
+                    [StudyAction.manageStudyCounters]: { hideLimiter: true },
+                    [StudyAction.manageStudyVariables]: { hideLimiter: true },
+                    [StudyAction.deleteStudy]: { hideLimiter: true },
+                    [StudyAction.createSurvey]: { hideLimiter: true },
+                    [StudyAction.updateSurvey]: {
+                        limiterHint: 'To scope this permission to specific surveys, use [{"surveyKey":"<sk1>"}]',
+                    },
+                    [StudyAction.unpublishSurvey]: {
+                        limiterHint: 'To scope this permission to specific surveys, use [{"surveyKey":"<sk1>"}]',
+                    },
+                    [StudyAction.deleteSurveyVersion]: {
+                        limiterHint: 'To scope this permission to specific surveys, use [{"surveyKey":"<sk1>"}]',
+                    },
+                    [StudyAction.updateStudyRules]: { hideLimiter: true },
+                    [StudyAction.runStudyAction]: { hideLimiter: true },
+                    [StudyAction.updateNotificationSubscriptions]: { hideLimiter: true },
+                    [StudyAction.getResponses]: {
+                        limiterHint: 'To scope this permission to responses, use [{"surveyKey":"<sk1>"}] or [{"reportKey":"<rk1>"}]',
+                    },
+                    [StudyAction.deleteResponses]: { hideLimiter: true },
+                    [StudyAction.getConfidentialResponses]: { hideLimiter: true },
+                    [StudyAction.getFiles]: { hideLimiter: true },
+                    [StudyAction.deleteFiles]: { hideLimiter: true },
+                    [StudyAction.getParticipantStates]: { hideLimiter: true },
+                    [StudyAction.editParticipantData]: { hideLimiter: true },
+                    [StudyAction.createVirtualParticipant]: { hideLimiter: true },
+                    [StudyAction.mergeParticipants]: { hideLimiter: true },
+                    [StudyAction.getReports]: {
+                        limiterHint: 'To scope this permission to reports, use [{"reportKey":"<rk1>"}]',
+                    },
+                    [StudyAction.deleteReports]: { hideLimiter: true },
+                },
+            },
+        },
+    },
+    [ResourceType.users]: {
+        resources: {
+            "*": {
+                actions: {
+                    "delete-users": { hideLimiter: true },
+                },
+            },
+        },
+    },
+};
+
+export function getPermissionActionInfo(
+    resourceType: ResourceType,
+    resourceKey: string,
+    action: string,
+): PermissionActionInfo | undefined {
+    const resources = permissionDefinitions[resourceType]?.resources;
+    if (!resources) {
+        return undefined;
+    }
+
+    const resourceInfo =
+        resources[resourceKey] ??
+        (resourceType === ResourceType.study ? resources[StudyPermissionResourceKey.allStudies] : undefined);
+
+    return resourceInfo?.actions[action];
+}
+
 class MessagingPermission extends PermissionBase {
     resourceKey: MessagingPermissionResourceKey;
     action: MessagingAction;
@@ -126,56 +302,12 @@ export const StudyPermissionResourceKey = {
 // it might be a dynamic string for studyKey -->
 export type StudyPermissionResourceKey = (typeof StudyPermissionResourceKey)[keyof typeof StudyPermissionResourceKey] | string;
 
-
-// TODOs:
-/* Use study actions
- actions: {
-                    "*": { hideLimiter: true },
-                    "create-study": { hideLimiter: true },
-                    "manage-study-permissions": { hideLimiter: true },
-                    "read-study-config": { hideLimiter: true },
-                    "update-study-props": { hideLimiter: true },
-                    "update-study-status": { hideLimiter: true },
-                    "manage-study-code-lists": { hideLimiter: true },
-                    "manage-study-counters": { hideLimiter: true },
-                    "manage-study-variables": { hideLimiter: true },
-                    "delete-study": { hideLimiter: true },
-                    "create-survey": { hideLimiter: true },
-                    "update-survey": {
-                        limiterHint: 'To specify which surveys the user can upload, use the format [{"surveyKey": "<sk1>"}]'
-                    },
-                    "unpublish-survey": {
-                        limiterHint: 'To specify which surveys the user can unpublish, use the format [{"surveyKey": "<sk1>"}]'
-                    },
-                    "delete-survey-version": {
-                        limiterHint: 'To specify which surveys the user can delete, use the format [{"surveyKey": "<sk1>"}]'
-                    },
-                    "update-study-rules": { hideLimiter: true },
-                    "run-study-action": { hideLimiter: true },
-                    "update-notification-subscriptions": { hideLimiter: true },
-                    "get-responses": {
-                        limiterHint: 'To specify which responses the user can access, use the format [{"surveyKey": "<sk1>"}]'
-                    },
-                    "delete-responses": { hideLimiter: true },
-                    "get-confidential-responses": { hideLimiter: true },
-                    "get-files": { hideLimiter: true },
-                    "get-participant-states": { hideLimiter: true },
-                    "edit-participant-data": { hideLimiter: true },
-                    "create-virtual-participant": { hideLimiter: true },
-                    "merge-participants": { hideLimiter: true },
-                    "get-reports": {
-                        limiterHint: 'To specify which reports the user can access, use the format [{"reportKey": "<rk1>"}]'
-                    },
-                    "delete-reports": { hideLimiter: true },
-                }
-*/
-
 export class StudyPermission extends PermissionBase {
     resourceKey: StudyPermissionResourceKey;
 
     constructor(
         resourceKey: StudyPermissionResourceKey,
-        action: string,
+        action: StudyAction,
         id?: string,
         subjectId?: string,
         subjectType?: SubjectType,
@@ -188,7 +320,7 @@ export class StudyPermission extends PermissionBase {
     static fromDoc(doc: PermissionDoc): StudyPermission {
         // TODO: validate the doc
         const resourceKey = doc.resourceKey as StudyPermissionResourceKey;
-        const action = doc.action as string;
+        const action = doc.action as StudyAction;
         const subjectType = doc.subjectType as SubjectType;
         const id = doc._id ? doc._id.toString() : undefined;
         return new StudyPermission(

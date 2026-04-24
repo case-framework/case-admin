@@ -1,12 +1,14 @@
 import Users from "@/components/features/user-management/users";
-import { requireAuth } from "@/lib/auth/utils";
+import { requirePageAccess } from "@/lib/auth/access";
 import { generatePageMetadata } from "@/lib/config/page-metadata";
 import { globalPagesBySegment } from "@/lib/config/pages";
 
-export const generateMetadata = () => generatePageMetadata(globalPagesBySegment["management-users"]!);
+const pageDef = globalPagesBySegment["management-users"]!;
+
+export const generateMetadata = () => generatePageMetadata(pageDef);
 
 const UserManagementPage = async () => {
-    await requireAuth();
+    await requirePageAccess(pageDef);
 
     return (
         <div className="p-4">

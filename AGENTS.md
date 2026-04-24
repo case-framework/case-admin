@@ -33,7 +33,8 @@ Before any Next.js work, find and read the relevant doc in `node_modules/next/di
     - **Pattern:** Components should rarely use `trpc.useQuery` directly. Instead, import a named hook from `hooks/`.
 3. **API Layer** (`trpc/`)
     - Routers located in `trpc/routers`.
-    - Procedures defined using `adminProcedure` or `router` from `trpc/init`.
+    - Procedures are defined from `router`, `authenticatedProcedure`, `adminProcedure`, or `accessProcedure` in `trpc/init`.
+    - When a router must enforce permissions, prefer `accessProcedure` and the shared access utilities in `lib/types/access` or `lib/auth/access` instead of fetching permissions ad hoc inside each procedure.
 4. **Service Layer** (`lib/db/service`)
     - Business logic and direct DB access live here.
     - Files must import `server-only`.
@@ -78,7 +79,7 @@ Before any Next.js work, find and read the relevant doc in `node_modules/next/di
 
 All application pages are defined in a central registry at `lib/config/pages.ts`. This drives sidebar navigation, breadcrumbs, page titles/descriptions, and tab metadata from a single source of truth. **When adding a new page, register it here first.**
 
-The registry distinguishes between global (top-level) pages and study sub-pages. Each entry carries a translation key (from the `Pages` i18n namespace), an icon, and an optional role restriction. Study sub-pages are identified by their URL segment; global pages by their full path.
+The registry distinguishes between global (top-level) pages and study sub-pages. Each entry carries a translation key (from the `Pages` i18n namespace), an icon, and an optional access requirement. Study sub-pages are identified by their URL segment; global pages by their full path.
 
 Helper functions (`globalNavSection`, `studyNavSection`) return resolved nav items for a given sidebar section. Lookup maps (`globalPagesBySegment`, `studyPagesBySegment`) let page files and the breadcrumb component resolve a `PageDef` from the current URL without duplicating data.
 

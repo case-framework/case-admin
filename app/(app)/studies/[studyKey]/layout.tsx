@@ -1,3 +1,5 @@
+import { requireAccess } from "@/lib/auth/access";
+import { pageStudyOverview } from "@/lib/config/pages";
 import { studyService } from "@/lib/db/service/study";
 import { getLocalizedText } from "@/lib/utils/localization";
 import { getLocale } from "@/i18n/actions";
@@ -10,6 +12,8 @@ interface StudyKeyLayoutProps {
 
 export async function generateMetadata({ params }: { params: Promise<{ studyKey: string }> }) {
     const { studyKey } = await params;
+    await requireAccess(pageStudyOverview.access, { studyKey });
+
     const [study, locale] = await Promise.all([
         studyService.getStudyByKey(studyKey),
         getLocale(),
@@ -23,6 +27,9 @@ export async function generateMetadata({ params }: { params: Promise<{ studyKey:
     };
 }
 
-export default function StudyKeyLayout({ children }: StudyKeyLayoutProps) {
+export default async function StudyKeyLayout({ children, params }: StudyKeyLayoutProps) {
+    const { studyKey } = await params;
+    await requireAccess(pageStudyOverview.access, { studyKey });
+
     return <>{children}</>;
 }
