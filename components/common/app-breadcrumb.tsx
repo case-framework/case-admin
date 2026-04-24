@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -69,7 +70,9 @@ export function AppBreadcrumb() {
                             {item.isLast ? (
                                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
                             ) : (
-                                <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
+                                <BreadcrumbLink asChild>
+                                    <Link href={item.href}>{item.label}</Link>
+                                </BreadcrumbLink>
                             )}
                         </BreadcrumbItem>
                     </React.Fragment>
