@@ -1,5 +1,5 @@
+import { PageLayout } from "@/components/common/page-layout";
 import Users from "@/components/features/user-management/users";
-import { requirePageAccess } from "@/lib/auth/access";
 import { generatePageMetadata } from "@/lib/config/page-metadata";
 import { globalPagesBySegment } from "@/lib/config/pages";
 
@@ -7,15 +7,10 @@ const pageDef = globalPagesBySegment["management-users"]!;
 
 export const generateMetadata = () => generatePageMetadata(pageDef);
 
-const UserManagementPage = async () => {
-    await requirePageAccess(pageDef);
-
+export default function UserManagementPage() {
     return (
-        <div className="p-4">
-            <h1>User Management</h1>
+        <PageLayout page={pageDef}>
             <Users />
-        </div>
-    )
+        </PageLayout>
+    );
 }
-
-export default UserManagementPage;

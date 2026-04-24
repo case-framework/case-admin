@@ -1,7 +1,8 @@
 import UserPermissions from "@/components/features/user-management/user-detail/user-permissions";
 import { requirePageAccess } from "@/lib/auth/access";
-import { pageManagementUsers } from "@/lib/config/pages";
+import { globalPagesBySegment } from "@/lib/config/pages";
 
+const pageDef = globalPagesBySegment["management-users"]!;
 
 interface UserManagementPageProps {
     params: Promise<{
@@ -11,14 +12,14 @@ interface UserManagementPageProps {
 
 const UserManagementPage = async ({ params }: UserManagementPageProps) => {
     const { userId } = await params;
-    await requirePageAccess(pageManagementUsers);
+    await requirePageAccess(pageDef);
 
     return (
         <div className="p-4">
             <h1>User Management {userId}</h1>
             <UserPermissions userId={userId} />
         </div>
-    )
-}
+    );
+};
 
 export default UserManagementPage;

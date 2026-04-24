@@ -158,7 +158,6 @@ export const globalPages: GlobalPageDef[] = [
 // Named references for entries used directly in navigation components
 export const pageDashboard = globalPages.find((p) => p.path === "/")!;
 export const pageStudies = globalPages.find((p) => p.path === "/studies")!;
-export const pageManagementUsers = globalPages.find((p) => p.path === "/management-users")!;
 
 /** Helper to get pages for a specific global navigation section */
 export function globalNavSection(section: GlobalNavSection): GlobalPageDef[] {
