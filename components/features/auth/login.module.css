@@ -1,0 +1,45 @@
+/* Card entrance: fade in + slide up + subtle scale */
+.card {
+    animation: card-enter 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes card-enter {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Gentle float for the app icon */
+.iconWrap {
+    animation: icon-float 5.5s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes icon-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+/* Respect user motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        animation: none;
+    }
+
+    .iconWrap {
+        animation: none;
+    }
+}

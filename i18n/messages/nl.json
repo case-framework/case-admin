@@ -28,6 +28,11 @@
         "label": "Taal",
         "nl": "Nederlands"
     },
+    "Login": {
+        "description": "Log in op uw werkruimte",
+        "signingIn": "Bezig met inloggen…",
+        "signInWithMicrosoft": "Verdergaan met Microsoft"
+    },
     "Pages": {
         "accessControl": "Toegangsbeheer",
         "actions": "Acties",
@@ -63,10 +68,10 @@
         "recentStudies": "Recente studies",
         "studiesSection": "Studies",
         "systemSection": "Systeem",
-        "userManagementSection": "Gebruikersbeheer",
         "User": {
             "sessionExpiresIn": "Sessie verloopt over",
             "signOut": "Uitloggen"
-        }
+        },
+        "userManagementSection": "Gebruikersbeheer"
     }
 }

@@ -28,6 +28,11 @@
         "label": "Language",
         "nl": "Nederlands"
     },
+    "Login": {
+        "description": "Sign in to your workspace",
+        "signingIn": "Signing in…",
+        "signInWithMicrosoft": "Continue with Microsoft"
+    },
     "Pages": {
         "accessControl": "Access Control",
         "actions": "Actions",
@@ -63,10 +68,10 @@
         "recentStudies": "Recent Studies",
         "studiesSection": "Studies",
         "systemSection": "System",
-        "userManagementSection": "User Management",
         "User": {
             "sessionExpiresIn": "Session expires in",
             "signOut": "Sign out"
-        }
+        },
+        "userManagementSection": "User Management"
     }
 }
