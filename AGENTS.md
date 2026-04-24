@@ -69,6 +69,11 @@ Before any Next.js work, find and read the relevant doc in `node_modules/next/di
 - **structure:** Services (e.g. `UserService`) take a `Db` instance in constructor.
 - **collections:** Typed via `UserDoc`, `PermissionDoc` generic types in `collection<T>()`.
 
+### Formatting & Diff Hygiene
+
+- **Indentation:** Follow `.editorconfig` exactly. Use spaces, not tabs, with an indent size of 4 in touched files unless the file already uses a different established style.
+- **Whitespace-only churn:** Do not introduce whitespace-only diffs unless the task is explicitly a formatting cleanup. Preserve existing final newline behavior and line endings when editing.
+
 ## 🗂 Page Definition System
 
 All application pages are defined in a central registry at `lib/config/pages.ts`. This drives sidebar navigation, breadcrumbs, page titles/descriptions, and tab metadata from a single source of truth. **When adding a new page, register it here first.**
