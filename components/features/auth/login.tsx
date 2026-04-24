@@ -45,7 +45,7 @@ const LoginComponent = ({ redirectTo }: LoginComponentProps) => {
     };
 
     return (
-        <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
+        <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden px-4">
             <LoginBubbleBackground />
 
             <div className="absolute top-4 right-4 z-10">
