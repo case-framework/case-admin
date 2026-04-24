@@ -104,8 +104,8 @@ export function SidebarUserButton() {
                         </SidebarMenuButton>
                     </PopoverTrigger>
                     <PopoverContent
-                        side="right"
-                        align="end"
+                        side="top"
+                        align="start"
                         sideOffset={8}
                         className="w-60 p-0"
                     >
