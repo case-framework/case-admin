@@ -1,4 +1,13 @@
 {
+    "AccessDenied": {
+        "adminOnlyMessage": "This page is restricted to administrator accounts.",
+        "allPermissionsLabel": "All of the following permissions are required:",
+        "anyPermissionsLabel": "At least one of the following permissions is required:",
+        "description": "You don't have permission to view this page. Contact an administrator if you believe this is a mistake.",
+        "goToDashboard": "Go to Dashboard",
+        "requiredPermissionsLabel": "Required access",
+        "title": "Access Denied"
+    },
     "Common": {
         "appName": "CASE Admin"
     },
@@ -35,6 +44,7 @@
     },
     "Pages": {
         "accessControl": "Access Control",
+        "accessDenied": "Access Denied",
         "actions": "Actions",
         "advanced": "Advanced",
         "appRoleTemplates": "App Role Templates",

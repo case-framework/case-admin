@@ -74,7 +74,13 @@ export async function requireAccess(
     });
 
     if (!hasAccess(access, resolvedRequirement)) {
-        redirect(options?.redirectTo ?? "/");
+        if (options?.redirectTo) {
+            redirect(options.redirectTo);
+        }
+        const params = new URLSearchParams({
+            requirement: JSON.stringify(resolvedRequirement),
+        });
+        redirect(`/access-denied?${params}`);
     }
 
     return { session, access };

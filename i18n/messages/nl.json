@@ -1,4 +1,13 @@
 {
+    "AccessDenied": {
+        "adminOnlyMessage": "Deze pagina is beperkt tot beheerdersaccounts.",
+        "allPermissionsLabel": "Alle volgende rechten zijn vereist:",
+        "anyPermissionsLabel": "Minimaal één van de volgende rechten is vereist:",
+        "description": "U heeft geen toestemming om deze pagina te bekijken. Neem contact op met een beheerder als u denkt dat dit een vergissing is.",
+        "goToDashboard": "Naar het dashboard",
+        "requiredPermissionsLabel": "Vereiste toegang",
+        "title": "Toegang geweigerd"
+    },
     "Common": {
         "appName": "CASE Admin"
     },
@@ -35,6 +44,7 @@
     },
     "Pages": {
         "accessControl": "Toegangsbeheer",
+        "accessDenied": "Toegang geweigerd",
         "actions": "Acties",
         "advanced": "Geavanceerd",
         "appRoleTemplates": "App rol-sjablonen",

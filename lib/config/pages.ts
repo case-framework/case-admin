@@ -22,6 +22,7 @@ import {
     Bell,
     Lock,
     Sliders,
+    ShieldOff,
     type LucideIcon,
 } from "lucide-react";
 import {
@@ -72,7 +73,7 @@ export interface StudyPageDef extends PageDef {
 
 // ─── Navigation groups ────────────────────────────────────────────────────────
 
-export type GlobalNavSection = "studies" | "global" | "userManagement" | "system";
+export type GlobalNavSection = "studies" | "global" | "userManagement" | "system" | "hidden";
 export type StudyNavSection = "overview" | "data" | "config";
 
 function currentStudyAnyAccess(): AccessRequirement {
@@ -153,6 +154,7 @@ export const globalPages: GlobalPageDef[] = [
         access: { adminOnly: true },
     },
     { path: "/settings", labelKey: "settings", icon: Settings, navSection: "system" },
+    { path: "/access-denied", labelKey: "accessDenied", icon: ShieldOff, navSection: "hidden" },
 ];
 
 // Named references for entries used directly in navigation components
