@@ -144,7 +144,13 @@ export const globalPages: GlobalPageDef[] = [
     { path: "/management-users", labelKey: "managementUsers", icon: UserCog, navSection: "userManagement", access: { adminOnly: true } },
     { path: "/external-services", labelKey: "externalServices", icon: Link2, navSection: "userManagement", access: { adminOnly: true } },
     { path: "/app-role-templates", labelKey: "appRoleTemplates", icon: LayoutTemplate, navSection: "userManagement", access: { adminOnly: true } },
-    { path: "/documentation", labelKey: "documentation", icon: BookText, navSection: "system" },
+    {
+        path: "/documentation",
+        labelKey: "documentation",
+        descriptionKey: "documentationDescription",
+        icon: BookText,
+        navSection: "system",
+    },
     {
         path: "/database-indexes",
         labelKey: "databaseIndexes",

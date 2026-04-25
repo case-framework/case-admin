@@ -32,6 +32,11 @@
         "title": "Database Indexes",
         "unique": "unique"
     },
+    "Documentation": {
+        "iframeTitle": "CASE documentation",
+        "loading": "Loading documentation…",
+        "openInNewTab": "Open in new tab"
+    },
     "LocaleSwitcher": {
         "en": "English",
         "label": "Language",
@@ -53,6 +58,7 @@
         "databaseIndexes": "Database Indexes",
         "databaseIndexesDescription": "Review and manage recommended MongoDB indexes for each database.",
         "documentation": "Documentation",
+        "documentationDescription": "Comprehensive guides and technical documentation for the CASE framework.",
         "externalServices": "External Services",
         "files": "Files",
         "general": "General",

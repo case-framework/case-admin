@@ -32,6 +32,11 @@
         "title": "Database-indexen",
         "unique": "uniek"
     },
+    "Documentation": {
+        "iframeTitle": "CASE-documentatie",
+        "loading": "Documentatie laden…",
+        "openInNewTab": "Openen in nieuw tabblad"
+    },
     "LocaleSwitcher": {
         "en": "English",
         "label": "Taal",
@@ -53,6 +58,7 @@
         "databaseIndexes": "Database-indexen",
         "databaseIndexesDescription": "Bekijk en beheer aanbevolen MongoDB-indexen per database.",
         "documentation": "Documentatie",
+        "documentationDescription": "Uitgebreide handleidingen en technische documentatie voor het CASE-framework.",
         "externalServices": "Externe diensten",
         "files": "Bestanden",
         "general": "Algemeen",
