@@ -34,20 +34,21 @@ function studyKeyToHue(key: string): number {
 // ---------------------------------------------------------------------------
 // Global theme map (outside study context)
 // ---------------------------------------------------------------------------
-const defaultTheme: BubbleTheme = { key: "overview", hue: 42 };
-const userManagementTheme: BubbleTheme = { key: "user-management", hue: 120 };
-const systemTheme: BubbleTheme = { key: "system", hue: 30 };
+const defaultTheme: BubbleTheme = { key: "overview", hue: 220 };
+// const globalTheme: BubbleTheme = { key: "global", hue: 270 }
+// const userManagementTheme: BubbleTheme = { key: "user-management", hue: 333 };
+// const systemTheme: BubbleTheme = { key: "system", hue: 120 };
 
 const globalThemes: { prefix: string; theme: BubbleTheme }[] = [
-    { prefix: "/studies", theme: { key: "studies", hue: 200 } },
-    { prefix: "/participants", theme: { key: "participants", hue: 270 } },
-    { prefix: "/messages", theme: { key: "messages", hue: 190 } },
-    { prefix: "/management-users", theme: userManagementTheme },
-    { prefix: "/external-services", theme: userManagementTheme },
-    { prefix: "/app-role-templates", theme: userManagementTheme },
-    { prefix: "/documentation", theme: systemTheme },
-    { prefix: "/database-indexes", theme: systemTheme },
-    { prefix: "/settings", theme: systemTheme },
+    { prefix: "/studies", theme: defaultTheme },
+    { prefix: "/participants", theme: defaultTheme },
+    { prefix: "/messages", theme: defaultTheme },
+    { prefix: "/management-users", theme: defaultTheme },
+    { prefix: "/external-services", theme: defaultTheme },
+    { prefix: "/app-role-templates", theme: defaultTheme },
+    { prefix: "/documentation", theme: defaultTheme },
+    { prefix: "/database-indexes", theme: defaultTheme },
+    { prefix: "/settings", theme: defaultTheme },
 ];
 
 function getGlobalTheme(pathname: string): BubbleTheme {
