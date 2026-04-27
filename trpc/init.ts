@@ -1,8 +1,15 @@
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { type Context } from './context'
-import { TRPCErrorCodes } from './utils'
+import { TRPCErrorCodes, type TRPCErrorCode } from './utils'
 import { getAccessSnapshotForUser } from '@/lib/auth/access';
+import {
+    AccessContext,
+    hasAccess,
+    resolveAccessRequirement,
+    type AccessRequirement,
+    type AccessSnapshot,
+} from '@/lib/types/access';
 import { UserRole } from '@/lib/types/user';
 
 
@@ -17,6 +24,25 @@ export const procedure = t.procedure;
 const requireLogIn = (ctx: Context) => {
     if (!ctx.session || !ctx.user) {
         throw new TRPCError({ code: TRPCErrorCodes.UNAUTHORIZED })
+    }
+}
+
+export const requireAccess = (
+    access: AccessSnapshot | undefined,
+    requirement?: AccessRequirement,
+    options?: {
+        code?: TRPCErrorCode;
+        message?: string;
+        context?: AccessContext;
+    },
+) => {
+    const resolvedRequirement = resolveAccessRequirement(requirement, options?.context);
+
+    if (!hasAccess(access, resolvedRequirement)) {
+        throw new TRPCError({
+            code: options?.code ?? TRPCErrorCodes.FORBIDDEN,
+            message: options?.message,
+        })
     }
 }
 

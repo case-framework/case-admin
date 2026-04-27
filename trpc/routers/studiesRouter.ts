@@ -1,7 +1,7 @@
-import { accessProcedure, router } from '../init';
+import { accessProcedure, requireAccess, router } from '../init';
 import { z } from 'zod';
 import { studyService } from '@/lib/db/service/study';
-import { currentStudyAnyAccess, filterStudiesByAccess, hasAccess, resolveAccessRequirement } from '@/lib/types/access';
+import { currentStudyAnyAccess, filterStudiesByAccess } from '@/lib/types/access';
 import { TRPCError } from '@trpc/server';
 import { TRPCErrorCodes } from '../utils';
 import { logger } from '@/lib/utils/logger';
@@ -25,13 +25,11 @@ export const studiesRouter = router({
         .query(async ({ ctx, input }) => {
             studiesLogger.info(`Getting study by key ${input.key} for user ${ctx.user?.id}`);
 
-            const canAccessStudy = hasAccess(
+            requireAccess(
                 ctx.access,
-                resolveAccessRequirement(currentStudyAnyAccess(), { studyKey: input.key })
+                currentStudyAnyAccess(),
+                { context: { studyKey: input.key } }
             );
-            if (!canAccessStudy) {
-                throw new TRPCError({ code: TRPCErrorCodes.FORBIDDEN, message: "Forbidden" });
-            }
 
             try {
                 return await studyService.getStudyByKey(input.key);

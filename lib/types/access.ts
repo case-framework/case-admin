@@ -34,7 +34,7 @@ export interface AccessSnapshot {
     permissions: PermissionAssignment[];
 }
 
-interface AccessContext {
+export interface AccessContext {
     studyKey?: string;
     pathname?: string;
 }
