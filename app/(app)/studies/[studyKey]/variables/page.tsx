@@ -1,10 +1,11 @@
 import { PageLayout } from "@/components/common/page-layout";
 import { generatePageMetadata } from "@/lib/config/page-metadata";
+import type { Metadata } from "next";
 import { studyPagesBySegment } from "@/lib/config/pages";
 
 const pageDef = studyPagesBySegment["variables"]!;
 
-export const generateMetadata = () => generatePageMetadata(pageDef);
+export const generateMetadata = (): Promise<Metadata> => generatePageMetadata(pageDef);
 
 export default function StudyVariablesPage() {
     return <PageLayout page={pageDef} />;

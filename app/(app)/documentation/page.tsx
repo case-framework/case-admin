@@ -2,6 +2,7 @@ import { PageLayout } from "@/components/common/page-layout";
 import { DocsIframe } from "@/components/features/documentation/docs-iframe";
 import { Button } from "@/components/ui/button";
 import { generatePageMetadata } from "@/lib/config/page-metadata";
+import type { Metadata } from "next";
 import { globalPagesBySegment } from "@/lib/config/pages";
 import { getTranslations } from "next-intl/server";
 import { ExternalLink } from "lucide-react";
@@ -11,7 +12,7 @@ const DEFAULT_DOCS_URL = "https://case-framework.github.io/case-docs/";
 
 const pageDef = globalPagesBySegment["documentation"]!;
 
-export const generateMetadata = () => generatePageMetadata(pageDef);
+export const generateMetadata = (): Promise<Metadata> => generatePageMetadata(pageDef);
 
 export default async function DocumentationPage() {
     const tDoc = await getTranslations("Documentation");

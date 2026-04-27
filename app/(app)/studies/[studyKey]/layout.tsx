@@ -1,4 +1,5 @@
 import { requireAccess } from "@/lib/auth/access";
+import type { Metadata } from "next";
 import { pageStudyOverview } from "@/lib/config/pages";
 import { studyService } from "@/lib/db/service/study";
 import { getLocalizedText } from "@/lib/utils/localization";
@@ -10,7 +11,7 @@ interface StudyKeyLayoutProps {
     params: Promise<{ studyKey: string }>;
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ studyKey: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ studyKey: string }> }): Promise<Metadata> {
     const { studyKey } = await params;
     await requireAccess(pageStudyOverview.access, { studyKey });
 

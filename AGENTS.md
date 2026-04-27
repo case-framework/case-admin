@@ -88,13 +88,14 @@ Helper functions (`globalNavSection`, `studyNavSection`) return resolved nav ite
 
 **Global page** (`app/(app)/[segment]/page.tsx`):
 ```tsx
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/common/page-layout";
 import { generatePageMetadata } from "@/lib/config/page-metadata";
 import { globalPagesBySegment } from "@/lib/config/pages";
 
 const pageDef = globalPagesBySegment["participants"]!;
 
-export const generateMetadata = () => generatePageMetadata(pageDef);
+export const generateMetadata = (): Promise<Metadata> => generatePageMetadata(pageDef);
 
 export default function ParticipantsPage() {
     return <PageLayout page={pageDef} />;
@@ -103,13 +104,14 @@ export default function ParticipantsPage() {
 
 **Study sub-page** (`app/(app)/studies/[studyKey]/[segment]/page.tsx`):
 ```tsx
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/common/page-layout";
 import { generatePageMetadata } from "@/lib/config/page-metadata";
 import { studyPagesBySegment } from "@/lib/config/pages";
 
 const pageDef = studyPagesBySegment["rules"]!;
 
-export const generateMetadata = () => generatePageMetadata(pageDef);
+export const generateMetadata = (): Promise<Metadata> => generatePageMetadata(pageDef);
 
 export default function StudyRulesPage() {
     return <PageLayout page={pageDef} />;
