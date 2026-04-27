@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { type PageDef } from "@/lib/config/pages";
 import { requireAuth } from "@/lib/auth/utils";
 import {
@@ -31,23 +32,31 @@ function toPermissionAssignment(permission: Awaited<ReturnType<typeof userServic
     };
 }
 
+const getCachedRequireAuth = cache(async (): Promise<Session> => requireAuth());
+
+const getCachedAccessSnapshotForUser = cache(
+    async (userId: string, role: string | null): Promise<AccessSnapshot> => {
+        const isAdmin = role === UserRole.ADMIN;
+        const permissions = isAdmin
+            ? []
+            : (await userService.getPermissions(userId, SubjectType.managementUser)).map(toPermissionAssignment);
+
+        return {
+            userId,
+            isAdmin,
+            permissions,
+        };
+    },
+);
+
 export async function getAccessSnapshotForUser(
     user: AccessUser,
 ): Promise<AccessSnapshot> {
-    const isAdmin = user.role === UserRole.ADMIN;
-    const permissions = isAdmin
-        ? []
-        : (await userService.getPermissions(user.id, SubjectType.managementUser)).map(toPermissionAssignment);
-
-    return {
-        userId: user.id,
-        isAdmin,
-        permissions,
-    };
+    return getCachedAccessSnapshotForUser(user.id, user.role ?? null);
 }
 
 export async function getCurrentAccess(session?: Session): Promise<AccessSnapshot> {
-    const currentSession = session ?? await requireAuth();
+    const currentSession = session ?? await getCachedRequireAuth();
     return getAccessSnapshotForUser(currentSession.user);
 }
 
@@ -60,7 +69,7 @@ export async function requireAccess(
         studyKey?: string;
     },
 ) {
-    const session = options?.session ?? await requireAuth();
+    const session = options?.session ?? await getCachedRequireAuth();
 
     if (!requirement) {
         return { session, access: undefined };
