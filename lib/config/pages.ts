@@ -26,14 +26,13 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import {
-    MessagingAction,
-    MessagingPermissionResourceKey,
-    ResourceType,
     StudyAction,
-    StudyVisibilityActions,
 } from "@/lib/types/permission";
 import {
-    CURRENT_STUDY_RESOURCE_KEY,
+    anyStudyActionsAccess,
+    currentStudyActionsAccess,
+    currentStudyAnyAccess,
+    messagingAccess,
     resolveAccessRequirement,
     type AccessRequirement,
 } from "@/lib/types/access";
@@ -75,46 +74,6 @@ export interface StudyPageDef extends PageDef {
 
 export type GlobalNavSection = "studies" | "global" | "userManagement" | "system" | "hidden";
 export type StudyNavSection = "overview" | "data" | "config";
-
-function currentStudyAnyAccess(): AccessRequirement {
-    return currentStudyActionsAccess(StudyVisibilityActions);
-}
-
-function anyStudyActionsAccess(actions: string[]): AccessRequirement {
-    return {
-        anyPermissions: actions.map((action) => ({
-            resourceType: ResourceType.study,
-            resourceKey: "*",
-            action,
-            acceptSpecificResourceKeys: true,
-        })),
-    };
-}
-
-function currentStudyActionsAccess(actions: string[]): AccessRequirement {
-    return {
-        anyPermissions: actions.map((action) => ({
-            resourceType: ResourceType.study,
-            resourceKey: CURRENT_STUDY_RESOURCE_KEY,
-            action,
-        })),
-    };
-}
-
-function messagingAccess(): AccessRequirement {
-    return {
-        anyPermissions: [
-            MessagingPermissionResourceKey.globalEmailTemplates,
-            MessagingPermissionResourceKey.studyEmailTemplates,
-            MessagingPermissionResourceKey.scheduledEmails,
-            MessagingPermissionResourceKey.smsTemplates,
-        ].map((resourceKey) => ({
-            resourceType: ResourceType.messaging,
-            resourceKey,
-            action: MessagingAction.all,
-        })),
-    };
-}
 
 // ─── Global (top-level) pages ─────────────────────────────────────────────────
 
@@ -282,8 +241,6 @@ export const studySubPages: StudyPageDef[] = [
         ]),
     },
 ];
-
-export const pageStudyOverview = studySubPages.find((p) => p.segment === "")!;
 
 function toNavPageDef(studyKey: string, p: StudyPageDef): NavPageDef {
     return {

@@ -123,6 +123,8 @@ export const StudyAction = {
 } as const;
 export type StudyAction = (typeof StudyAction)[keyof typeof StudyAction];
 
+
+// StudyVisibilityActions includes all actions that should be considered when determining if a user has access to view a study in the UI.
 export const StudyVisibilityActions: StudyAction[] = [
     StudyAction.readStudyConfig,
     StudyAction.updateStudyProps,

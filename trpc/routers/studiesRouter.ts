@@ -1,8 +1,7 @@
 import { accessProcedure, router } from '../init';
 import { z } from 'zod';
-import { pageStudyOverview } from '@/lib/config/pages';
 import { studyService } from '@/lib/db/service/study';
-import { filterStudiesByAccess, hasAccess, resolveAccessRequirement } from '@/lib/types/access';
+import { currentStudyAnyAccess, filterStudiesByAccess, hasAccess, resolveAccessRequirement } from '@/lib/types/access';
 import { TRPCError } from '@trpc/server';
 import { TRPCErrorCodes } from '../utils';
 import { logger } from '@/lib/utils/logger';
@@ -28,9 +27,8 @@ export const studiesRouter = router({
 
             const canAccessStudy = hasAccess(
                 ctx.access,
-                resolveAccessRequirement(pageStudyOverview.access, { studyKey: input.key })
+                resolveAccessRequirement(currentStudyAnyAccess(), { studyKey: input.key })
             );
-
             if (!canAccessStudy) {
                 throw new TRPCError({ code: TRPCErrorCodes.FORBIDDEN, message: "Forbidden" });
             }

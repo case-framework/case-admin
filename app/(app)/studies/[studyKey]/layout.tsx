@@ -1,10 +1,10 @@
 import { requireAccess } from "@/lib/auth/access";
 import type { Metadata } from "next";
-import { pageStudyOverview } from "@/lib/config/pages";
 import { studyService } from "@/lib/db/service/study";
 import { getLocalizedText } from "@/lib/utils/localization";
 import { getLocale } from "@/i18n/actions";
 import { appName } from "@/lib/config/page-metadata";
+import { currentStudyAnyAccess } from "@/lib/types/access";
 
 interface StudyKeyLayoutProps {
     children: React.ReactNode;
@@ -13,7 +13,7 @@ interface StudyKeyLayoutProps {
 
 export async function generateMetadata({ params }: { params: Promise<{ studyKey: string }> }): Promise<Metadata> {
     const { studyKey } = await params;
-    await requireAccess(pageStudyOverview.access, { studyKey });
+    await requireAccess(currentStudyAnyAccess(), { studyKey });
 
     const [study, locale] = await Promise.all([
         studyService.getStudyByKey(studyKey),
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ studyKey:
 
 export default async function StudyKeyLayout({ children, params }: StudyKeyLayoutProps) {
     const { studyKey } = await params;
-    await requireAccess(pageStudyOverview.access, { studyKey });
+    await requireAccess(currentStudyAnyAccess(), { studyKey });
 
     return <>{children}</>;
 }

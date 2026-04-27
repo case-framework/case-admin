@@ -1,4 +1,4 @@
-import { ResourceType, StudyVisibilityActions } from "@/lib/types/permission";
+import { MessagingAction, MessagingPermissionResourceKey, ResourceType, StudyVisibilityActions } from "@/lib/types/permission";
 import { type Study } from "@/lib/types/study";
 
 export const CURRENT_STUDY_RESOURCE_KEY = "$currentStudy";
@@ -237,4 +237,45 @@ export function filterStudiesByAccess(
     }
 
     return studies.filter((study) => accessible.keys.has(study.key));
+}
+
+export function currentStudyAnyAccess(): AccessRequirement {
+    return currentStudyActionsAccess(StudyVisibilityActions);
+}
+
+
+export function currentStudyActionsAccess(actions: string[]): AccessRequirement {
+    return {
+        anyPermissions: actions.map((action) => ({
+            resourceType: ResourceType.study,
+            resourceKey: CURRENT_STUDY_RESOURCE_KEY,
+            action,
+        })),
+    };
+}
+
+export function anyStudyActionsAccess(actions: string[]): AccessRequirement {
+    return {
+        anyPermissions: actions.map((action) => ({
+            resourceType: ResourceType.study,
+            resourceKey: "*",
+            action,
+            acceptSpecificResourceKeys: true,
+        })),
+    };
+}
+
+export function messagingAccess(): AccessRequirement {
+    return {
+        anyPermissions: [
+            MessagingPermissionResourceKey.globalEmailTemplates,
+            MessagingPermissionResourceKey.studyEmailTemplates,
+            MessagingPermissionResourceKey.scheduledEmails,
+            MessagingPermissionResourceKey.smsTemplates,
+        ].map((resourceKey) => ({
+            resourceType: ResourceType.messaging,
+            resourceKey,
+            action: MessagingAction.all,
+        })),
+    };
 }
