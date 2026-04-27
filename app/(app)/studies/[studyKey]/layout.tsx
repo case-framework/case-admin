@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ studyKey:
     return {
         title: {
             template: `%s - ${studyName} | ${appName}`,
-            default: `${studyName} | ${appName}`,
+            default: studyName,
         },
     };
 }
