@@ -57,12 +57,19 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
         ...initialSchedule
     });
     const [isDirty, setIsDirty] = useState(false);
+    const [nextTimeInput, setNextTimeInput] = useState(
+        dateToInputStr(new Date((props.schedule ?? initialSchedule).nextTime * 1000))
+    );
 
 
     const [currentDateTime, setCurrentDateTime] = React.useState(new Date());
     useEffect(() => {
         setCurrentDateTime(new Date());
     }, []);
+
+    useEffect(() => {
+        setNextTimeInput(dateToInputStr(new Date(schedule.nextTime * 1000)));
+    }, [schedule.nextTime]);
 
 
     const onSaveSchedule = () => {
@@ -310,16 +317,34 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                                                 id='schedule-next-time'
                                                 type='datetime-local'
                                                 placeholder='enter next time...'
-                                                value={dateToInputStr(new Date(schedule.nextTime * 1000))}
+                                                value={nextTimeInput}
                                                 min={dateToInputStr(currentDateTime)}
                                                 max={dateToInputStr(addMonths(currentDateTime, 12))}
                                                 onChange={(event) => {
-                                                    const value = event.target.value;
+                                                    setNextTimeInput(event.target.value);
+                                                }}
+                                                onBlur={() => {
+                                                    const parsed = new Date(nextTimeInput).getTime();
+                                                    if (Number.isNaN(parsed)) {
+                                                        toast.error('Please enter a valid date and time.');
+                                                        setNextTimeInput(dateToInputStr(new Date(schedule.nextTime * 1000)));
+                                                        return;
+                                                    }
+
+                                                    const minAllowed = currentDateTime.getTime();
+                                                    const maxAllowed = addMonths(currentDateTime, 12).getTime();
+                                                    if (parsed < minAllowed || parsed > maxAllowed) {
+                                                        toast.error('Please select a date between now and one year from now.');
+                                                        setNextTimeInput(dateToInputStr(new Date(schedule.nextTime * 1000)));
+                                                        return;
+                                                    }
+
+                                                    const nextTime = Math.floor(parsed / 1000);
                                                     setIsDirty(true);
-                                                    setSchedule({
-                                                        ...schedule,
-                                                        nextTime: Math.floor(new Date(value).getTime() / 1000)
-                                                    })
+                                                    setSchedule((s) => ({
+                                                        ...s,
+                                                        nextTime,
+                                                    }));
                                                 }}
                                             />
                                         </div>
