@@ -59,6 +59,7 @@
         "databaseIndexesDescription": "Review and manage recommended MongoDB indexes for each database.",
         "documentation": "Documentation",
         "documentationDescription": "Comprehensive guides and technical documentation for the CASE framework.",
+        "expressions": "Expression Editor",
         "externalServices": "External Services",
         "files": "Files",
         "general": "General",

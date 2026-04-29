@@ -23,6 +23,7 @@ import {
     Lock,
     Sliders,
     ShieldOff,
+    Code2,
     type LucideIcon,
 } from "lucide-react";
 import {
@@ -238,6 +239,15 @@ export const studySubPages: StudyPageDef[] = [
         access: currentStudyActionsAccess([
             StudyAction.manageStudyCounters,
             StudyAction.deleteStudy,
+        ]),
+    },
+    {
+        segment: "expressions",
+        labelKey: "expressions",
+        icon: Code2,
+        navSection: "config",
+        access: currentStudyActionsAccess([
+            StudyAction.updateStudyRules,
         ]),
     },
 ];
