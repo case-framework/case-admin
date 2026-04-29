@@ -111,6 +111,13 @@ export const globalPages: GlobalPageDef[] = [
         navSection: "system",
     },
     {
+        path: "/expression-editor",
+        labelKey: "expressionEditor",
+        descriptionKey: "expressionEditorDescription",
+        icon: GitBranch,
+        navSection: "system",
+    },
+    {
         path: "/database-indexes",
         labelKey: "databaseIndexes",
         descriptionKey: "databaseIndexesDescription",
