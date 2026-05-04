@@ -18,7 +18,7 @@ export default function Page(
                     href: '/tools/messaging',
                 },
                 {
-                    title: 'Schedules emails',
+                    title: 'Scheduled emails',
                     href: '/tools/messaging/schedules',
                 },
                 {

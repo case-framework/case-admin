@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { deleteMessageSchedule, saveMessageSchedule } from '../../../../../../actions/messaging/schedules';
 import NotImplemented from '@/components/NotImplemented';
-import { addHours, addMonths, addWeeks, format } from 'date-fns';
+import { addHours, addMinutes, addMonths, addWeeks, format } from 'date-fns';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import BackButton from '@/components/BackButton';
@@ -57,12 +57,32 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
         ...initialSchedule
     });
     const [isDirty, setIsDirty] = useState(false);
+    const [nextTimeInput, setNextTimeInput] = useState(
+        dateToInputStr(new Date((props.schedule ?? initialSchedule).nextTime * 1000))
+    );
+    const [untilInput, setUntilInput] = useState(
+        (props.schedule?.until && Number.isFinite(props.schedule.until) && props.schedule.until > 0)
+            ? dateToInputStr(new Date(props.schedule.until * 1000))
+            : ''
+    );
 
 
     const [currentDateTime, setCurrentDateTime] = React.useState(new Date());
     useEffect(() => {
         setCurrentDateTime(new Date());
     }, []);
+
+    useEffect(() => {
+        setNextTimeInput(dateToInputStr(new Date(schedule.nextTime * 1000)));
+    }, [schedule.nextTime]);
+
+    useEffect(() => {
+        if (schedule.until && Number.isFinite(schedule.until) && schedule.until > 0) {
+            setUntilInput(dateToInputStr(new Date(schedule.until * 1000)));
+            return;
+        }
+        setUntilInput('');
+    }, [schedule.until]);
 
 
     const onSaveSchedule = () => {
@@ -310,16 +330,34 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                                                 id='schedule-next-time'
                                                 type='datetime-local'
                                                 placeholder='enter next time...'
-                                                value={dateToInputStr(new Date(schedule.nextTime * 1000))}
-                                                min={dateToInputStr(currentDateTime)}
+                                                value={nextTimeInput}
+                                                min={dateToInputStr(addMinutes(currentDateTime, -30))}
                                                 max={dateToInputStr(addMonths(currentDateTime, 12))}
                                                 onChange={(event) => {
-                                                    const value = event.target.value;
+                                                    setNextTimeInput(event.target.value);
+                                                }}
+                                                onBlur={() => {
+                                                    const parsed = new Date(nextTimeInput).getTime();
+                                                    if (Number.isNaN(parsed)) {
+                                                        toast.error('Please enter a valid date and time.');
+                                                        setNextTimeInput(dateToInputStr(new Date(schedule.nextTime * 1000)));
+                                                        return;
+                                                    }
+
+                                                    const minAllowed = addMinutes(currentDateTime, -30).getTime();
+                                                    const maxAllowed = addMonths(currentDateTime, 12).getTime();
+                                                    if (parsed < minAllowed || parsed > maxAllowed) {
+                                                        toast.error('Please select a date between now and one year from now.');
+                                                        setNextTimeInput(dateToInputStr(new Date(schedule.nextTime * 1000)));
+                                                        return;
+                                                    }
+
+                                                    const nextTime = Math.floor(parsed / 1000);
                                                     setIsDirty(true);
-                                                    setSchedule({
-                                                        ...schedule,
-                                                        nextTime: Math.floor(new Date(value).getTime() / 1000)
-                                                    })
+                                                    setSchedule((s) => ({
+                                                        ...s,
+                                                        nextTime,
+                                                    }));
                                                 }}
                                             />
                                         </div>
@@ -359,8 +397,9 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                                             <div className='shrink-0 flex items-center'>
                                                 <Switch
                                                     id='auto-delete'
-                                                    checked={schedule.until !== null && schedule.until !== undefined && schedule.until !== 0}
+                                                    checked={Boolean(schedule.until && Number.isFinite(schedule.until) && schedule.until > 0)}
                                                     onCheckedChange={(value) => {
+                                                        setIsDirty(true);
                                                         setSchedule((s) => {
                                                             const newSchedule = { ...s };
                                                             if (value) {
@@ -399,17 +438,39 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                                                         id='schedule-until-time'
                                                         type='datetime-local'
                                                         placeholder='enter a time...'
-                                                        disabled={!schedule.until}
-                                                        value={dateToInputStr(new Date((schedule.until || 0) * 1000))}
+                                                        disabled={!(schedule.until && Number.isFinite(schedule.until) && schedule.until > 0)}
+                                                        value={untilInput}
                                                         min={dateToInputStr(currentDateTime)}
                                                         max={dateToInputStr(addMonths(currentDateTime, 24))}
                                                         onChange={(event) => {
-                                                            const value = event.target.value;
+                                                            setUntilInput(event.target.value);
+                                                        }}
+                                                        onBlur={() => {
+                                                            if (!(schedule.until && Number.isFinite(schedule.until) && schedule.until > 0)) {
+                                                                return;
+                                                            }
+
+                                                            const parsed = new Date(untilInput).getTime();
+                                                            if (Number.isNaN(parsed)) {
+                                                                toast.error('Please enter a valid date and time.');
+                                                                setUntilInput(dateToInputStr(new Date(schedule.until * 1000)));
+                                                                return;
+                                                            }
+
+                                                            const minAllowed = currentDateTime.getTime();
+                                                            const maxAllowed = addMonths(currentDateTime, 24).getTime();
+                                                            if (parsed < minAllowed || parsed > maxAllowed) {
+                                                                toast.error('Please select a date between now and two years from now.');
+                                                                setUntilInput(dateToInputStr(new Date(schedule.until * 1000)));
+                                                                return;
+                                                            }
+
+                                                            const until = Math.floor(parsed / 1000);
                                                             setIsDirty(true);
-                                                            setSchedule({
-                                                                ...schedule,
-                                                                until: Math.floor(new Date(value).getTime() / 1000)
-                                                            })
+                                                            setSchedule((s) => ({
+                                                                ...s,
+                                                                until,
+                                                            }));
                                                         }}
                                                     />
                                                 </div>
