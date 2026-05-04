@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { deleteMessageSchedule, saveMessageSchedule } from '../../../../../../actions/messaging/schedules';
 import NotImplemented from '@/components/NotImplemented';
-import { addHours, addMonths, addWeeks, format } from 'date-fns';
+import { addHours, addMinutes, addMonths, addWeeks, format } from 'date-fns';
 import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import BackButton from '@/components/BackButton';
@@ -331,7 +331,7 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                                                 type='datetime-local'
                                                 placeholder='enter next time...'
                                                 value={nextTimeInput}
-                                                min={dateToInputStr(currentDateTime)}
+                                                min={dateToInputStr(addMinutes(currentDateTime, -30))}
                                                 max={dateToInputStr(addMonths(currentDateTime, 12))}
                                                 onChange={(event) => {
                                                     setNextTimeInput(event.target.value);
@@ -344,7 +344,7 @@ const ScheduleEditor: React.FC<ScheduleEditorProps> = (props) => {
                                                         return;
                                                     }
 
-                                                    const minAllowed = currentDateTime.getTime();
+                                                    const minAllowed = addMinutes(currentDateTime, -30).getTime();
                                                     const maxAllowed = addMonths(currentDateTime, 12).getTime();
                                                     if (parsed < minAllowed || parsed > maxAllowed) {
                                                         toast.error('Please select a date between now and one year from now.');
