@@ -2795,6 +2795,38 @@ const dateHelpers: ExpressionDef[] = [
         }
     },
     {
+        id: 'getTsForStartOfISOWeek',
+        categories: ['date-helpers'],
+        label: 'Get timestamp for start of ISO week',
+        returnType: 'num',
+        icon: 'clock',
+        color: 'lime',
+        slots: [
+            {
+                label: 'Timestamp (optional)',
+                required: false,
+                allowedTypes: [
+                    {
+                        id: 'date-picker',
+                        type: 'date',
+                    },
+                    {
+                        id: 'exp-slot',
+                        type: 'expression',
+                        allowedExpressionTypes: ['num']
+                    }
+                ]
+            }
+        ],
+        defaultValue: {
+            dtype: 'exp',
+            exp: {
+                name: 'getTsForStartOfISOWeek',
+                data: []
+            }
+        }
+    },
+    {
         id: 'getTsForNextISOWeek',
         categories: ['date-helpers'],
         label: 'Get timestamp for next occurrence of an ISO week',
@@ -2937,6 +2969,53 @@ const dateHelpers: ExpressionDef[] = [
 
 
                 ]
+            }
+        }
+    },
+    {
+        id: 'timestampDiff',
+        categories: ['date-helpers'],
+        label: 'Get timestamp difference',
+        returnType: 'num',
+        icon: 'hourglass',
+        color: 'lime',
+        slots: [
+            {
+                label: 'Timestamp 1',
+                required: true,
+                allowedTypes: [
+                    {
+                        id: 'date-picker',
+                        type: 'date',
+                    },
+                    {
+                        id: 'exp-slot',
+                        type: 'expression',
+                        allowedExpressionTypes: ['num']
+                    }
+                ]
+            },
+            {
+                label: 'Timestamp 2',
+                required: true,
+                allowedTypes: [
+                    {
+                        id: 'date-picker',
+                        type: 'date',
+                    },
+                    {
+                        id: 'exp-slot',
+                        type: 'expression',
+                        allowedExpressionTypes: ['num']
+                    }
+                ]
+            }
+        ],
+        defaultValue: {
+            dtype: 'exp',
+            exp: {
+                name: 'timestampDiff',
+                data: []
             }
         }
     }
