@@ -79,7 +79,7 @@ export type IconVariant = 'braces' | 'function' | 'code' | 'box' | 'variable' | 
     'ampersands' | 'tally' | 'clipboard-check' | 'tags' | 'user-check' | 'badge-check' | 'package-check' | 'copy-check' | 'copy-x' | 'copy-plus' | 'list-check' |
     'less-than' | 'less-than-or-equal' | 'greater-than' | 'greater-than-or-equal' | 'equal' | 'corner-down-right' | 'tally-5' | 'calendar-days' | 'calendar-range' | 'refresh-ccw' |
     'book-check' | 'play' | 'list-x' | 'list-checks' | 'list-todo' | 'list-plus' | 'mail' | 'plus' | 'trash' | 'calendar-clock' | 'calendar-x-2' | 'link' | 'link-2' | 'link-2-off' | 'external-link' |
-    'file-plus' | 'file-x' | 'file-pen' | 'file-key' | 'sigma' | 'dice' | 'minus' | 'clock' | 'key-round' | 'circle-question-mark' | 'mail-question-mark' | 'app-window' | 'package' | 'package-search' |
+    'file-plus' | 'file-x' | 'file-pen' | 'file-key' | 'sigma' | 'dice' | 'minus' | 'clock' | 'hourglass' | 'key-round' | 'circle-question-mark' | 'mail-question-mark' | 'app-window' | 'package' | 'package-search' |
     'package-open' | 'send-horizontal'
 
 
