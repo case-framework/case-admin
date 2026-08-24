@@ -126,7 +126,7 @@ const ExpArgEditor: React.FC<ExpArgEditorProps> = ({
                 const currentSlotTypes = props.availableMetadata?.slotTypes || []
                 const updatedSlotTypes = ensureMinLength(currentSlotTypes, props.currentIndex + 1)
 
-                const currentArgs = [...props.availableExpData] || [];
+                const currentArgs = [...props.availableExpData];
                 const updatedArgs = ensureMinLength(currentArgs, props.currentIndex + 1)
 
                 if (slotTypeId === 'clipboard') {
@@ -252,7 +252,7 @@ const ExpArgEditor: React.FC<ExpArgEditorProps> = ({
                 const currentSlotTypes = props.availableMetadata?.slotTypes || []
                 const updatedSlotTypes = ensureMinLength(currentSlotTypes, props.currentIndex + 1)
 
-                const currentArgs = [...props.availableExpData] || [];
+                const currentArgs = [...props.availableExpData];
                 const updatedArgs = ensureMinLength(currentArgs, props.currentIndex + 1)
 
                 updatedSlotTypes[currentIndex] = undefined;
