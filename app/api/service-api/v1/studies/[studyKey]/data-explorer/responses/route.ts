@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
 import { getCASEManagementAPIURL, getServiceAccountHeaders } from '@/utils/server/api';
+import { studyKeySchema } from '@/utils/server/schemas';
 
 export const dynamic = 'force-dynamic';
-
-const studyKeySchema = z.string().min(2).max(50).regex(
-    /^[a-zA-Z0-9_-]+$/,
-    'Study key must contain only letters, numbers, hyphens, and underscores.'
-);
 
 export async function GET(request: NextRequest, props: { params: Promise<{ studyKey: string }> }) {
     const params = await props.params;
