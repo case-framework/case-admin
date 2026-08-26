@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { ColorVariant, IconVariant } from '../utils';
-import { Ampersands, BadgeCheck, Blocks, BookCheck, Box, Braces, Brackets, Calendar, CalendarClock, CalendarDays, CalendarRange, CalendarX2, CircleSlash2, ClipboardCheck, Code, CopyCheck, CopyPlus, CopyX, CornerDownRight, Database, Diamond, Equal, ExternalLink, FormInput, FunctionSquare, LayoutList, Link, Link2, Link2Off, ListX, Mail, PackageCheck, Parentheses, Play, Plus, Pyramid, RefreshCcw, Regex, Signpost, Split, Square, SquareCode, Tag, Tags, Tally2, Tally5, Terminal, TextCursor, Trash2, Triangle, UserCheck, Variable, FilePlus2, FileX, FilePen, FileKey, ListChecks, ListTodo, ListCheck, Sigma, Minus, Clock4, Dice6, KeyRound, ListPlus, CircleQuestionMark, MailQuestionMark, AppWindow, Package, PackageSearch, SendHorizonal, PackageOpen } from 'lucide-react';
+import { Ampersands, BadgeCheck, Blocks, BookCheck, Box, Braces, Brackets, Calendar, CalendarClock, CalendarDays, CalendarRange, CalendarX2, CircleSlash2, ClipboardCheck, Code, CopyCheck, CopyPlus, CopyX, CornerDownRight, Database, Diamond, Equal, ExternalLink, FormInput, FunctionSquare, LayoutList, Link, Link2, Link2Off, ListX, Mail, PackageCheck, Parentheses, Play, Plus, Pyramid, RefreshCcw, Regex, Signpost, Split, Square, SquareCode, Tag, Tags, Tally2, Tally5, Terminal, TextCursor, Trash2, Triangle, UserCheck, Variable, FilePlus2, FileX, FilePen, FileKey, ListChecks, ListTodo, ListCheck, Sigma, Minus, Clock4, Hourglass, Dice6, KeyRound, ListPlus, CircleQuestionMark, MailQuestionMark, AppWindow, Package, PackageSearch, SendHorizonal, PackageOpen } from 'lucide-react';
 
 interface ExpressionIconProps {
     icon?: IconVariant;
@@ -145,6 +145,8 @@ const getIconNode = (icon?: IconVariant) => {
             return <FileKey />;
         case 'clock':
             return <Clock4 />;
+        case 'hourglass':
+            return <Hourglass />;
         case 'key-round':
             return <KeyRound />;
         case 'circle-question-mark':
