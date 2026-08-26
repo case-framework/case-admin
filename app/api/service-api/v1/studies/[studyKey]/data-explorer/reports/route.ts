@@ -6,10 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest, props: { params: Promise<{ studyKey: string }> }) {
     const params = await props.params;
-
-    const {
-        studyKey
-    } = params;
+    const { studyKey } = params;
 
     const parsedStudyKey = studyKeySchema.safeParse(studyKey);
     if (!parsedStudyKey.success) {
@@ -36,7 +33,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ study
     }
 
     const url = getCASEManagementAPIURL(
-        `/v1/studies/${encodeURIComponent(parsedStudyKey.data)}/data-explorer/responses`
+        `/v1/studies/${encodeURIComponent(parsedStudyKey.data)}/data-explorer/reports`
     );
     request.nextUrl.searchParams.forEach((value, key) => {
         url.searchParams.append(key, value);
