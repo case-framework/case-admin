@@ -22,6 +22,7 @@ import React, { useEffect } from 'react';
 import { BsFileEarmark, BsFiletypeCsv, BsFiletypeJpg, BsFiletypeJson, BsFiletypePdf, BsFiletypePng } from 'react-icons/bs';
 import { toast } from 'sonner';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { fetchParticipantFile } from '@/utils/fetch-participant-file';
 
 interface ParticipantFilesClientProps {
     studyKey: string;
@@ -40,6 +41,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
     const [isPending, startTransition] = React.useTransition();
     const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set());
     const [isBulkDownloading, setIsBulkDownloading] = React.useState(false);
+    const [bulkDownloadProgress, setBulkDownloadProgress] = React.useState<{ current: number; total: number } | null>(null);
     const [isBulkDeleting, setIsBulkDeleting] = React.useState(false);
     const [bulkDeleteOpen, setBulkDeleteOpen] = React.useState(false);
     const [bulkDeleteConfirmText, setBulkDeleteConfirmText] = React.useState('');
@@ -115,34 +117,24 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
     const downloadFile = async (fileInfo: FileInfo, showToast = true) => {
         const url = `/api/case-management-api/v1/studies/${props.studyKey}/data-explorer/files/${fileInfo.id}`;
 
-        const resp = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        if (resp.status !== 200) {
-            const err = await resp.json();
-            if (showToast) {
-                toast.error('Failed to download file', {
-                    description: err.error,
-                });
-            }
-            throw new Error(err.error || 'Failed to download file');
-        }
-        const blob = await resp.blob();
-        const fileName = resp.headers.get('Content-Disposition')?.split('filename=')[1];
+        const { blob, fileName } = await fetchParticipantFile(url);
         const link = document.createElement('a');
         const objectUrl = window.URL.createObjectURL(blob);
         link.href = objectUrl;
         link.download = (fileName || 'participant_file').replaceAll('"', '');
-        link.click();
-
-        // Delay revocation to allow download to start
-        setTimeout(() => window.URL.revokeObjectURL(objectUrl), 1000);
+        document.body.appendChild(link);
+        try {
+            link.click();
+        } finally {
+            // Keep the link and blob available while the browser starts the download.
+            setTimeout(() => {
+                link.remove();
+                window.URL.revokeObjectURL(objectUrl);
+            }, 1000);
+        }
 
         if (showToast) {
-            toast.success('File downloaded');
+            toast.success('Download request started');
         }
     };
 
@@ -160,30 +152,41 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
     }
 
     const onDownloadSelected = async () => {
-        if (selectedIds.size === 0 || isBulkDownloading) {
+        if (selectedIds.size === 0 || isBulkDownloading || isBulkDeleting) {
             return;
         }
         const filesToDownload = fileInfos.filter((fileInfo) => selectedIds.has(fileInfo.id));
         setIsBulkDownloading(true);
         const errors: string[] = [];
+        const failedIds = new Set<string>();
+        let startedCount = 0;
         try {
-            for (const fileInfo of filesToDownload) {
+            for (const [index, fileInfo] of filesToDownload.entries()) {
+                setBulkDownloadProgress({ current: index + 1, total: filesToDownload.length });
                 try {
                     await downloadFile(fileInfo, false);
+                    startedCount++;
                 } catch (error) {
-                    errors.push(error instanceof Error ? error.message : 'Failed to download file');
+                    failedIds.add(fileInfo.id);
+                    errors.push(`${fileInfo.id}: ${error instanceof Error ? error.message : 'Failed to download file'}`);
+                }
+                if (index < filesToDownload.length - 1) {
+                    // Pace download starts to stay below the browser's burst limit.
+                    await new Promise(resolve => setTimeout(resolve, 150));
                 }
             }
 
             if (errors.length > 0) {
+                setSelectedIds(failedIds);
                 toast.error('Failed to download some files', {
-                    description: errors.join('\n'),
+                    description: `${startedCount} download requests started; ${errors.length} failed. Failed files remain selected for retry.\n${errors.join('\n')}`,
                 });
             } else {
-                toast.success(`Downloaded ${filesToDownload.length} file${filesToDownload.length === 1 ? '' : 's'}`);
+                toast.success(`${startedCount} download request${startedCount === 1 ? '' : 's'} started`);
             }
         } finally {
             setIsBulkDownloading(false);
+            setBulkDownloadProgress(null);
         }
     };
 
@@ -347,6 +350,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                                             <Checkbox
                                                 checked={isIndeterminate ? 'indeterminate' : allSelected}
                                                 onCheckedChange={toggleSelectAll}
+                                                disabled={isBulkDownloading}
                                                 aria-label='Select all files'
                                                 className='size-5 bg-white'
                                             />
@@ -368,6 +372,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                                                 <Checkbox
                                                     checked={selectedIds.has(fileInfo.id)}
                                                     onCheckedChange={() => toggleSelectRow(fileInfo.id)}
+                                                    disabled={isBulkDownloading}
                                                     aria-label={`Select file ${fileInfo.id}`}
                                                     className='size-5 bg-white'
                                                 />
@@ -398,7 +403,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                                                     <Button
                                                         size='icon'
                                                         variant={'ghost'}
-                                                        disabled={isPending}
+                                                        disabled={isPending || isBulkDownloading}
                                                         onClick={() => onDownloadFile(fileInfo)}
                                                         aria-label={`Download file ${fileInfo.id}`}
                                                     >
@@ -408,7 +413,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                                                     <Button
                                                         size='icon'
                                                         variant={'ghost'}
-                                                        disabled={isPending}
+                                                        disabled={isPending || isBulkDownloading}
                                                         onClick={() => onDeleteFile(fileInfo)}
                                                         aria-label={`Delete file ${fileInfo.id}`}
                                                     >
@@ -460,10 +465,15 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                             variant={'outline'}
                             onClick={onDownloadSelected}
                             className='rounded-full'
-                            disabled={isBulkDownloading || isPending}
+                            disabled={isBulkDownloading || isBulkDeleting || isPending}
+                            aria-busy={isBulkDownloading}
                         >
                             <Save className='size-4' />
-                            Download {selectedCount} files
+                            <span role='status'>
+                                {bulkDownloadProgress
+                                    ? `Starting download ${bulkDownloadProgress.current} of ${bulkDownloadProgress.total}`
+                                    : `Download ${selectedCount} files`}
+                            </span>
                         </Button>
 
                         <AlertDialog
@@ -485,7 +495,7 @@ const ParticipantFilesClient: React.FC<ParticipantFilesClientProps> = (props) =>
                                 variant={'outline'}
                                 className='rounded-full text-destructive'
                                 onClick={() => setBulkDeleteOpen(true)}
-                                disabled={isBulkDeleting || isPending}
+                                disabled={isBulkDeleting || isBulkDownloading || isPending}
                             >
                                 <Trash2 className='size-4' />
                                 Delete {selectedCount} files
