@@ -4,7 +4,7 @@ import { ADMIN_ROUTES, AuthPages, PUBLIC_ROUTES } from "./routes";
 
 export default auth((req) => {
     const { nextUrl } = req;
-    const isLoggedIn = !!req.auth;
+    const isLoggedIn = !!req.auth?.user;
     const isAdmin = req.auth?.isAdmin;
 
     const isPublicRoute = PUBLIC_ROUTES.some((route) => {
