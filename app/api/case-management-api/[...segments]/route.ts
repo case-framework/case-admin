@@ -40,6 +40,10 @@ export async function GET(request: NextRequest, props: { params: Promise<{ segme
             'Content-Disposition': apiResponse.headers.get('Content-Disposition') || '',
         }
     });
+    const retryAfter = apiResponse.headers.get('Retry-After');
+    if (retryAfter) {
+        resp.headers.set('Retry-After', retryAfter);
+    }
     return resp;
 }
 
