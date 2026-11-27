@@ -51,10 +51,8 @@ echo "✓ Switched back to main branch"
 
 # Merge changes from upstream branch
 echo "Merging changes from upstream..."
-git merge upstream --no-commit
-
-# Check for conflicts
-if [ $? -ne 0 ]; then
+# set -e would stop the script on a conflict before this message; test the merge directly.
+if ! git merge upstream --no-commit; then
   echo "⚠️ Merge conflicts detected."
   echo "Please resolve conflicts manually, then commit the changes."
   echo "Files with customizations (like favicon, app name) may need special attention."
