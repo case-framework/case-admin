@@ -10,19 +10,35 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # case-admin and its platform copies
 
-Platforms run their own copy of this repo (for example the infectieradar and flusurvey admin apps). A copy is not a GitHub fork: it merges this repo's `main` to take changes, and adds only files of its own (deployment files, icons). This file and `sync-script.sh` come from case-admin, so they are the same in every copy.
+Platforms run their own copy of this repo (for example the infectieradar and flusurvey admin apps). A copy is not a GitHub fork: it merges this repo's `main` to take changes. This file and `sync-script.sh` come from case-admin, so they are the same in every copy.
 
-- A change that is useful to every platform goes into case-admin first, as its own pull request. It reaches the copies when they next sync.
-- A feature only one platform needs now, but another might want later, also goes into case-admin, behind a setting (an environment variable, like `NEXT_PUBLIC_APP_NAME`) that only that platform turns on.
-- In a copy, change only what is for that platform alone, and add new files instead of editing files that came from case-admin, so syncs stay conflict-free. If a feature needs a hook in a shared file, add the hook to case-admin first.
+## Share first, diverge only when you must
 
-To sync a copy with case-admin (in the copy's checkout; `git remote -v` shows `origin` is not case-framework/case-admin):
+Every change in a copy makes the next sync harder, and every improvement made in case-admin helps all platforms. So:
+
+- Build new behavior in case-admin and make it configurable for the platforms that need it (an environment variable, like `NEXT_PUBLIC_APP_NAME`, or a setting), even when only one platform uses it today.
+- If a platform needs to plug something in, add a hook or extension point to case-admin, then add the platform's part in the copy as new files.
+- In a copy, prefer adding files of its own (deployment files, icons, platform-only pages) over editing files that came from case-admin.
+- Edit a file from case-admin in a copy only when none of the above works. Record every such edit in the copy's `FORK.md`: the file, what was changed, and why it couldn't be shared. `FORK.md` exists only in copies, so it never conflicts. Remove the entry when the edit goes away.
+
+## Syncing a copy
+
+In the copy's checkout (`git remote -v` shows `origin` is not case-framework/case-admin):
 
 ```sh
 git remote get-url upstream >/dev/null 2>&1 || git remote add upstream https://github.com/case-framework/case-admin.git
 git fetch origin && git fetch upstream
 git switch -c sync/case-admin-$(date +%Y%m%d) origin/main
-git merge upstream/main          # resolve conflicts, keeping the copy's own files
+# Files changed both in this copy and upstream since the last sync:
+base=$(git merge-base HEAD upstream/main)
+comm -12 <(git diff --name-only "$base" HEAD | sort) <(git diff --name-only "$base" upstream/main | sort)
+git merge upstream/main
 ```
 
-Then push the branch and open a pull request into `main`. It must be merged with a merge commit, not squash or rebase, so the next sync only brings what is new. `./sync-script.sh` does the same merge for people working on `main` directly.
+Git merges changes in different parts of a file by itself, but a file both sides changed needs a decision even when git reports no conflict. For each file in that list, check `FORK.md` for why the copy changed it, then choose one:
+
+- keep the copy's version,
+- take case-admin's version, because the copy's change is no longer needed (or case-admin now covers it; remove its `FORK.md` entry),
+- or apply the copy's change again on top of case-admin's new code.
+
+Write the decision for each file in the pull request, and ask when the right choice isn't clear. Then push the branch and open a pull request into `main`. Merge it with a merge commit, not squash or rebase, so the next sync only brings what is new. `./sync-script.sh` does the same merge for people working on `main` directly and lists the same files.

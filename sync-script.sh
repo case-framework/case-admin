@@ -49,6 +49,15 @@ fi
 git checkout main
 echo "✓ Switched back to main branch"
 
+# Files this copy and upstream both changed since the last sync need a decision, even when git
+# merges them without a conflict (see AGENTS.md and FORK.md).
+base=$(git merge-base main refs/heads/upstream)
+both=$(comm -12 <(git diff --name-only "$base" main | sort) <(git diff --name-only "$base" refs/heads/upstream | sort))
+if [ -n "$both" ]; then
+  echo "⚠️ Changed both in this copy and upstream; review each one (see FORK.md):"
+  echo "$both" | sed 's/^/   /'
+fi
+
 # Merge changes from upstream branch
 echo "Merging changes from upstream..."
 # set -e would stop the script on a conflict before this message; test the merge directly.
@@ -59,6 +68,10 @@ if ! git merge upstream --no-commit; then
   exit 1
 fi
 
+if [ -n "$both" ]; then
+  echo "⚠️ Before committing, decide for each of these files (keep this copy's version, take upstream's, or apply this copy's change again):"
+  echo "$both" | sed 's/^/   /'
+fi
 echo "Ready to commit merged changes."
 echo "Review the changes before committing:"
 echo "  git diff --staged"
